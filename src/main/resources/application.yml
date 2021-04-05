@@ -5,27 +5,40 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MariaDB53Dialect
+
 # local 환경
 ---
 spring:
-  profiles: local
+  config:
+    activate:
+      on-profile: local
   datasource:
     data: classpath:data-h2.sql # 시작할때 실행시킬 script
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: none
+
+
 #운영 환경
 ---
-spring.profiles: set1
-spring.profiles.include: read-db2
+spring:
+  config:
+    activate:
+      on-profile: set1
+  profiles:
+    include: read-db
 
 server:
   port: 8081
 
 ---
-spring.profiles: set2
-spring.profiles.include: read-db
+spring:
+  config:
+    activate:
+      on-profile: set2
+  profiles:
+    include: read-db
 
 server:
   port: 8082
