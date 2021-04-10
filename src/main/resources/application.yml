@@ -1,11 +1,6 @@
 spring:
   profiles:
     active: local # 기본 환경 선택
-  jpa:
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.MariaDB53Dialect
-
 # local 환경
 ---
 spring:
@@ -13,6 +8,14 @@ spring:
     activate:
       on-profile: local
   jpa:
-    show-sql: true
+    show-sql: true #sql 보기
+    generate-ddl: false
     hibernate:
-      ddl-auto: none
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+        implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl
+    properties:
+      hibernate:
+        format_sql: true;  #sql 예쁘게 보기
+        ddl-auto: none
+        dialect: org.hibernate.dialect.MariaDB53Dialect
