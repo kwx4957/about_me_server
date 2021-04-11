@@ -5,6 +5,6 @@ import lombok.Data;
 @Data
 public class BoardInteractionVO {
     String questionId;
-    String athourId;
+    String authorId;
     String userId;
 }

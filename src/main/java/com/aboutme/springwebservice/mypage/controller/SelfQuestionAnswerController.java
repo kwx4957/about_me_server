@@ -25,7 +25,7 @@ public class SelfQuestionAnswerController {
         //delete가 필요 한가?
     }
 
-    @GetMapping("Mypage/10Q10A")
+    @GetMapping("/Mypage/10Q10A")
     List<QuestionAnswerVO> getSelfQuestionAnswer(@RequestBody int questionSeq){
         //전체 조회 로직도 여기서 만들어야 되려나?
         return null;

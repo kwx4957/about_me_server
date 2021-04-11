@@ -1,9 +1,10 @@
 package com.aboutme.springwebservice.mypage.controller;
 
 import com.aboutme.springwebservice.mypage.model.ProfileVO;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import com.aboutme.springwebservice.mypage.model.ProgressingVO;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
 
 @RestController
 
@@ -12,5 +13,10 @@ public class ProfileController {
     void updateProfile(@RequestBody ProfileVO profileVO)
     {
         //TODO : 업데이트 구현
+    }
+
+    @GetMapping("/MyPage/Progressing")
+    public ArrayList<ProgressingVO> getProgressing(@RequestParam(value = "user_id", required = true) int user_id){
+        return null;
     }
 }
