@@ -1,13 +1,22 @@
 package com.aboutme.springwebservice.web;
 
+import lombok.AllArgsConstructor;
+import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController
-public class WebRestController {
+import java.util.Arrays;
 
-    @GetMapping("/hello")
-    public String hello() {
-        return "HelloWdfdsforld~~~";
+
+@RestController
+@AllArgsConstructor
+public class WebRestController {
+    private Environment env;
+
+    @GetMapping("/profile")
+    public String getProfile () {
+        return Arrays.stream(env.getActiveProfiles())
+                .findFirst()
+                .orElse("");
     }
 }
