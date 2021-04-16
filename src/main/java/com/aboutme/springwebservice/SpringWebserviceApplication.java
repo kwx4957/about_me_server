@@ -1,13 +1,22 @@
 package com.aboutme.springwebservice;
 
-import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
+
+@EnableJpaAuditing
 @SpringBootApplication
 public class SpringWebserviceApplication {
 
+    public static final String APPLICATION_LOCATIONS ="spring.config.import="
+            + "optional:classpath:application.yml";
+          //  + "optional:file:/home/ec2-user/app/config/real-application.yml";
+
     public static void main(String[] args) {
-        SpringApplication.run(SpringWebserviceApplication.class, args);
+        new SpringApplicationBuilder(SpringWebserviceApplication.class)
+                .properties(APPLICATION_LOCATIONS)
+                .run(args);
     }
 
 }
