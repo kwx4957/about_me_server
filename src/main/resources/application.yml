@@ -4,6 +4,8 @@ spring:
 # local 환경
 ---
 spring:
+  datasource:
+    driver-class-name:
   config:
     activate:
       on-profile: local

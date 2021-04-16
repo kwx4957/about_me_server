@@ -20,8 +20,6 @@ public interface UserLevelRepository extends JpaRepository<UserLevel, Long> {
 
 
 /*
-
-
 int _userID
 
 ArrayList<UserLevelResponseVO> progressList= getProgressing(_userID)
