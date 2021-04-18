@@ -21,7 +21,7 @@ public class SelfQuestService {
     private EntityManager em;
 
     @Transactional(readOnly = true)
-    public List<QuestionAnswerDTO> store(QuestionAnswerDTO qaDto) {
+    public List<QuestionAnswerDTO> createSelfQuestionAnswer(QuestionAnswerDTO qaDto) {
 
         StoredProcedureQuery spq =
                 em.createNamedStoredProcedureQuery(SelfQuest.set10Q10A);
@@ -38,7 +38,7 @@ public class SelfQuestService {
         return results;
     }
     @Transactional(readOnly = true)
-    public List<QuestionAnswerDTO> edit(QuestionAnswerDTO qaDto) {
+    public List<QuestionAnswerDTO> updateSelfQuestionAnswer(QuestionAnswerDTO qaDto) {
 
         StoredProcedureQuery spq =
                 em.createNamedStoredProcedureQuery(SelfQuest.set10Q10A);

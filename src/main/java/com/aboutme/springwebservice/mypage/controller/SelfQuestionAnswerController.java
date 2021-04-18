@@ -2,6 +2,7 @@ package com.aboutme.springwebservice.mypage.controller;
 
 import com.aboutme.springwebservice.mypage.model.QuestionAnswerDTO;
 import com.aboutme.springwebservice.mypage.model.SelfQuestRepository;
+import com.aboutme.springwebservice.mypage.model.SelfQuestService;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,15 +16,17 @@ public class SelfQuestionAnswerController {
     @Autowired
     private SelfQuestRepository selfQuestRepository;
 
+    private final SelfQuestService selfQuestService;
     @PostMapping("/MyPage/10Q10A/answer")
-    List<QuestionAnswerDTO> createSelfQuestionAnswer(@RequestBody QuestionAnswerDTO qaDTO){
+    public List<QuestionAnswerDTO> createSelfQuestionAnswer(@RequestBody QuestionAnswerDTO qaDTO){
         //초기 질문들을 담아서 리턴
-        return null;
+        return selfQuestService.createSelfQuestionAnswer(qaDTO);
     }
 
     @PutMapping("/MyPage/10Q10A")
-    void updateSelfQuestionAnswer(@RequestBody QuestionAnswerDTO questionAnswerVO)
+    public List<QuestionAnswerDTO> updateSelfQuestionAnswer(@RequestBody QuestionAnswerDTO qaDTO)
     {
+        return selfQuestService.updateSelfQuestionAnswer(qaDTO);
         //CREATE를 통해서 만들어진 질문에 답변을 다는 로직을 여기서 하면 될거 같음.
     }
 

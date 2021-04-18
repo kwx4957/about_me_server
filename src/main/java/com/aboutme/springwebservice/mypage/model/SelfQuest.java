@@ -15,11 +15,11 @@ import java.sql.Timestamp;
                 procedureName = "aboutme_rds.set10Q10A",   //실제 DB쪽 프로시저 이름
                 parameters = {
                         @StoredProcedureParameter(name = "_user",mode = ParameterMode.IN, type = Integer.class),
-                        @StoredProcedureParameter(name = "_title",mode = ParameterMode.OUT, type = String.class),
-                        @StoredProcedureParameter(name = "_answer",mode = ParameterMode.IN, type = Integer.class),
-                        @StoredProcedureParameter(name = "_theme",mode = ParameterMode.OUT, type = String.class),
+                        @StoredProcedureParameter(name = "_title",mode = ParameterMode.IN, type = String.class),
+                        @StoredProcedureParameter(name = "_answer",mode = ParameterMode.IN, type = String.class),
+                        @StoredProcedureParameter(name = "_theme",mode = ParameterMode.IN, type = String.class),
                         @StoredProcedureParameter(name = "_stages",mode = ParameterMode.IN, type = Integer.class),
-                        @StoredProcedureParameter(name = "_levels",mode = ParameterMode.OUT, type = String.class)
+                        @StoredProcedureParameter(name = "_levels",mode = ParameterMode.IN, type = Integer.class)
                 })
 })
 @Getter
