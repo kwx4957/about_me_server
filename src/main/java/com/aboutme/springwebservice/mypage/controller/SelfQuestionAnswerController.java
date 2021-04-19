@@ -1,13 +1,17 @@
 package com.aboutme.springwebservice.mypage.controller;
 
 import com.aboutme.springwebservice.mypage.model.QuestionAnswerDTO;
+import com.aboutme.springwebservice.mypage.model.SelfQuest;
 import com.aboutme.springwebservice.mypage.model.SelfQuestRepository;
 import com.aboutme.springwebservice.mypage.model.SelfQuestService;
+import com.google.gson.JsonObject;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.swing.text.html.HTMLDocument;
+import java.util.Iterator;
 import java.util.List;
 
 @RestController
@@ -18,9 +22,29 @@ public class SelfQuestionAnswerController {
 
     private final SelfQuestService selfQuestService;
     @PostMapping("/MyPage/10Q10A/answer")
-    public List<QuestionAnswerDTO> createSelfQuestionAnswer(@RequestBody QuestionAnswerDTO qaDTO){
+    public String createSelfQuestionAnswer(@RequestBody QuestionAnswerDTO qaDTO){
         //초기 질문들을 담아서 리턴
-        return selfQuestService.createSelfQuestionAnswer(qaDTO);
+        List<QuestionAnswerDTO> result =selfQuestService.createSelfQuestionAnswer(qaDTO);
+        JsonObject obj =new JsonObject();
+
+        obj.addProperty("user_id",qaDTO.getUser());
+        obj.addProperty("theme",qaDTO.getTheme());
+        for (Object o : result) {
+            Object[] res = (Object[]) o; // 결과가 둘 이상일 경우 Object[]
+            obj.addProperty("stage",res[0].toString());
+            break;
+        }
+
+        JsonObject data = new JsonObject();
+        for (Object o : result) {
+            Object[] res = (Object[]) o; // 결과가 둘 이상일 경우 Object[]
+
+            data.addProperty("level", res[1].toString());
+            data.addProperty("question", res[2].toString());
+            data.addProperty("answer",  res[3].toString());
+        }
+        obj.add("lists",data);
+        return obj.toString();
     }
 
     @PutMapping("/MyPage/10Q10A")
