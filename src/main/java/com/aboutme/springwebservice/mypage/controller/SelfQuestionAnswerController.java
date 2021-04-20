@@ -4,6 +4,7 @@ import com.aboutme.springwebservice.mypage.model.QuestionAnswerDTO;
 import com.aboutme.springwebservice.mypage.model.SelfQuest;
 import com.aboutme.springwebservice.mypage.model.SelfQuestRepository;
 import com.aboutme.springwebservice.mypage.model.SelfQuestService;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -18,7 +19,7 @@ import java.util.List;
 @AllArgsConstructor
 public class SelfQuestionAnswerController {
     @Autowired
-    private SelfQuestRepository selfQuestRepository;
+    public SelfQuestRepository selfQuestRepository;
 
     private final SelfQuestService selfQuestService;
     @PostMapping("/MyPage/10Q10A/answer")
@@ -31,27 +32,48 @@ public class SelfQuestionAnswerController {
         obj.addProperty("theme",qaDTO.getTheme());
         for (Object o : result) {
             Object[] res = (Object[]) o; // 결과가 둘 이상일 경우 Object[]
-            obj.addProperty("stage",res[0].toString());
+            obj.addProperty("stage",Integer.parseInt(res[0].toString()));
             break;
         }
 
-        JsonObject data = new JsonObject();
+        JsonArray resArr = new JsonArray();
         for (Object o : result) {
             Object[] res = (Object[]) o; // 결과가 둘 이상일 경우 Object[]
-
+            JsonObject data = new JsonObject();
             data.addProperty("level", res[1].toString());
             data.addProperty("question", res[2].toString());
             data.addProperty("answer",  res[3].toString());
+            resArr.add(data);
         }
-        obj.add("lists",data);
+        obj.add("lists",resArr);
         return obj.toString();
     }
 
-    @PutMapping("/MyPage/10Q10A")
-    public List<QuestionAnswerDTO> updateSelfQuestionAnswer(@RequestBody QuestionAnswerDTO qaDTO)
+    @PutMapping("/MyPage/10Q10A/answer")
+    public String updateSelfQuestionAnswer(@RequestBody QuestionAnswerDTO qaDTO)
     {
-        return selfQuestService.updateSelfQuestionAnswer(qaDTO);
-        //CREATE를 통해서 만들어진 질문에 답변을 다는 로직을 여기서 하면 될거 같음.
+        List<QuestionAnswerDTO> result = selfQuestService.updateSelfQuestionAnswer(qaDTO);
+        JsonObject obj2 = new JsonObject();
+
+        obj2.addProperty("user_id",qaDTO.getUser());
+        obj2.addProperty("theme",qaDTO.getTheme());
+        for (Object o : result) {
+            Object[] res = (Object[]) o; // 결과가 둘 이상일 경우 Object[]
+            obj2.addProperty("stage",res[0].toString());
+            break;
+        }
+
+        JsonArray resArr = new JsonArray();
+        for (Object o : result) {
+            Object[] res = (Object[]) o; // 결과가 둘 이상일 경우 Object[]
+            JsonObject data2 = new JsonObject();
+            data2.addProperty("level", res[1].toString());
+            data2.addProperty("question", res[2].toString());
+            data2.addProperty("answer",  res[3].toString());
+            resArr.add(data2);
+        }
+        obj2.add("lists",resArr);
+        return obj2.toString();
     }
 
     @DeleteMapping("/MyPage/10Q10A")
