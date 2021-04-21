@@ -1,9 +1,8 @@
 package com.aboutme.springwebservice.mypage.controller;
 
-import com.aboutme.springwebservice.mypage.model.QuestionAnswerDTO;
-import com.aboutme.springwebservice.mypage.model.SelfQuest;
-import com.aboutme.springwebservice.mypage.model.SelfQuestRepository;
-import com.aboutme.springwebservice.mypage.model.SelfQuestService;
+import com.aboutme.springwebservice.mypage.model.*;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import lombok.AllArgsConstructor;
@@ -12,8 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.swing.text.html.HTMLDocument;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 @RestController
 @AllArgsConstructor
@@ -22,58 +20,44 @@ public class SelfQuestionAnswerController {
     public SelfQuestRepository selfQuestRepository;
 
     private final SelfQuestService selfQuestService;
-    @PostMapping("/MyPage/10Q10A/answer")
-    public String createSelfQuestionAnswer(@RequestBody QuestionAnswerDTO qaDTO){
+    @RequestMapping(value="/MyPage/10Q10A/answer",method = RequestMethod.POST,produces = "application/json; charset=utf8")
+    public String createSelfQnA(@RequestBody String param) throws JsonProcessingException {
         //초기 질문들을 담아서 리턴
-        List<QuestionAnswerDTO> result =selfQuestService.createSelfQuestionAnswer(qaDTO);
-        JsonObject obj =new JsonObject();
+        ObjectMapper om = new ObjectMapper();
+        SelfRequestVO sq = om.readValue(param,SelfRequestVO.class);
+        QuestionAnswerDTO qaDto = new QuestionAnswerDTO();
 
-        obj.addProperty("user_id",qaDTO.getUser());
-        obj.addProperty("theme",qaDTO.getTheme());
-        for (Object o : result) {
-            Object[] res = (Object[]) o; // 결과가 둘 이상일 경우 Object[]
-            obj.addProperty("stage",Integer.parseInt(res[0].toString()));
-            break;
+        JsonObject js = new JsonObject();
+        for(int i=0;i<sq.getAnswerLists().size();i++) {
+            int j=i+1;
+            qaDto.setUser(sq.getUser());
+            qaDto.setTheme(sq.getTheme());
+            qaDto.setTitle(sq.getAnswerLists().get(i).getQuestion());
+            qaDto.setAnswer(sq.getAnswerLists().get(i).getAnswer());
+            qaDto.setStage(sq.getStage());
+            qaDto.setLevels(sq.getAnswerLists().get(i).getLevel());
+            js.addProperty("result ", selfQuestService.createSelfQuestionAnswer(qaDto));
         }
-
-        JsonArray resArr = new JsonArray();
-        for (Object o : result) {
-            Object[] res = (Object[]) o; // 결과가 둘 이상일 경우 Object[]
-            JsonObject data = new JsonObject();
-            data.addProperty("level", res[1].toString());
-            data.addProperty("question", res[2].toString());
-            data.addProperty("answer",  res[3].toString());
-            resArr.add(data);
-        }
-        obj.add("lists",resArr);
-        return obj.toString();
+        return js.toString();
     }
 
-    @PutMapping("/MyPage/10Q10A/answer")
-    public String updateSelfQuestionAnswer(@RequestBody QuestionAnswerDTO qaDTO)
-    {
-        List<QuestionAnswerDTO> result = selfQuestService.updateSelfQuestionAnswer(qaDTO);
-        JsonObject obj2 = new JsonObject();
+    @RequestMapping(value="/MyPage/10Q10A/updateAnswer",method = RequestMethod.PUT,produces = "application/json; charset=utf8")
+    public String updateSelfQnA(@RequestBody String param) throws JsonProcessingException {
 
-        obj2.addProperty("user_id",qaDTO.getUser());
-        obj2.addProperty("theme",qaDTO.getTheme());
-        for (Object o : result) {
-            Object[] res = (Object[]) o; // 결과가 둘 이상일 경우 Object[]
-            obj2.addProperty("stage",res[0].toString());
-            break;
-        }
+        ObjectMapper om = new ObjectMapper();
+        SelfRequestVO sq = om.readValue(param,SelfRequestVO.class);
+        QuestionAnswerDTO qaDto = new QuestionAnswerDTO();
 
-        JsonArray resArr = new JsonArray();
-        for (Object o : result) {
-            Object[] res = (Object[]) o; // 결과가 둘 이상일 경우 Object[]
-            JsonObject data2 = new JsonObject();
-            data2.addProperty("level", res[1].toString());
-            data2.addProperty("question", res[2].toString());
-            data2.addProperty("answer",  res[3].toString());
-            resArr.add(data2);
-        }
-        obj2.add("lists",resArr);
-        return obj2.toString();
+        JsonObject js = new JsonObject();
+        qaDto.setUser(sq.getUser());
+        qaDto.setTheme(sq.getTheme());
+        qaDto.setTitle(sq.getAnswerLists().get(0).getQuestion());
+        qaDto.setAnswer(sq.getAnswerLists().get(0).getAnswer());
+        qaDto.setStage(sq.getStage());
+        qaDto.setLevels(sq.getAnswerLists().get(0).getLevel());
+        js.addProperty("result ", selfQuestService.updateSelfQuestionAnswer(qaDto));
+
+        return js.toString();
     }
 
     @DeleteMapping("/MyPage/10Q10A")

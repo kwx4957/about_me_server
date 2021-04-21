@@ -3,6 +3,7 @@ package com.aboutme.springwebservice.mypage.model;
 import lombok.*;
 
 @Getter
+@Setter
 @NoArgsConstructor
 public class QuestionAnswerDTO {
     int user; //질답 순서
