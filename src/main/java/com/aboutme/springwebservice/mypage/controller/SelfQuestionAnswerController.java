@@ -61,15 +61,31 @@ public class SelfQuestionAnswerController {
     }
 
     @DeleteMapping("/MyPage/10Q10A")
-    void deleteSeleQuestionAnswer(@RequestParam int questionSeq)
+    void deleteSeleQuestionAnswer(@RequestParam int userid)
     {
         //delete가 필요 한가?
     }
 
-    @GetMapping("Mypage/10Q10A")
-    List<QuestionAnswerDTO> getSelfQuestionAnswer(@RequestBody int questionSeq){
+    @RequestMapping(value = "Mypage/10Q10A/listDetail", method = RequestMethod.POST,produces = "application/json; charset=utf8")
+    public String getSelfQnAList(@RequestBody String param) throws JsonProcessingException {
         //전체 조회 로직도 여기서 만들어야 되려나?
-        return null;
+        ObjectMapper om = new ObjectMapper();
+        SelfRequestVO sq = om.readValue(param,SelfRequestVO.class);
+        QuestionAnswerDTO qaDto = new QuestionAnswerDTO();
+
+        qaDto.setUser(sq.getUser());
+        qaDto.setStage(sq.getStage());
+        qaDto.setTheme(sq.getTheme());
+
+        return selfQuestService.getSelfQuestList(qaDto);
+    }
+
+    @RequestMapping(value = "Mypage/10Q10A/theme", method = RequestMethod.POST,produces = "application/json; charset=utf8")
+    public String getStageList(@RequestBody String param) throws JsonProcessingException {
+        //전체 조회 로직도 여기서 만들어야 되려나?
+        ObjectMapper om = new ObjectMapper();
+        SelfRequestVO sq = om.readValue(param,SelfRequestVO.class);
+        return selfQuestService.getThemeList(sq.getUser());
     }
 
     //TODO: 자문자답리스트, 관심리스트, 진행도 표출
