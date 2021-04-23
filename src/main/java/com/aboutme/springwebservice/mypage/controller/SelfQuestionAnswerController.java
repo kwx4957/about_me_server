@@ -18,11 +18,11 @@ import java.util.*;
 public class SelfQuestionAnswerController {
     @Autowired
     public SelfQuestRepository selfQuestRepository;
-
     private final SelfQuestService selfQuestService;
+
     @RequestMapping(value="/MyPage/10Q10A/answer",method = RequestMethod.POST,produces = "application/json; charset=utf8")
     public String createSelfQnA(@RequestBody String param) throws JsonProcessingException {
-        //초기 질문들을 담아서 리턴
+        //input json {"user":1,"stage":1,"theme":"진로","answerLists":[{"level":1,"question":"질문이생겼다","answer":"몰라라라랄"},{...}]}
         ObjectMapper om = new ObjectMapper();
         SelfRequestVO sq = om.readValue(param,SelfRequestVO.class);
         QuestionAnswerDTO qaDto = new QuestionAnswerDTO();
@@ -36,6 +36,7 @@ public class SelfQuestionAnswerController {
             qaDto.setAnswer(sq.getAnswerLists().get(i).getAnswer());
             qaDto.setStage(sq.getStage());
             qaDto.setLevels(sq.getAnswerLists().get(i).getLevel());
+            //dto  생성자 순대로 할라고 이렇게 했슴
             js.addProperty("result ", selfQuestService.createSelfQuestionAnswer(qaDto));
         }
         return js.toString();
@@ -43,7 +44,7 @@ public class SelfQuestionAnswerController {
 
     @RequestMapping(value="/MyPage/10Q10A/updateAnswer",method = RequestMethod.PUT,produces = "application/json; charset=utf8")
     public String updateSelfQnA(@RequestBody String param) throws JsonProcessingException {
-
+        //input json {"user":1,"stage":1,"theme":"진로","answerLists":[{"level":1,"question":"질문이생겼다","answer":"몰라라라랄"}]} 바꿀리스트만 인풋
         ObjectMapper om = new ObjectMapper();
         SelfRequestVO sq = om.readValue(param,SelfRequestVO.class);
         QuestionAnswerDTO qaDto = new QuestionAnswerDTO();
@@ -68,7 +69,7 @@ public class SelfQuestionAnswerController {
 
     @RequestMapping(value = "Mypage/10Q10A/listDetail", method = RequestMethod.POST,produces = "application/json; charset=utf8")
     public String getSelfQnAList(@RequestBody String param) throws JsonProcessingException {
-        //전체 조회 로직도 여기서 만들어야 되려나?
+        //한 주제에 대한 단계별 글 내용 input {"user":1,"stage":1,"theme":"진로"}
         ObjectMapper om = new ObjectMapper();
         SelfRequestVO sq = om.readValue(param,SelfRequestVO.class);
         QuestionAnswerDTO qaDto = new QuestionAnswerDTO();
@@ -82,7 +83,7 @@ public class SelfQuestionAnswerController {
 
     @RequestMapping(value = "Mypage/10Q10A/theme", method = RequestMethod.POST,produces = "application/json; charset=utf8")
     public String getStageList(@RequestBody String param) throws JsonProcessingException {
-        //전체 조회 로직도 여기서 만들어야 되려나?
+        //주제별 리스트 input {"user":1}
         ObjectMapper om = new ObjectMapper();
         SelfRequestVO sq = om.readValue(param,SelfRequestVO.class);
         return selfQuestService.getThemeList(sq.getUser());

@@ -37,7 +37,7 @@ public class SelfQuestService {
         spq.execute();
 
         String returns = spq.getOutputParameterValue("RESULT").toString();
-        if(returns.length()>0) return returns;
+        if(returns.equals("저장 완료")) return returns;
         else return "db에 저장 내역이 없습니다.";
     }
     @Transactional(readOnly = true)
@@ -54,7 +54,7 @@ public class SelfQuestService {
         spq2.execute();
 
         String returns = spq2.getOutputParameterValue("RESULT").toString();
-        if(returns.length()>0) return returns;
+        if(returns.equals("수정 완료")) return returns;
         else return "db에 저장 내역이 없습니다.";
     }
     @Transactional(readOnly = true)
