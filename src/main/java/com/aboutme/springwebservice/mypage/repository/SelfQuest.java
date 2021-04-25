@@ -1,13 +1,10 @@
-package com.aboutme.springwebservice.mypage.model;
+package com.aboutme.springwebservice.mypage.repository;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
 
 @NamedStoredProcedureQueries({
         @NamedStoredProcedureQuery(

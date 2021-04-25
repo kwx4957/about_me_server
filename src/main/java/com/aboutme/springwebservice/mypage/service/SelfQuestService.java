@@ -1,18 +1,20 @@
-package com.aboutme.springwebservice.mypage.model;
+package com.aboutme.springwebservice.mypage.service;
 
-import com.google.gson.JsonObject;
+import com.aboutme.springwebservice.mypage.model.QuestionAnswerDTO;
+import com.aboutme.springwebservice.mypage.model.response.ResponseSelfQnAList;
+import com.aboutme.springwebservice.mypage.model.response.ResponseThemeList;
+import com.aboutme.springwebservice.mypage.repository.SelfQuest;
+import com.aboutme.springwebservice.mypage.repository.SelfQuestRepository;
 import lombok.RequiredArgsConstructor;
 
-import net.minidev.json.JSONArray;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.StoredProcedureQuery;
-import java.util.List;
-import com.google.gson.JsonArray;
-import java.util.stream.Collectors;
+import java.util.*;
+
 
 @RequiredArgsConstructor
 @Service
@@ -58,54 +60,65 @@ public class SelfQuestService {
         else return "db에 저장 내역이 없습니다.";
     }
     @Transactional(readOnly = true)
-    public String getSelfQuestList(QuestionAnswerDTO dto) {
+    public ResponseSelfQnAList getSelfQuestList(int userId, int stage, String theme) {
         StoredProcedureQuery spqq =
                 em.createNamedStoredProcedureQuery(SelfQuest.getList10Q10A);
-        spqq.setParameter("_user", dto.getUser());
-        spqq.setParameter("_stages", dto.getStage());
-        spqq.setParameter("_theme", dto.getTheme());
+        spqq.setParameter("_user", userId);
+        spqq.setParameter("_stages", stage);
+        spqq.setParameter("_theme", theme);
         spqq.execute();
         List lists = spqq.getResultList();
 
-        JsonObject obj = new JsonObject();
-        obj.addProperty("user_id",dto.getUser());
-        obj.addProperty("stage_num",dto.getStage());
-        obj.addProperty("stage_name",dto.getTheme());
-
-        JsonArray resArr = new JsonArray();
-        for (Object o : lists) {
-            Object[] res = (Object[]) o; // 결과가 둘 이상일 경우 Object[]
-            JsonObject data = new JsonObject();
-            data.addProperty("level",res[1].toString());
-            data.addProperty("question", res[3].toString());
-            data.addProperty("answer",  res[4].toString());
-            data.addProperty("timer",  res[5].toString());
-            resArr.add(data);
+        List list_01 = new ArrayList<Object>(); // 매핑 한거 받는 타입입
+       for (Object o : lists) {
+            Object[] res = (Object[]) o;
+            LinkedHashMap<String, Object> map = new LinkedHashMap<String, Object>();
+            map.put("seq",res[0]);
+            map.put("levels",res[1].toString());
+            map.put("question",res[2].toString());
+            map.put("answer",res[3].toString());
+            map.put("postOn",res[4].toString());
+            list_01.add(map);
         }
-        obj.add("result",resArr);
-        return obj.toString();
+        ResponseSelfQnAList responseSelfQnAList = new ResponseSelfQnAList();
+        responseSelfQnAList.setUser(userId);
+        responseSelfQnAList.setStage(stage);
+        responseSelfQnAList.setTheme(theme);
+        responseSelfQnAList.setAnswerLists(list_01);
+
+        return responseSelfQnAList;
     }
     @Transactional(readOnly = true)
-    public String getThemeList(int userid) {
+    public String delSelfQuestTheme(int userId, int stages, String theme) {
+
+        return null;
+    }
+    @Transactional(readOnly = true)
+    public ResponseThemeList getThemeList(int userId) {
+
         StoredProcedureQuery spq =
                 em.createNamedStoredProcedureQuery(SelfQuest.getTheme10Q10A);
-        spq.setParameter("_user", userid);
+        spq.setParameter("_user", userId);
         spq.execute();
-        List lists = spq.getResultList();
 
-        JsonObject obj2 = new JsonObject();
-        JsonArray resArr = new JsonArray();
-        for (Object o : lists) {
-            Object[] res = (Object[]) o; // 결과가 둘 이상일 경우 Object[]
-            JsonObject data = new JsonObject();
-            data.addProperty("stage_num",Integer.parseInt(res[1].toString()));
-            data.addProperty("stage_name", res[0].toString());
-            data.addProperty("rate",  res[2].toString());
-            data.addProperty("timer",  res[3].toString());
-            resArr.add(data);
+        List lists = spq.getResultList();
+        List list_02 = new ArrayList<Object>();
+
+        for (Object o : lists){
+            Object[] res = (Object[]) o;
+            LinkedHashMap<String, Object> map = new LinkedHashMap<String, Object>();
+            map.put("stage_num",res[1].toString());
+            map.put("stage_name",res[0]);
+            map.put("rate",res[2].toString());
+            map.put("timer",res[3].toString());
+            list_02.add(map);
         }
-        obj2.add("result",resArr);
-        return obj2.toString();
+        ResponseThemeList responseList = new ResponseThemeList();
+        responseList.setUser(userId);
+        responseList.setThemeLists(list_02);
+
+        return responseList;
+
     }
     // private List<QuestionAnswerDTO> toDto(List<SelfQuest> posts) {
     //     return posts.stream()
