@@ -41,7 +41,7 @@ public class ProfileController {
         for(int i = 0; i < resDTOList.size(); i++){
             ResponseProgressing rp = new ResponseProgressing();
             rp.setLevel(resDTOList.get(i).getLevel());
-            rp.setColor(resDTOList.get(i).getLevel());
+            rp.setColor(resDTOList.get(i).getColor());
             rp.setExperience(resDTOList.get(i).getExperience());
 
             res.add(rp);

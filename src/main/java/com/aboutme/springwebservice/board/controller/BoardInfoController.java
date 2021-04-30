@@ -16,7 +16,7 @@ public class BoardInfoController {
 
     //TODO : list에서 담고 있는게 이 함수가 필요할까 확인 필요.
     @GetMapping("/Board/info")
-    public BoardVO getBoardInfo(@RequestParam(value="questionId") int questionId, @RequestParam(value="authorId") int authorId)
+    public BoardVO getBoardInfo()
     {
         return null;
     }
