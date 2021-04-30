@@ -10,4 +10,5 @@ import java.util.List;
 public class ResponseDailyLists{
     int user;
     List dailyLists; // 질문 일련번호 - 질문 - (답) - 색상 - 레벨 정보 담음
+    String error = "x";
 }

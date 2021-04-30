@@ -9,7 +9,6 @@ public class BoardVO {
     int title;
     String answer;
     String color;
-    String stage;
     String share_yn;
 
 }
