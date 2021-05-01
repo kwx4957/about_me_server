@@ -3,11 +3,11 @@ package com.aboutme.springwebservice.board.service;
 import com.aboutme.springwebservice.board.model.DailyAnswerDTO;
 import com.aboutme.springwebservice.board.model.DailyQuestDTO;
 import com.aboutme.springwebservice.board.model.response.ResponseDailyLists;
-import com.aboutme.springwebservice.board.repository.BoardDailyRepository;
-import com.aboutme.springwebservice.board.repository.CategoryAnswer;
-import com.aboutme.springwebservice.board.repository.CategoryQuestion;
-import com.aboutme.springwebservice.board.repository.Enquiry;
-import com.aboutme.springwebservice.mypage.model.response.ResponseThemeList;
+import com.aboutme.springwebservice.board.model.response.ResponseDailyProc;
+import com.aboutme.springwebservice.board.repository.DefaultEnquiry;
+import com.aboutme.springwebservice.board.repository.DefaultEnquiryRepository;
+import com.aboutme.springwebservice.board.repository.QnACategory;
+import com.aboutme.springwebservice.board.repository.QnACategoryLevel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,7 +23,7 @@ import java.util.List;
 @Service
 public class BoardDailyService{
 
-    private final BoardDailyRepository boardDailyRepository;
+    private final DefaultEnquiryRepository DailyRepository;
 
     @PersistenceContext
     private EntityManager em;
@@ -31,7 +31,7 @@ public class BoardDailyService{
     @Transactional(readOnly = true)
     public ResponseDailyLists getDailyColors(int userId) {
         StoredProcedureQuery spqq =
-                em.createNamedStoredProcedureQuery(Enquiry.getDailyList);
+                em.createNamedStoredProcedureQuery(DefaultEnquiry.getDailyList);
         spqq.setParameter("_user", userId);
         spqq.execute();
         List lists = spqq.getResultList();
@@ -54,7 +54,7 @@ public class BoardDailyService{
     @Transactional(readOnly = true)
     public int setDailyStep1(DailyQuestDTO ques) {
         StoredProcedureQuery spqq =
-                em.createNamedStoredProcedureQuery(CategoryQuestion.setDaily_step1);
+                em.createNamedStoredProcedureQuery(QnACategory.setDaily_step1);
         spqq.setParameter("_user", ques.getUser());
         spqq.setParameter("_title", ques.getTitle());
         spqq.setParameter("_color", ques.getColor());
@@ -63,28 +63,30 @@ public class BoardDailyService{
     }
     @Transactional(readOnly = true)
     public ResponseDailyLists setDailyStep2(DailyAnswerDTO ans) {
-        StoredProcedureQuery spqq =
-                em.createNamedStoredProcedureQuery(CategoryAnswer.setDaily_step2);
-        spqq.setParameter("_category",ans.getCategory_seq());
-        spqq.setParameter("_level",ans.getLevel());
-        spqq.setParameter("_answer", ans.getAnswer());
-        spqq.setParameter("_share", ans.getShare());
-        spqq.execute();
+        ResponseDailyLists dailyLists = new ResponseDailyLists();
 
-        List lists = spqq.getResultList();
+        StoredProcedureQuery sp =
+                em.createNamedStoredProcedureQuery(QnACategoryLevel.setDaily_step2);
+        sp.setParameter("_category",ans.getCategory_seq());
+        sp.setParameter("_level",ans.getLevel());
+        sp.setParameter("_answer", ans.getAnswer());
+        sp.setParameter("_share",  Character.toString( ans.getShare()));
+        sp.execute();
+
+        Object[] daily = (Object[]) sp.getSingleResult();
         List list_02 = new ArrayList<Object>();
 
         LinkedHashMap<String, Object> map = new LinkedHashMap<String, Object>();
-        map.put("cardSeq", lists.get(1));
-        map.put("quest_id",lists.get(2));
-        map.put("question",lists.get(3));
-        map.put("answer",lists.get(4));
-        map.put("level",lists.get(5));
-        map.put("isShare",lists.get(6));
-        map.put("color",lists.get(7));
+        map.put("cardSeq", daily[1]);
+        map.put("quest_id", daily[2]);
+        map.put("question", daily[3]);
+        map.put("answer", daily[4]);
+        map.put("level", daily[5]);
+        map.put("isShare", daily[6]);
+        map.put("color", daily[7]);
         list_02.add(map);
-        ResponseDailyLists dailyLists = new ResponseDailyLists();
-        dailyLists.setUser((int) lists.get(0));
+
+        dailyLists.setUser(Integer.parseInt(daily[0].toString()));
         dailyLists.setDailyLists(list_02);
 
         return dailyLists;

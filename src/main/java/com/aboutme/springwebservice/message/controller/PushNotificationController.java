@@ -1,11 +1,10 @@
 package com.aboutme.springwebservice.message.controller;
 
 import com.aboutme.springwebservice.message.model.PushNotificationVO;
-import com.aboutme.springwebservice.message.model.SueVO;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
+import java.util.ArrayList;
 
 @RestController
 public class PushNotificationController {
@@ -16,8 +15,9 @@ public class PushNotificationController {
     }
 
     @GetMapping("/Message/PushNotificationList")
-    public List<PushNotificationVO> getPushNotificationList()
+    public ArrayList<PushNotificationVO> getPushNotificationList()
     {
         return null;
     }
+
 }

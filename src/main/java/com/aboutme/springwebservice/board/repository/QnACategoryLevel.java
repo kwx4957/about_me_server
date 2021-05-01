@@ -1,13 +1,18 @@
 package com.aboutme.springwebservice.board.repository;
 
+import com.aboutme.springwebservice.board.model.response.ResponseDailyProc;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 @NamedStoredProcedureQueries({
         @NamedStoredProcedureQuery(
-                name = CategoryAnswer.setDaily_step2,
+                name = QnACategoryLevel.setDaily_step2,
                 procedureName = "aboutme_rds.setDaily2",   //실제 DB쪽 프로시저 이름
                 parameters = {
                         @StoredProcedureParameter(name = "_category", mode = ParameterMode.IN, type = Integer.class),
@@ -16,38 +21,38 @@ import javax.persistence.*;
                         @StoredProcedureParameter(name = "_share", mode = ParameterMode.IN, type = String.class),
                 })
 })
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-@NoArgsConstructor
 @Entity
-public class CategoryAnswer {
-    public static final String setDaily_step2= "aboutme_rds.setDaily_step2";
+@Table(name="QnA_Category_Level")
+public class QnACategoryLevel {
+    public static final String setDaily_step2= "aboutme_rds.setDaily2";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long seq;
 
-    @Column(nullable = false)
-    private long answer_seq;
+    private long category_id;
 
-    @Column(nullable = false)
     private String answer;
 
-    @Column(nullable = false)
     private int level;
 
-    private String share;
-    private long likeCount;
-    private long scrapCount;
+    private char share_yn;
+
+    private int likes;
+
+    private int scraps;
+
+    private LocalDateTime reg_date;
+
+    private LocalDateTime update_date;
 
     @Builder
-    public CategoryAnswer(long seq,long answer_seq,String answer,int level,
-                          String share,int likeCount, int scrapCount){
-        this.seq=seq;
-        this.answer_seq =answer_seq;
+    public QnACategoryLevel(long category_id, int level,String answer ,char share_yn){
+        this.category_id = category_id;
+        this.level = level;
         this.answer = answer;
-        this.level=level;
-        this.share=share;
-        this.likeCount=likeCount;
-        this.scrapCount=scrapCount;
+        this.share_yn=share_yn;
     }
 }

@@ -1,7 +1,7 @@
 package com.aboutme.springwebservice.board.model;
 
 import com.aboutme.springwebservice.board.repository.QnACategory;
-import lombok.Builder;
+import com.aboutme.springwebservice.mypage.repository.UserLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -9,22 +9,19 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class DailyQuestDTO {
-    int user; //질답 순서
-    int title;
-    int color;
+public class DE {
+    private long seq;
 
-    @Builder
-    public DailyQuestDTO( int user, int title,int color){
-        this.user=user;
-        this.title=title;
-        this.color=color;
+    private long author_id;
 
-    }
+    private long title_id;
+
+    private int color;
+
     public QnACategory toEntity() {
         return QnACategory.builder()
-                .author_id(user)
-                .title_id(title)
+                .author_id(author_id)
+                .title_id(title_id)
                 .color(color)
                 .build();
     }
