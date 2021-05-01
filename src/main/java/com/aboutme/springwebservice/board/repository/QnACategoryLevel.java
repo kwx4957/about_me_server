@@ -21,8 +21,9 @@ import java.time.LocalDateTime;
                         @StoredProcedureParameter(name = "_share", mode = ParameterMode.IN, type = String.class),
                 })
 })
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+
 @Getter
+@NoArgsConstructor
 @Entity
 @Table(name="QnA_Category_Level")
 public class QnACategoryLevel {

@@ -18,8 +18,9 @@ import javax.persistence.*;
                         @StoredProcedureParameter(name = "RESULT", mode = ParameterMode.OUT, type = Integer.class)
                 })
 })
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+
 @Getter
+@NoArgsConstructor
 @Entity
 @Table(name="QnA_Category")
 public class QnACategory {

@@ -19,8 +19,3 @@ spring :
         format_sql : true;  #sql 예쁘게 보기
         ddl-auto : none
         dialect : org.hibernate.dialect.MariaDB53Dialect
-  datasource :
-    url : jdbc:mariadb://about-me-server.ci2sufiezham.ap-northeast-2.rds.amazonaws.com:3306/aboutme_rds?characterEncoding=UTF-8
-    username : admin_aboutme
-    password : p98cnd!Y
-    driver-class-name : org.mariadb.jdbc.Driver
