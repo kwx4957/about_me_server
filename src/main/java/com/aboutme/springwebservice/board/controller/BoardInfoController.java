@@ -8,8 +8,10 @@ import com.aboutme.springwebservice.board.repository.QnACategoryLevelRepository;
 import com.aboutme.springwebservice.board.repository.QnACategoryRepository;
 import com.aboutme.springwebservice.board.service.BoardDailyService;
 import com.aboutme.springwebservice.mypage.service.UserLevelService;
+import com.google.gson.JsonObject;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import com.aboutme.springwebservice.board.model.BoardMetaInfoVO;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Optional;
 
@@ -72,7 +75,8 @@ public class BoardInfoController {
                 questDTO.setColor(4);
                 break;
             default:
-                r.setError("색상입력이 잘못되었습니다.");
+                r.setStatus(500);
+                r.setMessage("색상입력이 잘못되었습니다. 다시 시도해주세요");
                 return r;
         }
         questDTO.setUser(vo.getUser());
@@ -81,7 +85,8 @@ public class BoardInfoController {
         int cardSeq = boardDailyService.setDailyStep1(questDTO);
 
         if(cardSeq ==0){
-            r.setError("dl입력이 잘못되었습니다.");
+            r.setStatus(500);
+            r.setMessage("데이터 내역이 존재하지 않습니다. 다시 시도해주세요");
         }
         answerDTO.setCategory_seq(cardSeq);
         answerDTO.setLevel(vo.getLevel());
@@ -110,11 +115,13 @@ public class BoardInfoController {
         answerRepository.delCardAnswer(categorySeq);
         questionRepository.delCardQuestion(categorySeq);
         levelService.updateUserLevelExperience( quest.get().getAuthor_id(),quest.get().getColor(),true);
-
-        return "{result:삭제완료}";
+        JsonObject o = new JsonObject();
+        o.addProperty("code",200);
+        o.addProperty("message","삭제완료");
+        return o.toString();
     }
     @GetMapping(path = "/Board/dailyColors/{user}")
-    public ResponseDailyLists getDailyColors(@PathVariable(name = "user") int userId){
+    public ResponseDailyLists getDailyColors(HttpServletResponse response,@PathVariable(name = "user") int userId){
         return boardDailyService.getDailyColors(userId);
     }
 }

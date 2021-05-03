@@ -7,7 +7,8 @@ import java.util.List;
 @Getter
 @Setter
 public class ResponseThemeList {
-
+    int status = 200;
+    String message ="ok";
     int user;
     List themeLists;
 
