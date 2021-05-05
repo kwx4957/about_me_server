@@ -1,6 +1,6 @@
 package com.aboutme.springwebservice.mypage.model;
 
-import com.aboutme.springwebservice.mypage.repository.UserLevel;
+import com.aboutme.springwebservice.mypage.entity.UserLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

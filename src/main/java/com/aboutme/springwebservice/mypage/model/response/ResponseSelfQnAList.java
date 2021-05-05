@@ -8,7 +8,7 @@ import java.util.List;
 @Getter
 @Setter
 public class ResponseSelfQnAList {
-    int status = 200;
+    int code = 200;
     String message ="ok";
     int user; //질답 순서
     String theme;

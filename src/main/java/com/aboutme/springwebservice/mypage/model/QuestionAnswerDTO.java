@@ -1,6 +1,6 @@
 package com.aboutme.springwebservice.mypage.model;
 
-import com.aboutme.springwebservice.mypage.repository.SelfQuest;
+import com.aboutme.springwebservice.mypage.entity.SelfQuest;
 import lombok.*;
 
 @Getter

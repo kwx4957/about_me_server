@@ -1,7 +1,6 @@
 package com.aboutme.springwebservice.board.model;
 
 import com.aboutme.springwebservice.board.repository.QnACategory;
-import com.aboutme.springwebservice.mypage.repository.UserLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

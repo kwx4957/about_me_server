@@ -8,7 +8,7 @@ import java.util.List;
 @Getter
 @Setter
 public class ResponseDailyLists{
-    int status = 200;
+    int code = 200;
     String message ="ok";
     int user;
     List dailyLists; // 질문 일련번호 - 질문 - (답) - 색상 - 레벨 정보 담음

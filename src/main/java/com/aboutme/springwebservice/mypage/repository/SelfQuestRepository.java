@@ -1,5 +1,6 @@
 package com.aboutme.springwebservice.mypage.repository;
 
+import com.aboutme.springwebservice.mypage.entity.SelfQuest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

@@ -7,6 +7,7 @@ import com.aboutme.springwebservice.board.repository.QnACategoryLevel;
 import com.aboutme.springwebservice.board.repository.QnACategoryLevelRepository;
 import com.aboutme.springwebservice.board.repository.QnACategoryRepository;
 import com.aboutme.springwebservice.board.service.BoardDailyService;
+import com.aboutme.springwebservice.mypage.repository.UserInfoRepository;
 import com.aboutme.springwebservice.mypage.service.UserLevelService;
 import com.google.gson.JsonObject;
 import lombok.AllArgsConstructor;
@@ -31,10 +32,9 @@ import java.util.Optional;
 public class BoardInfoController {
     //TODO : list에서 담고 있는게 이 함수가 필요할까 확인 필요.
 
-    @Autowired
     public QnACategoryLevelRepository answerRepository;
-    @Autowired
     public QnACategoryRepository questionRepository;
+    public UserInfoRepository infoRepository;
 
     private final BoardDailyService boardDailyService;
     private final UserLevelService levelService;
@@ -75,7 +75,7 @@ public class BoardInfoController {
                 questDTO.setColor(4);
                 break;
             default:
-                r.setStatus(500);
+                r.setCode(500);
                 r.setMessage("색상입력이 잘못되었습니다. 다시 시도해주세요");
                 return r;
         }
@@ -84,8 +84,8 @@ public class BoardInfoController {
 
         int cardSeq = boardDailyService.setDailyStep1(questDTO);
 
-        if(cardSeq ==0){
-            r.setStatus(500);
+        if(cardSeq == 0){
+            r.setCode(500);
             r.setMessage("데이터 내역이 존재하지 않습니다. 다시 시도해주세요");
         }
         answerDTO.setCategory_seq(cardSeq);
@@ -101,27 +101,45 @@ public class BoardInfoController {
         System.out.println( answerDTO.getLevel());
         System.out.println( answerDTO.getAnswer());
 
-        levelService.updateUserLevelExperience(vo.getUser(),questDTO.getColor(),false);
+        levelService.updateUserLevelExperience(vo.getUser(),questDTO.getColor(),false);//진행도 증가
 
         return boardDailyService.setDailyStep2(answerDTO);
     }
     @PutMapping("/Board/dailyColors")
     public ResponseDailyLists updateDailyColors(@RequestBody DailyAnswerDTO ans){
-        return boardDailyService.setDailyStep2(ans);
+            ResponseDailyLists r = new ResponseDailyLists();
+        if(!questionRepository.existsById((long)ans.getCategory_seq())){
+            r.setCode(500);
+            r.setMessage("해당 질답에 대한 정보가 존재하지 않습니다.");
+            return r;
+        }
+        else return boardDailyService.setDailyStep2(ans);
     }
     @DeleteMapping("/Board/dailyColors/{cardSeq}")
     public String deleteDailyColors(@PathVariable(name="cardSeq") int categorySeq){
-        Optional<QnACategory> quest = questionRepository.findById((long)categorySeq);
-        answerRepository.delCardAnswer(categorySeq);
-        questionRepository.delCardQuestion(categorySeq);
-        levelService.updateUserLevelExperience( quest.get().getAuthor_id(),quest.get().getColor(),true);
         JsonObject o = new JsonObject();
-        o.addProperty("code",200);
-        o.addProperty("message","삭제완료");
+        Optional<QnACategory> quest = questionRepository.findById((long)categorySeq);
+        if(quest.isPresent()){
+            answerRepository.delCardAnswer(categorySeq);
+            questionRepository.delCardQuestion(categorySeq);
+            levelService.updateUserLevelExperience( quest.get().getAuthor_id(),quest.get().getColor(),true); //진행도 감소
+            o.addProperty("code",200);
+            o.addProperty("message","삭제완료");
+        }
+        else {
+            o.addProperty("code",500);
+            o.addProperty("message","해당 질답에 대한 정보가 존재하지 않습니다.");
+        }
         return o.toString();
     }
     @GetMapping(path = "/Board/dailyColors/{user}")
     public ResponseDailyLists getDailyColors(HttpServletResponse response,@PathVariable(name = "user") int userId){
-        return boardDailyService.getDailyColors(userId);
+        if(!infoRepository.existsById((long)userId)){
+            ResponseDailyLists r = new ResponseDailyLists();
+            r.setCode(500);
+            r.setMessage("해당 유저가 존재하지 않습니다.");
+            return r;
+        }
+        else return boardDailyService.getDailyColors(userId);
     }
 }
