@@ -3,17 +3,13 @@ package com.aboutme.springwebservice.board.controller;
 import com.aboutme.springwebservice.board.model.*;
 import com.aboutme.springwebservice.board.model.response.ResponseDailyLists;
 import com.aboutme.springwebservice.board.repository.QnACategory;
-import com.aboutme.springwebservice.board.repository.QnACategoryLevel;
 import com.aboutme.springwebservice.board.repository.QnACategoryLevelRepository;
 import com.aboutme.springwebservice.board.repository.QnACategoryRepository;
 import com.aboutme.springwebservice.board.service.BoardDailyService;
-import com.aboutme.springwebservice.mypage.repository.UserInfoRepository;
+import com.aboutme.springwebservice.domain.repository.UserInfoRepository;
 import com.aboutme.springwebservice.mypage.service.UserLevelService;
 import com.google.gson.JsonObject;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import com.aboutme.springwebservice.board.model.BoardMetaInfoVO;
 import com.aboutme.springwebservice.board.model.BoardVO;
@@ -55,55 +51,62 @@ public class BoardInfoController {
     public ResponseDailyLists saveDailyColors(@RequestBody BoardVO vo){
         DailyQuestDTO questDTO =  new DailyQuestDTO();
         DailyAnswerDTO answerDTO = new DailyAnswerDTO();
-
         ResponseDailyLists r = new ResponseDailyLists();
 
-        switch (vo.getColor()){
-            case "red":
-                questDTO.setColor(0);
-                break;
-            case "yellow":
-                questDTO.setColor(1);
-                break;
-            case "green":
-                questDTO.setColor(2);
-                break;
-            case "pink":
-                questDTO.setColor(3);
-                break;
-            case "purple":
-                questDTO.setColor(4);
-                break;
-            default:
-                r.setCode(500);
-                r.setMessage("색상입력이 잘못되었습니다. 다시 시도해주세요");
-                return r;
-        }
-        questDTO.setUser(vo.getUser());
-        questDTO.setTitle(vo.getTitle());
-
-        int cardSeq = boardDailyService.setDailyStep1(questDTO);
-
-        if(cardSeq == 0){
+        if(!infoRepository.existsById((long)vo.getUser())){
             r.setCode(500);
-            r.setMessage("데이터 내역이 존재하지 않습니다. 다시 시도해주세요");
+            r.setMessage("해당 유저가 존재하지 않습니다.");
+            return r;
         }
-        answerDTO.setCategory_seq(cardSeq);
-        answerDTO.setLevel(vo.getLevel());
-        answerDTO.setAnswer(vo.getAnswer());
-        if(!vo.getShare_yn().equals("N")){
-            answerDTO.setShare('Y');
+        else{
+            switch (vo.getColor()){
+                case "red":
+                    questDTO.setColor(0);
+                    break;
+                case "yellow":
+                    questDTO.setColor(1);
+                    break;
+                case "green":
+                    questDTO.setColor(2);
+                    break;
+                case "pink":
+                    questDTO.setColor(3);
+                    break;
+                case "purple":
+                    questDTO.setColor(4);
+                    break;
+                default:
+                    r.setCode(500);
+                    r.setMessage("색상입력이 잘못되었습니다. 다시 시도해주세요");
+                    return r;
+            }
+            questDTO.setUser(vo.getUser());
+            questDTO.setTitle(vo.getTitle());
+
+            int cardSeq = boardDailyService.setDailyStep1(questDTO);
+
+            if(cardSeq == 0){
+                r.setCode(500);
+                r.setMessage("데이터 내역이 존재하지 않습니다. 다시 시도해주세요");
+            }
+            answerDTO.setCategory_seq(cardSeq);
+            answerDTO.setLevel(vo.getLevel());
+            answerDTO.setAnswer(vo.getAnswer());
+            if(!vo.getShare_yn().equals("N")){
+                answerDTO.setShare('Y');
+            }
+            else
+                answerDTO.setShare('N');
+
+            System.out.println(cardSeq);
+            System.out.println( answerDTO.getLevel());
+            System.out.println( answerDTO.getAnswer());
+
+            levelService.updateUserLevelExperience(vo.getUser(),questDTO.getColor(),false);//진행도 증가
+
+            return boardDailyService.setDailyStep2(answerDTO);
         }
-        else
-            answerDTO.setShare('N');
 
-        System.out.println(cardSeq);
-        System.out.println( answerDTO.getLevel());
-        System.out.println( answerDTO.getAnswer());
-
-        levelService.updateUserLevelExperience(vo.getUser(),questDTO.getColor(),false);//진행도 증가
-
-        return boardDailyService.setDailyStep2(answerDTO);
     }
     @PutMapping("/Board/dailyColors")
     public ResponseDailyLists updateDailyColors(@RequestBody DailyAnswerDTO ans){

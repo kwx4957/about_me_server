@@ -1,18 +1,14 @@
 package com.aboutme.springwebservice.mypage.controller;
 
-import com.aboutme.springwebservice.board.model.response.ResponseDailyLists;
+import com.aboutme.springwebservice.domain.repository.UserInfoRepository;
 import com.aboutme.springwebservice.mypage.model.*;
 import com.aboutme.springwebservice.mypage.model.response.ResponseSelfQnAList;
 import com.aboutme.springwebservice.mypage.model.response.ResponseThemeList;
 import com.aboutme.springwebservice.mypage.repository.SelfQuestRepository;
-import com.aboutme.springwebservice.mypage.repository.UserInfoRepository;
 import com.aboutme.springwebservice.mypage.service.SelfQuestService;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.JsonObject;
-import io.swagger.annotations.ApiResponse;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -40,7 +36,7 @@ public class SelfQuestionAnswerController {
             qaDto.setStage(sq.getStage());
             qaDto.setLevels(sq.getAnswerLists().get(i).getLevel());
             //dto  생성자 순대로 할라고 이렇게 했슴
-            String result =selfQuestService.updateSelfQuestionAnswer(qaDto);
+            String result =selfQuestService.createSelfQuestionAnswer(qaDto);
             if(result.equals("저장 완료"))
                 js.addProperty("code",200);
             else  js.addProperty("code",500);
@@ -79,9 +75,22 @@ public class SelfQuestionAnswerController {
                                         @PathVariable(name = "theme") String theme) {
 
         JsonObject js = new JsonObject();
-        selfQuestRepository.deleteTheme(userId,stage,theme);
-        js.addProperty("code",200);
-        js.addProperty("message","삭제 완료");
+        if(!infoRepository.existsById((long)userId)){
+            js.addProperty("code",500);
+            js.addProperty("message","해당 유저가 존재하지 않습니다.");
+        }
+        else {
+            ResponseSelfQnAList r  = selfQuestService.getSelfQuestList(userId, stage, theme);
+            if (r.getAnswerLists().isEmpty()) {
+                js.addProperty("code",500);
+                js.addProperty("message","해당 " + theme + " Ver." + stage + " 에 대한 내용이 존재하지 않습니다.");
+            }
+            else{
+                selfQuestRepository.deleteTheme(userId,stage,theme);
+                js.addProperty("code",200);
+                js.addProperty("message","삭제 완료");
+            }
+        }
         return js.toString();
     }
 
@@ -99,7 +108,7 @@ public class SelfQuestionAnswerController {
         }
         else {
             r = selfQuestService.getSelfQuestList(userId, stage, theme);
-            if (r.getAnswerLists().size() < 0) {
+            if (r.getAnswerLists().isEmpty()) {
                 r.setCode(500);
                 r.setMessage("해당 " + theme + " Ver." + stage + " 에 대한 내용이 존재하지 않습니다.");
                 return r;

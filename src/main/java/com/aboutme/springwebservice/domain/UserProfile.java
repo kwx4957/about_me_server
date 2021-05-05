@@ -1,4 +1,4 @@
-package com.aboutme.springwebservice.mypage.entity;
+package com.aboutme.springwebservice.domain;
 
 import lombok.AccessLevel;
 import lombok.Builder;

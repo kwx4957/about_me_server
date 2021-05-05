@@ -8,7 +8,6 @@ spring :
     activate :
       on-profile : local
   jpa :
-    show-sql : true #sql 보기
     generate-ddl : false
     hibernate :
       naming :
@@ -16,11 +15,16 @@ spring :
         implicit-strategy : org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl
     properties :
       hibernate :
-        format_sql : true;  #sql 예쁘게 보기
+        show_sql : true
+        format_sql : true  #sql 예쁘게 보기
         ddl-auto : none
         dialect : org.hibernate.dialect.MariaDB53Dialect
-  datasource :
-    url : jdbc:mariadb://about-me-server.ci2sufiezham.ap-northeast-2.rds.amazonaws.com:3306/aboutme_rds?characterEncoding=UTF-8
-    username : admin_aboutme
-    password : p98cnd!Y
-    driver-class-name : org.mariadb.jdbc.Driver
+
+logging :
+  level :
+    org :
+      hibernate :
+        sql: Debug
+        type :
+          descriptor :
+            sql : TRACE
