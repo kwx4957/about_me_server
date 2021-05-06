@@ -1,15 +1,13 @@
 package com.aboutme.springwebservice.mypage.controller;
 
-import com.aboutme.springwebservice.mypage.model.UserLevelDTO;
+import com.aboutme.springwebservice.mypage.model.*;
 import com.aboutme.springwebservice.mypage.model.response.ResponseWeeklyProgressing;
 import com.aboutme.springwebservice.mypage.model.response.ResponseProgressing;
 import com.aboutme.springwebservice.mypage.service.UserLevelService;
-import com.aboutme.springwebservice.mypage.model.ProfileVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
-import java.util.List;
 
 @RestController
 
@@ -31,31 +29,34 @@ public class ProfileController {
 
     // 진행도
     @GetMapping("/MyPage/Progressing/{userId}")
-    public ArrayList<ResponseProgressing> getProgressing(@PathVariable("userId") long userId){
+    public ResponseProgressing getProgressing(@PathVariable("userId") long userId){
         // TODO: 본인의 마이페이지인지 아닌지에 따라서 수정해야함
         UserLevelDTO ulDTO = new UserLevelDTO();
+        String[] colors = {"red", "yellow", "green", "pink", "purple"};
+
         ulDTO.setUser_id(userId);
         ArrayList<UserLevelDTO> resDTOList = userLevelService.getProgressing(ulDTO);
 
-        ArrayList<ResponseProgressing> res = new ArrayList<ResponseProgressing>();
+        ArrayList<ProgressingVO> pr = new ArrayList<ProgressingVO>();
         for(int i = 0; i < resDTOList.size(); i++){
-            ResponseProgressing rp = new ResponseProgressing();
-            rp.setLevel(resDTOList.get(i).getLevel());
-            rp.setColor(resDTOList.get(i).getColor());
-            rp.setExperience(resDTOList.get(i).getExperience());
+            int level = resDTOList.get(i).getLevel();
+            int color = resDTOList.get(i).getColor();
+            float exp = (float)resDTOList.get(i).getExperience()/100;
+            ProgressingVO rp = new ProgressingVO(colors[color], level, exp);
 
-            res.add(rp);
+            pr.add(rp);
         }
 
-        return res;
+        return new ResponseProgressing(200, pr);
     }
 
     //주차별 진행도
     @GetMapping("/MyPage/WeeklyProgressing/{userId}")
-    public ArrayList<ResponseWeeklyProgressing> getMonthlyProgressing(@PathVariable("userId") long userId){
+    public ResponseWeeklyProgressing getMonthlyProgressing(@PathVariable("userId") long userId, RequestWeeklyProgressing requestWeeklyProgressing){
         UserLevelDTO ulDTO = new UserLevelDTO();
         ulDTO.setUser_id(userId);
+        ArrayList<ArrayList<WeeklyProgressingVO>> resList = userLevelService.getWeeklyProgressing(ulDTO, requestWeeklyProgressing);
 
-        return userLevelService.getWeeklyProgressing(ulDTO);
+        return new ResponseWeeklyProgressing(200, resList);
     }
 }
