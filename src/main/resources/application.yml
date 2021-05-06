@@ -19,7 +19,6 @@ spring :
         format_sql : true  #sql 예쁘게 보기
         ddl-auto : none
         dialect : org.hibernate.dialect.MariaDB53Dialect
-
 logging :
   level :
     org :
