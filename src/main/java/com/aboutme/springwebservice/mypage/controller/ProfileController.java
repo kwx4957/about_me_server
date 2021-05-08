@@ -1,21 +1,27 @@
 package com.aboutme.springwebservice.mypage.controller;
 
+import com.aboutme.springwebservice.domain.UserInfo;
+import com.aboutme.springwebservice.entity.BasicResponse;
 import com.aboutme.springwebservice.mypage.model.UserLevelDTO;
+import com.aboutme.springwebservice.mypage.model.response.ResponseCrushList;
 import com.aboutme.springwebservice.mypage.model.response.ResponseWeeklyProgressing;
 import com.aboutme.springwebservice.mypage.model.response.ResponseProgressing;
+import com.aboutme.springwebservice.mypage.service.UserCrushService;
 import com.aboutme.springwebservice.mypage.service.UserLevelService;
 import com.aboutme.springwebservice.mypage.model.ProfileVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-
 public class ProfileController {
     @Autowired
     private UserLevelService userLevelService;
+    @Autowired
+    private UserCrushService userCrushService;
 
 //    @GetMapping("/")
 //    void test(@RequestParam("userId") Long userId, @RequestParam("color") int color){
@@ -57,5 +63,11 @@ public class ProfileController {
         ulDTO.setUser_id(userId);
 
         return userLevelService.getWeeklyProgressing(ulDTO);
+    }
+
+    //crush는 likes or scarp 으로 접근
+    @GetMapping("/MyPage/CrushList/{userId}/{crush}")
+    public ResponseEntity<? extends BasicResponse> getCrushList(@PathVariable("userId") long userId , @PathVariable("crush") String crush){
+        return userCrushService.crushLists(userId,crush);
     }
 }

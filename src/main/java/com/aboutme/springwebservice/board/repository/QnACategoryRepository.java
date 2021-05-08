@@ -8,4 +8,5 @@ public interface QnACategoryRepository extends JpaRepository<QnACategory, Long> 
 
     @Query(value = "DELETE FROM QnA_Category WHERE seq = ?1", nativeQuery = true)
     void delCardQuestion(int categorySeq);
+    QnACategory findBySeq(long seq);
 }

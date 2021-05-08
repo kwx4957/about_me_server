@@ -1,9 +1,6 @@
 package com.aboutme.springwebservice.domain;
 
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -39,8 +36,11 @@ public class UserInfo {
     @Column
     LocalDateTime update_date;
 
+
+    //long seq는 유저정보를 받기위한 임시
     @Builder
-    public UserInfo(String email, String name, char gender, String login_type, LocalDateTime last_login, LocalDate reg_date, LocalDateTime update_date){
+    public UserInfo(long seq,String email, String name, char gender, String login_type, LocalDateTime last_login, LocalDate reg_date, LocalDateTime update_date){
+        this.seq=seq;
         this.email = email;
         this.name = name;
         this.gender = gender;

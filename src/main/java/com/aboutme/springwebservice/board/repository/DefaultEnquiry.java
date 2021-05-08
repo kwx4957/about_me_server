@@ -30,7 +30,7 @@ public class DefaultEnquiry {
 
     private int color;
 
-    private int theme;
+    private Integer theme;
 
     private String question;
 
