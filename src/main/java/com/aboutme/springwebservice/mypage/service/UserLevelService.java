@@ -2,7 +2,7 @@ package com.aboutme.springwebservice.mypage.service;
 
 import com.aboutme.springwebservice.mypage.model.UserLevelDTO;
 import com.aboutme.springwebservice.mypage.model.WeeklyProgressingVO;
-import com.aboutme.springwebservice.mypage.repository.UserLevel;
+import com.aboutme.springwebservice.mypage.entity.UserLevel;
 import com.aboutme.springwebservice.mypage.repository.UserLevelRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;

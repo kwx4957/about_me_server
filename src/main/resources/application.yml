@@ -1,0 +1,29 @@
+spring :
+  profiles :
+    active : local # 기본 환경 선택
+# local 환경
+---
+spring :
+  config :
+    activate :
+      on-profile : local
+  jpa :
+    generate-ddl : false
+    hibernate :
+      naming :
+        physical-strategy : org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+        implicit-strategy : org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl
+    properties :
+      hibernate :
+        show_sql : true
+        format_sql : true  #sql 예쁘게 보기
+        ddl-auto : none
+        dialect : org.hibernate.dialect.MariaDB53Dialect
+logging :
+  level :
+    org :
+      hibernate :
+        sql: Debug
+        type :
+          descriptor :
+            sql : TRACE

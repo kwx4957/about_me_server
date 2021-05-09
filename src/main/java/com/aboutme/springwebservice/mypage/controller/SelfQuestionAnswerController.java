@@ -1,22 +1,23 @@
 package com.aboutme.springwebservice.mypage.controller;
 
+import com.aboutme.springwebservice.domain.repository.UserInfoRepository;
 import com.aboutme.springwebservice.mypage.model.*;
 import com.aboutme.springwebservice.mypage.model.response.ResponseSelfQnAList;
 import com.aboutme.springwebservice.mypage.model.response.ResponseThemeList;
 import com.aboutme.springwebservice.mypage.repository.SelfQuestRepository;
 import com.aboutme.springwebservice.mypage.service.SelfQuestService;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.JsonObject;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @AllArgsConstructor
 public class SelfQuestionAnswerController {
-    @Autowired
+
     public SelfQuestRepository selfQuestRepository;
+    public UserInfoRepository infoRepository;
+
     private final SelfQuestService selfQuestService;
 
     //한 주제에 대한 단계별 글 내용 다 생성
@@ -35,7 +36,11 @@ public class SelfQuestionAnswerController {
             qaDto.setStage(sq.getStage());
             qaDto.setLevels(sq.getAnswerLists().get(i).getLevel());
             //dto  생성자 순대로 할라고 이렇게 했슴
-            js.addProperty("result ", selfQuestService.createSelfQuestionAnswer(qaDto));
+            String result =selfQuestService.createSelfQuestionAnswer(qaDto);
+            if(result.equals("저장 완료"))
+                js.addProperty("code",200);
+            else  js.addProperty("code",500);
+            js.addProperty("message ", result);
         }
 
         return js.toString();
@@ -54,7 +59,11 @@ public class SelfQuestionAnswerController {
         qaDto.setAnswer(sq.getAnswerLists().get(0).getAnswer());
         qaDto.setStage(sq.getStage());
         qaDto.setLevels(sq.getAnswerLists().get(0).getLevel());
-        js.addProperty("result ", selfQuestService.updateSelfQuestionAnswer(qaDto));
+        String result = selfQuestService.updateSelfQuestionAnswer(qaDto);
+        if(result.equals("수정 완료"))
+            js.addProperty("code",200);
+        else  js.addProperty("code",500);
+        js.addProperty("message ", result);
 
         return js.toString();
     }
@@ -66,23 +75,57 @@ public class SelfQuestionAnswerController {
                                         @PathVariable(name = "theme") String theme) {
 
         JsonObject js = new JsonObject();
-        selfQuestRepository.deleteTheme(userId,stage,theme);
-        js.addProperty("result","삭제 완료");
+        if(!infoRepository.existsById((long)userId)){
+            js.addProperty("code",500);
+            js.addProperty("message","해당 유저가 존재하지 않습니다.");
+        }
+        else {
+            ResponseSelfQnAList r  = selfQuestService.getSelfQuestList(userId, stage, theme);
+            if (r.getAnswerLists().isEmpty()) {
+                js.addProperty("code",500);
+                js.addProperty("message","해당 " + theme + " Ver." + stage + " 에 대한 내용이 존재하지 않습니다.");
+            }
+            else{
+                selfQuestRepository.deleteTheme(userId,stage,theme);
+                js.addProperty("code",200);
+                js.addProperty("message","삭제 완료");
+            }
+        }
         return js.toString();
     }
 
     // 생성주제 리스트 프로시져 결과 이미지 :https://prnt.sc/120scgd
-    @GetMapping(path="/Mypage/10Q10A/listDetail/{user}/{stage}/{theme}")
+    @GetMapping(path="/MyPage/10Q10A/listDetail/{user}/{stage}/{theme}")
     public ResponseSelfQnAList getSelfQnAList(
             @PathVariable(name = "user") int userId,
             @PathVariable(name = "stage") int stage,
             @PathVariable(name = "theme") String theme){
-       return selfQuestService.getSelfQuestList(userId,stage,theme);
+
+        ResponseSelfQnAList r = new ResponseSelfQnAList();
+        if(!infoRepository.existsById((long)userId)){
+            r.setCode(500);
+            r.setMessage("해당 유저가 존재하지 않습니다.");
+        }
+        else {
+            r = selfQuestService.getSelfQuestList(userId, stage, theme);
+            if (r.getAnswerLists().isEmpty()) {
+                r.setCode(500);
+                r.setMessage("해당 " + theme + " Ver." + stage + " 에 대한 내용이 존재하지 않습니다.");
+                return r;
+            }
+        }
+        return r;
     }
 
     //주제별 리스트 get 프로시져 결과이미지: https://prnt.sc/120sewo
-    @GetMapping(value = "Mypage/10Q10A/theme/{user}")
+    @GetMapping(value = "MyPage/10Q10A/theme/{user}")
     public ResponseThemeList getStageList(@PathVariable(name = "user") int userId){
+        if(!infoRepository.existsById((long)userId)){
+            ResponseThemeList r = new ResponseThemeList();
+            r.setCode(500);
+            r.setMessage("해당 유저가 존재하지 않습니다.");
+            return r;
+        }
         return selfQuestService.getThemeList(userId);
     }
 

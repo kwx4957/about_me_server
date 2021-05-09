@@ -3,7 +3,7 @@ package com.aboutme.springwebservice.mypage.service;
 import com.aboutme.springwebservice.mypage.model.QuestionAnswerDTO;
 import com.aboutme.springwebservice.mypage.model.response.ResponseSelfQnAList;
 import com.aboutme.springwebservice.mypage.model.response.ResponseThemeList;
-import com.aboutme.springwebservice.mypage.repository.SelfQuest;
+import com.aboutme.springwebservice.mypage.entity.SelfQuest;
 import com.aboutme.springwebservice.mypage.repository.SelfQuestRepository;
 import lombok.RequiredArgsConstructor;
 

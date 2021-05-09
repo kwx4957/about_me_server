@@ -8,6 +8,8 @@ import java.util.List;
 @Getter
 @Setter
 public class ResponseSelfQnAList {
+    int code = 200;
+    String message ="ok";
     int user; //질답 순서
     String theme;
     int stage;

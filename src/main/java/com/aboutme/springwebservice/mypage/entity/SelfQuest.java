@@ -1,4 +1,4 @@
-package com.aboutme.springwebservice.mypage.repository;
+package com.aboutme.springwebservice.mypage.entity;
 
 import lombok.Builder;
 import lombok.Getter;

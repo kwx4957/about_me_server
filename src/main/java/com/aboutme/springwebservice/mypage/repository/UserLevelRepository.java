@@ -1,8 +1,7 @@
 package com.aboutme.springwebservice.mypage.repository;
 
-import com.aboutme.springwebservice.mypage.model.UserLevelDTO;
+import com.aboutme.springwebservice.mypage.entity.UserLevel;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 

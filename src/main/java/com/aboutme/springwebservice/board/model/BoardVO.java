@@ -4,10 +4,11 @@ import lombok.Data;
 
 @Data
 public class BoardVO {
-    String userName;
-    String question;
+    int level;
+    int user; //질답 순서
+    int title;
     String answer;
-    int likeCount;
-    int scrapCount;
     String color;
+    String share_yn;
+
 }
