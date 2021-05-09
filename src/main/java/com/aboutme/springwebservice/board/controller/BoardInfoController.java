@@ -2,7 +2,7 @@ package com.aboutme.springwebservice.board.controller;
 
 import com.aboutme.springwebservice.board.model.*;
 import com.aboutme.springwebservice.board.model.response.ResponseDailyLists;
-import com.aboutme.springwebservice.board.repository.QnACategory;
+import com.aboutme.springwebservice.board.entity.QnACategory;
 import com.aboutme.springwebservice.board.repository.QnACategoryLevelRepository;
 import com.aboutme.springwebservice.board.repository.QnACategoryRepository;
 import com.aboutme.springwebservice.board.service.BoardDailyService;

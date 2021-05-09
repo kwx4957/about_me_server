@@ -1,6 +1,6 @@
 package com.aboutme.springwebservice.mypage.model.response;
 
-import com.aboutme.springwebservice.board.repository.QnACategoryLevel;
+import com.aboutme.springwebservice.board.entity.QnACategoryLevel;
 import lombok.*;
 
 import java.time.LocalDateTime;

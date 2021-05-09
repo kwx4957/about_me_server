@@ -1,13 +1,12 @@
 package com.aboutme.springwebservice.board.service;
 
+import com.aboutme.springwebservice.board.entity.QnACategoryLevel;
 import com.aboutme.springwebservice.board.model.DailyAnswerDTO;
 import com.aboutme.springwebservice.board.model.DailyQuestDTO;
 import com.aboutme.springwebservice.board.model.response.ResponseDailyLists;
-import com.aboutme.springwebservice.board.model.response.ResponseDailyProc;
-import com.aboutme.springwebservice.board.repository.DefaultEnquiry;
+import com.aboutme.springwebservice.board.entity.DefaultEnquiry;
 import com.aboutme.springwebservice.board.repository.DefaultEnquiryRepository;
-import com.aboutme.springwebservice.board.repository.QnACategory;
-import com.aboutme.springwebservice.board.repository.QnACategoryLevel;
+import com.aboutme.springwebservice.board.entity.QnACategory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
