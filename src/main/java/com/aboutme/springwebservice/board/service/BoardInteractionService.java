@@ -1,8 +1,8 @@
 package com.aboutme.springwebservice.board.service;
 
 import com.aboutme.springwebservice.board.entity.BoardInteraction;
+import com.aboutme.springwebservice.board.entity.QnACategoryLevel;
 import com.aboutme.springwebservice.board.repository.BoardInteractionRepository;
-import com.aboutme.springwebservice.board.repository.QnACategoryLevel;
 import com.aboutme.springwebservice.board.repository.QnACategoryLevelRepository;
 import com.aboutme.springwebservice.domain.UserInfo;
 import lombok.AllArgsConstructor;

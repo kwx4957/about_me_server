@@ -1,4 +1,4 @@
-package com.aboutme.springwebservice.board.repository;
+package com.aboutme.springwebservice.board.entity;
 
 import lombok.AccessLevel;
 import lombok.Builder;

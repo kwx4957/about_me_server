@@ -1,14 +1,12 @@
 package com.aboutme.springwebservice.mypage.model;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.Getter;
 
-@Data
-@AllArgsConstructor
 @Getter
-public class ProgressingVO {
+@AllArgsConstructor
+public class WeeklyProgressingVO {
     private String color;
-    private int level;
-    private float experience;
+    private String day;
+    private Boolean isWritten;
 }

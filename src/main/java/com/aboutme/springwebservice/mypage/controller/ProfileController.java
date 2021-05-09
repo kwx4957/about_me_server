@@ -1,33 +1,35 @@
 package com.aboutme.springwebservice.mypage.controller;
 
 import com.aboutme.springwebservice.domain.UserInfo;
+import com.aboutme.springwebservice.domain.repository.UserInfoRepository;
 import com.aboutme.springwebservice.entity.BasicResponse;
+import com.aboutme.springwebservice.mypage.model.ProfileVO;
+import com.aboutme.springwebservice.mypage.model.ProgressingVO;
 import com.aboutme.springwebservice.mypage.model.UserLevelDTO;
+import com.aboutme.springwebservice.mypage.model.WeeklyProgressingVO;
 import com.aboutme.springwebservice.mypage.model.response.ResponseCrushList;
 import com.aboutme.springwebservice.mypage.model.response.ResponseWeeklyProgressing;
 import com.aboutme.springwebservice.mypage.model.response.ResponseProgressing;
 import com.aboutme.springwebservice.mypage.service.UserCrushService;
 import com.aboutme.springwebservice.mypage.service.UserLevelService;
-import com.aboutme.springwebservice.mypage.model.ProfileVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
-import java.util.List;
 
 @RestController
 public class ProfileController {
-    @Autowired
     private UserLevelService userLevelService;
-    @Autowired
     private UserCrushService userCrushService;
 
-//    @GetMapping("/")
-//    void test(@RequestParam("userId") Long userId, @RequestParam("color") int color){
-//        userLevelService.updateUserLevelExperience(userId, color, true);
-//        return;
-//    }
+//    @Autowired
+//    private UserInfoRepository userInfoRepository;
+    public UserInfoRepository userInfoRepository;
 
     @PutMapping("/MyPage/profile")
     void updateProfile(@RequestBody ProfileVO profileVO)
@@ -37,32 +39,71 @@ public class ProfileController {
 
     // 진행도
     @GetMapping("/MyPage/Progressing/{userId}")
-    public ArrayList<ResponseProgressing> getProgressing(@PathVariable("userId") long userId){
-        // TODO: 본인의 마이페이지인지 아닌지에 따라서 수정해야함
+    public ResponseProgressing getProgressing(@PathVariable("userId") long userId){
+
+        if(!userInfoRepository.existsById(userId)){
+            return new ResponseProgressing(500, "해당 유저가 존재하지 않습니다.", null);
+        }
+
         UserLevelDTO ulDTO = new UserLevelDTO();
+        String[] colors = {"red", "yellow", "green", "pink", "purple"};
+
         ulDTO.setUser_id(userId);
         ArrayList<UserLevelDTO> resDTOList = userLevelService.getProgressing(ulDTO);
 
-        ArrayList<ResponseProgressing> res = new ArrayList<ResponseProgressing>();
+        ArrayList<ProgressingVO> pr = new ArrayList<ProgressingVO>();
         for(int i = 0; i < resDTOList.size(); i++){
-            ResponseProgressing rp = new ResponseProgressing();
-            rp.setLevel(resDTOList.get(i).getLevel());
-            rp.setColor(resDTOList.get(i).getColor());
-            rp.setExperience(resDTOList.get(i).getExperience());
+            int level = resDTOList.get(i).getLevel();
+            int color = resDTOList.get(i).getColor();
+            float exp = (float)resDTOList.get(i).getExperience()/100;
+            ProgressingVO rp = new ProgressingVO(colors[color], level, exp);
 
-            res.add(rp);
+            pr.add(rp);
         }
 
-        return res;
+        return new ResponseProgressing(200, "OK", pr);
     }
 
     //주차별 진행도
     @GetMapping("/MyPage/WeeklyProgressing/{userId}")
-    public ArrayList<ResponseWeeklyProgressing> getMonthlyProgressing(@PathVariable("userId") long userId){
+    public ResponseWeeklyProgressing getMonthlyProgressing(@PathVariable("userId") long userId){
+
+        if (!userInfoRepository.existsById(userId)) {
+            return new ResponseWeeklyProgressing(500, "해당 유저가 존재하지 않습니다", null, null);
+        }
+
         UserLevelDTO ulDTO = new UserLevelDTO();
         ulDTO.setUser_id(userId);
+        ArrayList<ArrayList<WeeklyProgressingVO>> resList = userLevelService.getWeeklyProgressing(ulDTO);
 
-        return userLevelService.getWeeklyProgressing(ulDTO);
+        LocalDate now = LocalDate.now();
+        LocalDate monday = LocalDate.of(now.getYear(), now.getMonth(), 1);
+        int weeks = (int)ChronoUnit.DAYS.between(monday.with(TemporalAdjusters.nextOrSame(DayOfWeek.MONDAY)), now) / 7 + 1;
+
+        String date = null;
+        switch(weeks) {
+            case 1: {
+                date = "2021년 " + now.getMonthValue() + "월 첫째주";
+                break;
+            }
+            case 2: {
+                date = "2021년 " + now.getMonthValue() + "월 둘째주";
+                break;
+            }
+            case 3: {
+                date = "2021년 " + now.getMonthValue() + "월 셋째주";
+                break;
+            }
+            case 4: {
+                date = "2021년 " + now.getMonthValue() + "월 넷째주";
+                break;
+            }
+            case 5: {
+                date = "2021년 " + now.getMonthValue() + "월 다섯째주";
+            }
+        }
+
+        return new ResponseWeeklyProgressing(200, "OK", date, resList);
     }
 
     //crush는 likes or scarp 으로 접근

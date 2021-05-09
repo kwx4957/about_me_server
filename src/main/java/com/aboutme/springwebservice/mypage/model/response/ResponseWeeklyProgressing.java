@@ -1,18 +1,20 @@
 package com.aboutme.springwebservice.mypage.model.response;
 
+import com.aboutme.springwebservice.mypage.model.WeeklyProgressingVO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class ResponseWeeklyProgressing {
-    private int color;
-    private String reg_date;
-    private String day;
+    private int code;
+    private String message;
+    private String date;
+    private ArrayList<ArrayList<WeeklyProgressingVO>> weeklyProgressingList;
 }

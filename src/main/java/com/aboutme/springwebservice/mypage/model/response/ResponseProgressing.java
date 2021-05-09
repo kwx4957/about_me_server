@@ -1,24 +1,17 @@
 package com.aboutme.springwebservice.mypage.model.response;
 
+import com.aboutme.springwebservice.mypage.model.ProgressingVO;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
+
 @Getter
 @Setter
+@AllArgsConstructor
 public class ResponseProgressing {
-    private int color;
-    private int level;
-    private int experience;
-
-//    public ResponseUserLevel(UserLevel entity) {
-//        id = entity.getSeq();
-//        color = entity.getColor();
-//        experience = entity.getExperience();
-//        level = entity.getLevel();
-//        user_id = entity.getUser_id();
-//    }
-
-//    public int getTotalExperience(){
-//        return (this.getLevel()-1) * 100 + this.getExperience();
-//    }
+    private int code;
+    private String message;
+    private ArrayList<ProgressingVO> data;
 }

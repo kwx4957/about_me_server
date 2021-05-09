@@ -1,6 +1,5 @@
 package com.aboutme.springwebservice.board.entity;
 
-import com.aboutme.springwebservice.board.repository.QnACategoryLevel;
 import com.aboutme.springwebservice.domain.UserInfo;
 import com.aboutme.springwebservice.entity.BaseTimeEntity;
 import lombok.*;

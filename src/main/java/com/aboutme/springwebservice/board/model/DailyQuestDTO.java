@@ -1,6 +1,6 @@
 package com.aboutme.springwebservice.board.model;
 
-import com.aboutme.springwebservice.board.repository.QnACategory;
+import com.aboutme.springwebservice.board.entity.QnACategory;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

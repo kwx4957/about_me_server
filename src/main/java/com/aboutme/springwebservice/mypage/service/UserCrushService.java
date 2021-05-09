@@ -2,6 +2,9 @@ package com.aboutme.springwebservice.mypage.service;
 
 
 import com.aboutme.springwebservice.board.entity.BoardInteraction;
+import com.aboutme.springwebservice.board.entity.DefaultEnquiry;
+import com.aboutme.springwebservice.board.entity.QnACategory;
+import com.aboutme.springwebservice.board.entity.QnACategoryLevel;
 import com.aboutme.springwebservice.board.repository.*;
 import com.aboutme.springwebservice.domain.UserInfo;
 import com.aboutme.springwebservice.entity.BasicResponse;

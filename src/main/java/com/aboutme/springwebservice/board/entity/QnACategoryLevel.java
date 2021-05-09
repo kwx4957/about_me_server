@@ -1,16 +1,28 @@
-package com.aboutme.springwebservice.board.repository;
+package com.aboutme.springwebservice.board.entity;
 
-import com.aboutme.springwebservice.board.model.response.ResponseDailyProc;
+import com.aboutme.springwebservice.board.model.response.ResponseBoardList;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+
 @NamedStoredProcedureQueries({
+        @NamedStoredProcedureQuery(
+                name = "getLatestPost",
+                procedureName = "aboutme_rds.getLatestPost",
+                parameters = {
+                        @StoredProcedureParameter(name = "color", mode = ParameterMode.IN, type = Integer.class),
+                }
+        ),
+        @NamedStoredProcedureQuery(
+                name = "getPopularPost",
+                procedureName = "aboutme_rds.getPopularPost",
+                parameters = {}
+        ),
         @NamedStoredProcedureQuery(
                 name = QnACategoryLevel.setDaily_step2,
                 procedureName = "aboutme_rds.setDaily2",   //실제 DB쪽 프로시저 이름
@@ -19,11 +31,10 @@ import java.time.LocalDateTime;
                         @StoredProcedureParameter(name = "_level", mode = ParameterMode.IN, type = Integer.class),
                         @StoredProcedureParameter(name = "_answer", mode = ParameterMode.IN, type = String.class),
                         @StoredProcedureParameter(name = "_share", mode = ParameterMode.IN, type = String.class),
-                })
+                }),
 })
-
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-@NoArgsConstructor
 @Entity
 @Table(name="QnA_Category_Level")
 public class QnACategoryLevel {
@@ -50,10 +61,15 @@ public class QnACategoryLevel {
     private LocalDateTime update_date;
 
     @Builder
-    public QnACategoryLevel(long category_id, int level,String answer ,char share_yn){
+    public QnACategoryLevel(long seq, long category_id, String answer, int level, char share_yn, int likes, int scraps, LocalDateTime reg_date, LocalDateTime update_date){
+        this.seq = seq;
         this.category_id = category_id;
-        this.level = level;
         this.answer = answer;
-        this.share_yn=share_yn;
+        this.level = level;
+        this.share_yn = share_yn;
+        this.likes = likes;
+        this.scraps = scraps;
+        this.reg_date = reg_date;
+        this.update_date = update_date;
     }
 }

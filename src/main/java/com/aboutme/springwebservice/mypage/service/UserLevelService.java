@@ -1,7 +1,7 @@
 package com.aboutme.springwebservice.mypage.service;
 
 import com.aboutme.springwebservice.mypage.model.UserLevelDTO;
-import com.aboutme.springwebservice.mypage.model.response.ResponseWeeklyProgressing;
+import com.aboutme.springwebservice.mypage.model.WeeklyProgressingVO;
 import com.aboutme.springwebservice.mypage.entity.UserLevel;
 import com.aboutme.springwebservice.mypage.repository.UserLevelRepository;
 import lombok.AllArgsConstructor;
@@ -10,6 +10,10 @@ import org.springframework.stereotype.Service;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,7 +31,6 @@ public class UserLevelService {
         long userId = ulDTO.getUser_id();
         ArrayList<UserLevel> ul = new ArrayList<UserLevel>(5);
 
-        //궁금!
         ul = userLevelRepository.getProgressingByUserId(userId);
 
         ArrayList<UserLevelDTO> resDTOList = new ArrayList<UserLevelDTO>(5);
@@ -44,33 +47,60 @@ public class UserLevelService {
     }
 
     @Transactional
-    public ArrayList<ResponseWeeklyProgressing> getWeeklyProgressing(UserLevelDTO ulDTO) {
+    public ArrayList<ArrayList<WeeklyProgressingVO>> getWeeklyProgressing(UserLevelDTO ulDTO) {
+
+        String[] days= {"월", "화", "수", "목", "금", "토", "일"};
+        String[] colors = {"red", "yellow", "green", "pink", "purple"};
         long userId = ulDTO.getUser_id();
+        ArrayList<ArrayList<WeeklyProgressingVO>> res = new ArrayList<ArrayList<WeeklyProgressingVO>>();
 
-        List<Object[]> resultList = em.createNativeQuery(
-                "SELECT " +
-                "de.color, " +
-                "date_format(qacl.reg_date, '%Y.%m.%d'), " +
-                "date_format(qacl.reg_date, '%a') " +
-                "FROM QnA_Category_Level qacl " +
-                "JOIN QnA_Category qac ON qacl.category_id = qac.seq " +
-                "JOIN Default_Enquiry de ON de.seq = qac.title_id " +
-                "WHERE qac.author_id = :userId " +
-                "ORDER BY qacl.reg_date")
-                .setParameter("userId", userId)
-                .getResultList();
+        LocalDate now = LocalDate.now();
+        LocalDate monday = LocalDate.of(now.getYear(), now.getMonth(), 1);
+        long weeks = ChronoUnit.DAYS.between(monday.with(TemporalAdjusters.nextOrSame(DayOfWeek.MONDAY)), now) / 7 + 1;
 
-        ArrayList<ResponseWeeklyProgressing> responseWeeklyProgressings = new ArrayList<ResponseWeeklyProgressing>();
-        for(int i = 0; i < resultList.size(); i++){
-            ResponseWeeklyProgressing responseWeeklyProgressing = new ResponseWeeklyProgressing();
-            responseWeeklyProgressing.setColor((Integer)resultList.get(i)[0]);
-            responseWeeklyProgressing.setReg_date((String)resultList.get(i)[1]);
-            responseWeeklyProgressing.setDay((String)resultList.get(i)[2]);
+        monday = monday.with(TemporalAdjusters.nextOrSame(DayOfWeek.MONDAY));
+        monday = monday.minusWeeks(1);
 
-            responseWeeklyProgressings.add(responseWeeklyProgressing);
+        for(int i = 0; i < weeks; i++){
+            monday = monday.plusWeeks(1);
+            LocalDate nextMonday = monday.plusWeeks(1);
+
+            List<Object[]> resultList = em.createNativeQuery(
+                    "SELECT " +
+                            "de.color, " +
+                            "date_format(qacl.reg_date, '%Y.%m.%d'), " +
+                            "date_format(qacl.reg_date, '%a') " +
+                            "FROM QnA_Category_Level qacl " +
+                            "JOIN QnA_Category qac ON qacl.category_id = qac.seq " +
+                            "JOIN Default_Enquiry de ON de.seq = qac.title_id " +
+                            "WHERE qac.author_id = :userId " +
+                            "AND qacl.reg_date >= date(:monday) " +
+                            "AND qacl.reg_date < date(:nextMonday) " +
+                            "ORDER BY qacl.reg_date")
+                    .setParameter("userId", userId)
+                    .setParameter("monday", monday.toString())
+                    .setParameter("nextMonday", nextMonday.toString())
+                    .getResultList();
+
+            ArrayList<WeeklyProgressingVO> weeklyProgressingList = new ArrayList<WeeklyProgressingVO>();
+            for(int j = 0, k = 0; j < 7; j++){
+                WeeklyProgressingVO weeklyProgressing;
+
+                if(k < resultList.size() && resultList.get(k)[2].equals(days[j])){
+                    int color = (Integer)resultList.get(k)[0];
+                    k++;
+
+
+                    weeklyProgressing = new WeeklyProgressingVO(colors[color], days[j], true);
+                } else {
+                    weeklyProgressing = new WeeklyProgressingVO(null, days[j], false);
+                }
+                weeklyProgressingList.add(weeklyProgressing);
+            }
+            res.add(weeklyProgressingList);
         }
 
-        return responseWeeklyProgressings;
+        return res;
     }
 
     // 카드를 작성했을 때 userlevel의 level, experience수정
