@@ -14,7 +14,9 @@ import java.time.LocalDateTime;
         @NamedStoredProcedureQuery(
                 name = "getLatestPost",
                 procedureName = "aboutme_rds.getLatestPost",
-                parameters = {}
+                parameters = {
+                        @StoredProcedureParameter(name = "color", mode = ParameterMode.IN, type = Integer.class),
+                }
         ),
         @NamedStoredProcedureQuery(
                 name = "getPopularPost",

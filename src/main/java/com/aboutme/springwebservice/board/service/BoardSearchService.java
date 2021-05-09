@@ -24,6 +24,7 @@ public class BoardSearchService {
 
         List<Object[]> resultList = em
                 .createNamedStoredProcedureQuery("getLatestPost")
+                .setParameter("color", -1)
                 .getResultList();
 
         List postList = new ArrayList<ResponseBoardList>();
