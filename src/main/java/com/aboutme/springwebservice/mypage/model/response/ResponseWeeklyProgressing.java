@@ -14,5 +14,7 @@ import java.util.ArrayList;
 @NoArgsConstructor
 public class ResponseWeeklyProgressing {
     private int code;
+    private String message;
+    private String date;
     private ArrayList<ArrayList<WeeklyProgressingVO>> weeklyProgressingList;
 }

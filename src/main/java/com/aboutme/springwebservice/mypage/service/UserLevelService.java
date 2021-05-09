@@ -1,9 +1,7 @@
 package com.aboutme.springwebservice.mypage.service;
 
-import com.aboutme.springwebservice.mypage.model.RequestWeeklyProgressing;
 import com.aboutme.springwebservice.mypage.model.UserLevelDTO;
 import com.aboutme.springwebservice.mypage.model.WeeklyProgressingVO;
-import com.aboutme.springwebservice.mypage.model.response.ResponseWeeklyProgressing;
 import com.aboutme.springwebservice.mypage.repository.UserLevel;
 import com.aboutme.springwebservice.mypage.repository.UserLevelRepository;
 import lombok.AllArgsConstructor;
@@ -12,13 +10,11 @@ import org.springframework.stereotype.Service;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
-import java.lang.reflect.Array;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 
 @Service
@@ -35,7 +31,6 @@ public class UserLevelService {
         long userId = ulDTO.getUser_id();
         ArrayList<UserLevel> ul = new ArrayList<UserLevel>(5);
 
-        //궁금!
         ul = userLevelRepository.getProgressingByUserId(userId);
 
         ArrayList<UserLevelDTO> resDTOList = new ArrayList<UserLevelDTO>(5);
@@ -52,19 +47,21 @@ public class UserLevelService {
     }
 
     @Transactional
-    public ArrayList<ArrayList<WeeklyProgressingVO>> getWeeklyProgressing(UserLevelDTO ulDTO, RequestWeeklyProgressing req) {
+    public ArrayList<ArrayList<WeeklyProgressingVO>> getWeeklyProgressing(UserLevelDTO ulDTO) {
 
-// TODO: 요청에 이상한 값이 들어왔을 때 에러처리
-        String[] days= {"Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"};
+        String[] days= {"월", "화", "수", "목", "금", "토", "일"};
         String[] colors = {"red", "yellow", "green", "pink", "purple"};
         long userId = ulDTO.getUser_id();
         ArrayList<ArrayList<WeeklyProgressingVO>> res = new ArrayList<ArrayList<WeeklyProgressingVO>>();
 
-        LocalDate monday = LocalDate.of(req.getYear(), req.getMonth(), 1);
+        LocalDate now = LocalDate.now();
+        LocalDate monday = LocalDate.of(now.getYear(), now.getMonth(), 1);
+        long weeks = ChronoUnit.DAYS.between(monday.with(TemporalAdjusters.nextOrSame(DayOfWeek.MONDAY)), now) / 7 + 1;
+
         monday = monday.with(TemporalAdjusters.nextOrSame(DayOfWeek.MONDAY));
         monday = monday.minusWeeks(1);
 
-        for(int i = 0; i < req.getWeek(); i++){
+        for(int i = 0; i < weeks; i++){
             monday = monday.plusWeeks(1);
             LocalDate nextMonday = monday.plusWeeks(1);
 
@@ -91,13 +88,12 @@ public class UserLevelService {
 
                 if(k < resultList.size() && resultList.get(k)[2].equals(days[j])){
                     int color = (Integer)resultList.get(k)[0];
-                    String regDate = (String)resultList.get(k)[1];
                     k++;
 
 
-                    weeklyProgressing = new WeeklyProgressingVO(colors[color], regDate, days[j], true);
+                    weeklyProgressing = new WeeklyProgressingVO(colors[color], days[j], true);
                 } else {
-                    weeklyProgressing = new WeeklyProgressingVO(null, null, days[j], false);
+                    weeklyProgressing = new WeeklyProgressingVO(null, days[j], false);
                 }
                 weeklyProgressingList.add(weeklyProgressing);
             }

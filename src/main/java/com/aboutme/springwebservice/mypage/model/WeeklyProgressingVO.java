@@ -7,7 +7,6 @@ import lombok.Getter;
 @AllArgsConstructor
 public class WeeklyProgressingVO {
     private String color;
-    private String regDate;
     private String day;
     private Boolean isWritten;
 }

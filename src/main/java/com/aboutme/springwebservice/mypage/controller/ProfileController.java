@@ -1,5 +1,6 @@
 package com.aboutme.springwebservice.mypage.controller;
 
+import com.aboutme.springwebservice.domain.UserInfoRepository;
 import com.aboutme.springwebservice.mypage.model.*;
 import com.aboutme.springwebservice.mypage.model.response.ResponseWeeklyProgressing;
 import com.aboutme.springwebservice.mypage.model.response.ResponseProgressing;
@@ -7,6 +8,10 @@ import com.aboutme.springwebservice.mypage.service.UserLevelService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 
 @RestController
@@ -15,11 +20,8 @@ public class ProfileController {
     @Autowired
     private UserLevelService userLevelService;
 
-//    @GetMapping("/")
-//    void test(@RequestParam("userId") Long userId, @RequestParam("color") int color){
-//        userLevelService.updateUserLevelExperience(userId, color, true);
-//        return;
-//    }
+    @Autowired
+    private UserInfoRepository userInfoRepository;
 
     @PutMapping("/MyPage/profile")
     void updateProfile(@RequestBody ProfileVO profileVO)
@@ -30,7 +32,7 @@ public class ProfileController {
     // 진행도
     @GetMapping("/MyPage/Progressing/{userId}")
     public ResponseProgressing getProgressing(@PathVariable("userId") long userId){
-        // TODO: 본인의 마이페이지인지 아닌지에 따라서 수정해야함
+
         UserLevelDTO ulDTO = new UserLevelDTO();
         String[] colors = {"red", "yellow", "green", "pink", "purple"};
 
@@ -52,11 +54,39 @@ public class ProfileController {
 
     //주차별 진행도
     @GetMapping("/MyPage/WeeklyProgressing/{userId}")
-    public ResponseWeeklyProgressing getMonthlyProgressing(@PathVariable("userId") long userId, RequestWeeklyProgressing requestWeeklyProgressing){
+    public ResponseWeeklyProgressing getMonthlyProgressing(@PathVariable("userId") long userId){
+
         UserLevelDTO ulDTO = new UserLevelDTO();
         ulDTO.setUser_id(userId);
-        ArrayList<ArrayList<WeeklyProgressingVO>> resList = userLevelService.getWeeklyProgressing(ulDTO, requestWeeklyProgressing);
+        ArrayList<ArrayList<WeeklyProgressingVO>> resList = userLevelService.getWeeklyProgressing(ulDTO);
 
-        return new ResponseWeeklyProgressing(200, resList);
+        LocalDate now = LocalDate.now();
+        LocalDate monday = LocalDate.of(now.getYear(), now.getMonth(), 1);
+        int weeks = (int)ChronoUnit.DAYS.between(monday.with(TemporalAdjusters.nextOrSame(DayOfWeek.MONDAY)), now) / 7 + 1;
+
+        String date = null;
+        switch(weeks) {
+            case 1: {
+                date = "2021년 " + now.getMonthValue() + "월 첫째주";
+                break;
+            }
+            case 2: {
+                date = "2021년 " + now.getMonthValue() + "월 둘째주";
+                break;
+            }
+            case 3: {
+                date = "2021년 " + now.getMonthValue() + "월 셋째주";
+                break;
+            }
+            case 4: {
+                date = "2021년 " + now.getMonthValue() + "월 넷째주";
+                break;
+            }
+            case 5: {
+                date = "2021년 " + now.getMonthValue() + "월 다섯째주";
+            }
+        }
+
+        return new ResponseWeeklyProgressing(200, "OK", date, resList);
     }
 }
