@@ -28,15 +28,15 @@ public class ResponseCrushList {
 
     @Builder
     public ResponseCrushList(QnACategoryLevel entity, int commentCount, String color, String question){
-        this.question=question;
-        this.color=color;
-        this.boardSeq=entity.getSeq();
-        this.answer=entity.getAnswer();
-        this.level=entity.getLevel();
-        this.likes=entity.getLikes();
-        this.scraps=entity.getScraps();
-        this.updateDate= converTime(entity.getUpdate_date());
-        this.commentCount=commentCount;
+        this.question     = question;
+        this.color        = color;
+        this.boardSeq     = entity.getSeq();
+        this.answer       = entity.getAnswer();
+        this.level        = entity.getLevel();
+        this.likes        = entity.getLikes();
+        this.scraps       = entity.getScraps();
+        this.updateDate   = converTime(entity.getUpdate_date());
+        this.commentCount = commentCount;
     }
 
     private String converTime(LocalDateTime update_date){

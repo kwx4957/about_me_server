@@ -29,7 +29,7 @@ public class UserCrushService {
     @Transactional
     public ResponseEntity<?extends BasicResponse>  crushLists(Long userId, String cursh){
         char likeYn = 'Y', scarpYn = 'Y';
-        int commentCount = 0;
+        int commentCount ;
         List<ResponseCrushList> responseBoardSeq  = new ArrayList<>();
         List<ResponseCrushList> responseCrushList = new ArrayList<>();
         List<BoardInteraction> boardInteractions;
@@ -40,7 +40,7 @@ public class UserCrushService {
         //수정예정   코드 테스트용 유저 삽입
         UserInfo userInfo=UserInfo.builder().seq(userId).build();
 
-        //input:1일 경우 string index out of 0 예외처리 할 예정  케이스 1: 값에 Null 이있어서 케이스 2 likes에 값이 있지만 scarp에 값이 없어서
+        //input:1일 경우 string index out of 0 예외처리 할 예정   likes에 값이 있지만 scarp에 값이 없어서
         if(cursh.equals("likes")){
              boardInteractions =  boardInteractionRepository.findByLikeUserAndLikeYn(userInfo,likeYn);
 

@@ -18,7 +18,7 @@ public class BoardInteractionController {
     @PostMapping("/Board/{seq}/{userId}/likes/")
     public ResponseEntity<String> createLike(@PathVariable long seq,@PathVariable long userId)  //userid->  @AuthenticationPrincipal MemberAdapter memberAdapter
     {
-        boolean result=true;
+        boolean result=true; //추후 수정
         boardInteractionService.addLike(userId,seq);
         return result?new ResponseEntity<>(HttpStatus.OK):new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }

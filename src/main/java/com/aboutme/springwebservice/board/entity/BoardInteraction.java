@@ -21,10 +21,10 @@ public class BoardInteraction extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long seq;
 
-    @Column(name = "like_yn")
+    @Column(name = "like_yn" ,nullable = true)
     private char likeYn;
 
-    @Column(name = "scrap_yn")
+    @Column(name = "scrap_yn" ,nullable = true)
     private char scrapYn;
 
     @ManyToOne(targetEntity = QnACategoryLevel.class,fetch = FetchType.LAZY)
