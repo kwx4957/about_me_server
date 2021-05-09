@@ -17,6 +17,11 @@ import java.time.LocalDateTime;
                 parameters = {}
         ),
         @NamedStoredProcedureQuery(
+                name = "getPopularPost",
+                procedureName = "aboutme_rds.getPopularPost",
+                parameters = {}
+        ),
+        @NamedStoredProcedureQuery(
                 name = QnACategoryLevel.setDaily_step2,
                 procedureName = "aboutme_rds.setDaily2",   //실제 DB쪽 프로시저 이름
                 parameters = {
@@ -30,19 +35,6 @@ import java.time.LocalDateTime;
 @Getter
 @Entity
 @Table(name="QnA_Category_Level")
-@SqlResultSetMapping(
-        name = "BoardList",
-        classes = @ConstructorResult(
-                targetClass = ResponseBoardList.class,
-                columns = {
-                        @ColumnResult(name = "answerId", type = Long.class),
-                        @ColumnResult(name = "color", type = Integer.class),
-                        @ColumnResult(name = "question", type = String.class),
-                        @ColumnResult(name = "userId", type = Long.class),
-                        @ColumnResult(name = "nickname")
-                }
-        )
-)
 public class QnACategoryLevel {
     public static final String setDaily_step2= "aboutme_rds.setDaily2";
 

@@ -1,6 +1,7 @@
 package com.aboutme.springwebservice.mypage.controller;
 
 import com.aboutme.springwebservice.domain.UserInfo;
+import com.aboutme.springwebservice.domain.repository.UserInfoRepository;
 import com.aboutme.springwebservice.entity.BasicResponse;
 import com.aboutme.springwebservice.mypage.model.ProfileVO;
 import com.aboutme.springwebservice.mypage.model.ProgressingVO;
@@ -23,13 +24,12 @@ import java.util.ArrayList;
 
 @RestController
 public class ProfileController {
-    @Autowired
     private UserLevelService userLevelService;
-    @Autowired
     private UserCrushService userCrushService;
 
 //    @Autowired
 //    private UserInfoRepository userInfoRepository;
+    public UserInfoRepository userInfoRepository;
 
     @PutMapping("/MyPage/profile")
     void updateProfile(@RequestBody ProfileVO profileVO)
@@ -40,6 +40,10 @@ public class ProfileController {
     // 진행도
     @GetMapping("/MyPage/Progressing/{userId}")
     public ResponseProgressing getProgressing(@PathVariable("userId") long userId){
+
+        if(!userInfoRepository.existsById(userId)){
+            return new ResponseProgressing(500, "해당 유저가 존재하지 않습니다.", null);
+        }
 
         UserLevelDTO ulDTO = new UserLevelDTO();
         String[] colors = {"red", "yellow", "green", "pink", "purple"};
@@ -57,12 +61,16 @@ public class ProfileController {
             pr.add(rp);
         }
 
-        return new ResponseProgressing(200, pr);
+        return new ResponseProgressing(200, "OK", pr);
     }
 
     //주차별 진행도
     @GetMapping("/MyPage/WeeklyProgressing/{userId}")
     public ResponseWeeklyProgressing getMonthlyProgressing(@PathVariable("userId") long userId){
+
+        if (!userInfoRepository.existsById(userId)) {
+            return new ResponseWeeklyProgressing(500, "해당 유저가 존재하지 않습니다", null, null);
+        }
 
         UserLevelDTO ulDTO = new UserLevelDTO();
         ulDTO.setUser_id(userId);

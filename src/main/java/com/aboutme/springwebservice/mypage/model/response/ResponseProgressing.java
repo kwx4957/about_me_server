@@ -12,5 +12,6 @@ import java.util.ArrayList;
 @AllArgsConstructor
 public class ResponseProgressing {
     private int code;
+    private String message;
     private ArrayList<ProgressingVO> data;
 }

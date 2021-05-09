@@ -3,6 +3,7 @@ package com.aboutme.springwebservice.board.controller;
 import com.aboutme.springwebservice.board.model.BoardVO;
 import com.aboutme.springwebservice.board.model.response.ResponseBoardList;
 import com.aboutme.springwebservice.board.service.BoardSearchService;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -11,10 +12,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
+@AllArgsConstructor
 public class BoardSearchController {
 
-    @Autowired
-    private BoardSearchService boardSearchService;
+    private final BoardSearchService boardSearchService;
 
     @GetMapping("/Board/latestList")
     public ResponseBoardList getLatestList()
@@ -31,9 +32,17 @@ public class BoardSearchController {
     }
 
     @GetMapping("/Board/currentHotList")
-    public List<BoardVO> getCurrentHotList()
+    public ResponseBoardList getCurrentHotList()
     {
-        return null;
+        List postList = boardSearchService.getHotPosts();
+
+        ResponseBoardList res = new ResponseBoardList();
+
+        res.setCode(200);
+        res.setMessage("OK");
+        res.setPostList(postList);
+
+        return res;
     }
 
     @GetMapping("/Board/latestList/Category")
