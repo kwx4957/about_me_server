@@ -16,7 +16,8 @@ public class UserProfile {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long seq;
-    private int userID;
+    @Column
+    private int userId;
     private String intro;
     private String nickname;
     private int color;
@@ -26,9 +27,9 @@ public class UserProfile {
     private LocalDateTime update_date;
 
     @Builder
-    public UserProfile(long seq, int userID,String intro,String nickname,int color,char push_yn){
+    public UserProfile(long seq, int userId,String intro,String nickname,int color,char push_yn){
         this.seq=seq;
-        this.userID=userID;
+        this.userId=userId;
         this.intro=intro;
         this.nickname=nickname;
         this.color=color;

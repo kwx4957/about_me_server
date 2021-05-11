@@ -47,6 +47,7 @@ public class BoardInfoController {
         return null;
     }
 
+    //매일 받는 5색 질문 중 하나 저장
     @PostMapping(value = "/Board/dailyColors" , produces = "application/json;charset=UTF-8")
     public ResponseDailyLists saveDailyColors(@RequestBody BoardVO vo){
         DailyQuestDTO questDTO =  new DailyQuestDTO();
@@ -108,6 +109,7 @@ public class BoardInfoController {
         }
 
     }
+    //매일 받는 5색 질문 중 하나 수정
     @PutMapping("/Board/dailyColors")
     public ResponseDailyLists updateDailyColors(@RequestBody DailyAnswerDTO ans){
             ResponseDailyLists r = new ResponseDailyLists();
@@ -118,6 +120,7 @@ public class BoardInfoController {
         }
         else return boardDailyService.setDailyStep2(ans);
     }
+    //매일 받는 5색 질문 중 하나 삭제
     @DeleteMapping("/Board/dailyColors/{cardSeq}")
     public String deleteDailyColors(@PathVariable(name="cardSeq") int categorySeq){
         JsonObject o = new JsonObject();
@@ -135,6 +138,7 @@ public class BoardInfoController {
         }
         return o.toString();
     }
+    //매일 받는 5색 질문 리스트 제공
     @GetMapping(path = "/Board/dailyColors/{user}")
     public ResponseDailyLists getDailyColors(HttpServletResponse response,@PathVariable(name = "user") int userId){
         if(!infoRepository.existsById((long)userId)){

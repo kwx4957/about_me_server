@@ -1,13 +1,17 @@
 package com.aboutme.springwebservice.mypage.controller;
 
+import com.aboutme.springwebservice.board.entity.QnACategory;
 import com.aboutme.springwebservice.domain.UserInfo;
+import com.aboutme.springwebservice.domain.UserProfile;
 import com.aboutme.springwebservice.domain.repository.UserInfoRepository;
+import com.aboutme.springwebservice.domain.repository.UserProfileRepository;
 import com.aboutme.springwebservice.entity.BasicResponse;
 import com.aboutme.springwebservice.mypage.model.ProfileVO;
 import com.aboutme.springwebservice.mypage.model.ProgressingVO;
 import com.aboutme.springwebservice.mypage.model.UserLevelDTO;
 import com.aboutme.springwebservice.mypage.model.WeeklyProgressingVO;
 import com.aboutme.springwebservice.mypage.model.response.ResponseCrushList;
+import com.aboutme.springwebservice.mypage.model.response.ResponseMyMain;
 import com.aboutme.springwebservice.mypage.model.response.ResponseWeeklyProgressing;
 import com.aboutme.springwebservice.mypage.model.response.ResponseProgressing;
 import com.aboutme.springwebservice.mypage.service.UserCrushService;
@@ -16,11 +20,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 @RestController
 public class ProfileController {
@@ -30,6 +38,10 @@ public class ProfileController {
 //    @Autowired
 //    private UserInfoRepository userInfoRepository;
     public UserInfoRepository userInfoRepository;
+    public UserProfileRepository profileRepository;
+
+    @PersistenceContext
+    private EntityManager em;
 
     @PutMapping("/MyPage/profile")
     void updateProfile(@RequestBody ProfileVO profileVO)
@@ -110,5 +122,42 @@ public class ProfileController {
     @GetMapping("/MyPage/CrushList/{userId}/{crush}")
     public ResponseEntity<? extends BasicResponse> getCrushList(@PathVariable("userId") long userId , @PathVariable("crush") String crush){
         return userCrushService.crushLists(userId,crush);
+    }
+    // 마이버튼 누를시 프로필및 내가쓴글 리스트 출력
+    @GetMapping("/MyPage/{userId}")
+    public ResponseMyMain enterMyProfile(@PathVariable("userId") int userId){
+        Object[] resultList =  (Object[]) em.createNativeQuery(
+                "SELECT "+
+                        "up.nickname, " +
+                        "up.introduce , " +
+                        "case" +
+                        " when ul.color = 0 then 'red' " +
+                        " when ul.color = 1 then 'yellow' " +
+                        " when ul.color = 2 then 'green' " +
+                        " when ul.color = 3 then 'pink' " +
+                        " else 'purple' " +
+                        "end as color, " +
+                        "case " +
+                        " when ul.color = 0 then '열정충만' " +
+                        " when ul.color = 1 then '소소한일상' " +
+                        " when ul.color = 2 then '기억상자' " +
+                        " when ul.color = 3 then '관계의미학' " +
+                        " else '상상플러스' " +
+                        "end as color_tag " +
+                        "FROM User_Level ul " +
+                        "JOIN User_Profile up on up.user_id = ul.user_id " +
+                        "WHERE ul.user_id = :userId " +
+                        "ORDER BY ul.level desc ,ul.experience desc " +
+                        "limit 1 ")
+                .setParameter("userId", userId)
+                .getSingleResult();
+        ResponseMyMain response= new ResponseMyMain();
+        response.setUser_id(userId);
+        response.setNickName(resultList[0].toString());
+        response.setIntroduce(resultList[1].toString());
+        response.setColor(resultList[2].toString());
+        response.setColor_tag(resultList[3].toString());
+        // 여기에 내가쓴글 붙이기;
+        return response;
     }
 }

@@ -36,7 +36,6 @@ public class UserInfo {
     @Column
     LocalDateTime update_date;
 
-
     //long seq는 유저정보를 받기위한 임시
     @Builder
     public UserInfo(long seq,String email, String name, char gender, String login_type, LocalDateTime last_login, LocalDate reg_date, LocalDateTime update_date){
