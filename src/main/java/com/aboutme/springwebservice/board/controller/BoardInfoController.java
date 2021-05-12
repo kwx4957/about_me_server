@@ -1,10 +1,12 @@
 package com.aboutme.springwebservice.board.controller;
 
+import com.aboutme.springwebservice.board.entity.QnACategoryLevel;
 import com.aboutme.springwebservice.board.model.*;
 import com.aboutme.springwebservice.board.model.response.ResponseDailyLists;
 import com.aboutme.springwebservice.board.entity.QnACategory;
 import com.aboutme.springwebservice.board.repository.QnACategoryLevelRepository;
 import com.aboutme.springwebservice.board.repository.QnACategoryRepository;
+import com.aboutme.springwebservice.board.repository.QnACommentRepository;
 import com.aboutme.springwebservice.board.service.BoardDailyService;
 import com.aboutme.springwebservice.domain.repository.UserInfoRepository;
 import com.aboutme.springwebservice.mypage.service.UserLevelService;
@@ -29,6 +31,7 @@ public class BoardInfoController {
     //TODO : list에서 담고 있는게 이 함수가 필요할까 확인 필요.
 
     public QnACategoryLevelRepository answerRepository;
+    public QnACommentRepository commRepository;
     public QnACategoryRepository questionRepository;
     public UserInfoRepository infoRepository;
 
@@ -125,7 +128,9 @@ public class BoardInfoController {
     public String deleteDailyColors(@PathVariable(name="cardSeq") int categorySeq){
         JsonObject o = new JsonObject();
         Optional<QnACategory> quest = questionRepository.findById((long)categorySeq);
+        QnACategoryLevel answer = answerRepository.findBySeq((long)categorySeq);
         if(quest.isPresent()){
+            commRepository.delCardComment((int)answer.getSeq());
             answerRepository.delCardAnswer(categorySeq);
             questionRepository.delCardQuestion(categorySeq);
             levelService.updateUserLevelExperience( quest.get().getAuthor_id(),quest.get().getColor(),true); //진행도 감소
