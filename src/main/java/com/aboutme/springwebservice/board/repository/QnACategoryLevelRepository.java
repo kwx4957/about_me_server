@@ -9,5 +9,8 @@ public interface QnACategoryLevelRepository extends JpaRepository<QnACategoryLev
     @Query(value = "DELETE FROM QnA_Category_Level WHERE category_id = ?1", nativeQuery = true)
     void delCardAnswer(int categorySeq);
 
+    @Query(value = "SELECT seq  FROM QnA_Category_Level WHERE category_id = ?1", nativeQuery = true)
+    int selectCard(int categorySeq);
+
     QnACategoryLevel findBySeq(long seq);
 }

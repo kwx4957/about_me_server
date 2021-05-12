@@ -128,9 +128,9 @@ public class BoardInfoController {
     public String deleteDailyColors(@PathVariable(name="cardSeq") int categorySeq){
         JsonObject o = new JsonObject();
         Optional<QnACategory> quest = questionRepository.findById((long)categorySeq);
-        QnACategoryLevel answer = answerRepository.findBySeq((long)categorySeq);
+
         if(quest.isPresent()){
-            commRepository.delCardComment((int)answer.getSeq());
+            commRepository.delCardComment(answerRepository.selectCard(categorySeq));
             answerRepository.delCardAnswer(categorySeq);
             questionRepository.delCardQuestion(categorySeq);
             levelService.updateUserLevelExperience( quest.get().getAuthor_id(),quest.get().getColor(),true); //진행도 감소
