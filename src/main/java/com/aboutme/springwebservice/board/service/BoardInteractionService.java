@@ -7,6 +7,7 @@ import com.aboutme.springwebservice.board.repository.QnACategoryLevelRepository;
 import com.aboutme.springwebservice.domain.UserInfo;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+
 import javax.transaction.Transactional;
 
 @AllArgsConstructor
@@ -16,39 +17,56 @@ public class BoardInteractionService {
         private  BoardInteractionRepository boardInteractionRepository;
         private  QnACategoryLevelRepository qnACategoryLevelRepository;
 
-        @Transactional //좋아요 삽입 및 수정 총 3N
+        @Transactional //자기글 좋아요 X 글없을경우 에러 표시
         public boolean addLike(long userId, Long seq) {
-
+                //임시 userId;
                 UserInfo likeUser= UserInfo.builder().seq(userId).build();
                 QnACategoryLevel qnACategoryLevel = qnACategoryLevelRepository.findById(seq).orElseThrow(() -> new IllegalArgumentException("해당 글이 존재하지 않습니다"));
-                //값이 존재하면 기존값 이용 없다면 새로운 객체 생성
-                BoardInteraction boardInteraction = boardInteractionRepository.findByBoardAndLikeUser(qnACategoryLevel,likeUser).orElseGet(() -> BoardInteraction.builder()
-                                                                                                                                  .board(qnACategoryLevel)
-                                                                                                                                  .likeUser(likeUser)
-                                                                                                                                  .likeYn('Y')
-                                                                                                                                  .authorId(likeUser)
-                                                                                                                                  .build());
-                if(boardInteraction.getLikeYn() == 'N'){
+
+                BoardInteraction boardInteraction = boardInteractionRepository.findByBoardAndLikeUser(qnACategoryLevel,likeUser)
+                                                                              .orElseGet(()-> BoardInteraction.builder()
+                                                                                             .board(qnACategoryLevel)
+                                                                                             .likeUser(likeUser)
+                                                                                             .likeYn(0)
+                                                                                             .authorId(likeUser)
+                                                                                             .build());
+
+                if(boardInteraction.getLikeYn() == 0){
                     boardInteraction.likeYes();
+                    boardInteraction.getBoard().addLikesCount();
                     boardInteractionRepository.save(boardInteraction);
-                    return false;
+                    return true;
                 }
-                else if(boardInteraction.getLikeYn() == 'Y'){
+                else if(boardInteraction.getLikeYn() == 1){
                     boardInteraction.likeNo();
+                    boardInteraction.getBoard().subtractLikes();
                     boardInteractionRepository.save(boardInteraction);
-                    return false;
+                    return true;
                 }
                 else
                     return false;
         }
-        @Transactional
-        public int countLikes(Long seq){ //+1 or -1으로할지 해당글 조회로 최신화활지
-               //BoardInteraction boardInteractionDTO =boardInteractionRepository.findById(seq);
-               //countby 조희 결과수 출력
-               //글정보 + likeYn Y 값 추출
-                int count=0;
-                return  count;
+        @Transactional //자기글 좋아요 X 글없을경우 에러 표시
+        public boolean addScrap(long userId, Long seq) {
+                UserInfo likeUser= UserInfo.builder().seq(userId).build();
+                QnACategoryLevel qnACategoryLevel = qnACategoryLevelRepository.findById(seq).orElseThrow(() -> new IllegalArgumentException("해당 글이 존재하지 않습니다"));
+
+                BoardInteraction boardInteraction = boardInteractionRepository.findByBoardAndLikeUser(qnACategoryLevel,likeUser)
+                                                                              .orElseGet(()->new BoardInteraction(qnACategoryLevel,likeUser,likeUser,0));
+
+                if(boardInteraction.getScrapYn() == 0){
+                    boardInteraction.scrapYes();
+                    boardInteraction.getBoard().addScrapCount();
+                    boardInteractionRepository.save(boardInteraction);
+                    return true;
+                }
+                else if(boardInteraction.getScrapYn() == 1){
+                    boardInteraction.scrapNo();
+                    boardInteraction.getBoard().subtractScrap();
+                    boardInteractionRepository.save(boardInteraction);
+                    return true;
+                }
+                else
+                    return false;
         }
-
-
 }

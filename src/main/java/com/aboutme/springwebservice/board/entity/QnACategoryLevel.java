@@ -1,6 +1,7 @@
 package com.aboutme.springwebservice.board.entity;
 
 import com.aboutme.springwebservice.board.model.response.ResponseBoardList;
+import com.aboutme.springwebservice.entity.BaseTimeEntity;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -8,6 +9,8 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 
 @NamedStoredProcedureQueries({
@@ -44,7 +47,7 @@ import java.time.LocalDateTime;
 @Getter
 @Entity
 @Table(name="QnA_Category_Level")
-public class QnACategoryLevel {
+public class QnACategoryLevel  {
     public static final String setDaily_step2 = "aboutme_rds.setDaily2";
     public static final String getLatestPost= "aboutme_rds.getLatestPost";
     public static final String getPopularPost= "aboutme_rds.getPopularPost";
@@ -81,5 +84,22 @@ public class QnACategoryLevel {
         this.scraps = scraps;
         this.reg_date = reg_date;
         this.update_date = update_date;
+    }
+
+    public void addLikesCount(){
+        this.likes++;
+    }
+    public void subtractLikes(){
+        if(this.likes>0) {
+            this.likes--;
+        }
+    }
+    public void addScrapCount(){
+        this.scraps++;
+    }
+    public void subtractScrap(){
+        if(this.scraps>0) {
+            this.scraps--;
+        }
     }
 }
