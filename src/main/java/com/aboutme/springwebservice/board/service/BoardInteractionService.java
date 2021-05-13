@@ -27,10 +27,10 @@ public class BoardInteractionService {
         public ResponseEntity<?extends BasicResponse> addLike(BoardInteractionVO vo) {
                 //임시 userId;
                 UserInfo likeUser= UserInfo.builder().seq(vo.getUserId()).build();
-
+                UserInfo authorUser= UserInfo.builder().seq(vo.getAuthorId()).build();
                 QnACategoryLevel qnACategoryLevel = qnACategoryLevelRepository.findById(vo.getQuestId())
                                                                               .orElseThrow(() -> new IllegalArgumentException("해당 글이 존재하지 않습니다"));
-                if(vo.getQuestId() == vo.getUserId()){
+                if( likeUser.getSeq() == authorUser.getSeq() ){
                     return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                                          .body(new ErrorResponse("자신의 글에는 좋아요 할 수 없습니다","400"));
                 }
@@ -39,7 +39,7 @@ public class BoardInteractionService {
                                                                                              .board(qnACategoryLevel)
                                                                                              .likeUser(likeUser)
                                                                                              .likeYn(0)
-                                                                                             .authorId(likeUser)
+                                                                                             .authorId(authorUser)
                                                                                              .build());
 
                 if(boardInteraction.getLikeYn() == 0){
@@ -59,20 +59,20 @@ public class BoardInteractionService {
                                          .body(new ErrorResponse("좋아요를 처리하지 못하였습니다","500"));
         }
 
-        @Transactional //자기글 좋아요 X 글없을경우 에러 표시
+        @Transactional
         public ResponseEntity<?extends BasicResponse> addScrap(BoardInteractionVO vo) {
 
                 UserInfo likeUser= UserInfo.builder().seq(vo.getUserId()).build();
-
+                UserInfo authorUser= UserInfo.builder().seq(vo.getAuthorId()).build();
                 QnACategoryLevel qnACategoryLevel = qnACategoryLevelRepository.findById(vo.getQuestId())
                                                                               .orElseThrow(() -> new IllegalArgumentException("해당 글이 존재하지 않습니다"));
 
-                if(vo.getQuestId() == vo.getUserId()){
+                if(likeUser.getSeq() == authorUser.getSeq() ){
                     return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                                          .body(new ErrorResponse("자신의 글에는 스크랩 할 수 없습니다","400"));
                 }
                 BoardInteraction boardInteraction = boardInteractionRepository.findByBoardAndLikeUser(qnACategoryLevel,likeUser)
-                                                                              .orElseGet(()->new BoardInteraction(qnACategoryLevel,likeUser,likeUser,0));
+                                                                              .orElseGet(()->new BoardInteraction(qnACategoryLevel,likeUser,authorUser,0));
 
                 if(boardInteraction.getScrapYn() == 0){
                     boardInteraction.scrapYes();
