@@ -120,6 +120,7 @@ public class SelfQuestService {
         return responseList;
 
     }
+    
     // private List<QuestionAnswerDTO> toDto(List<SelfQuest> posts) {
     //     return posts.stream()
     //             .map(QuestionAnswerDTO::new)

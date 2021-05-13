@@ -24,6 +24,17 @@ spring :
     username : admin_aboutme
     password : p98cnd!Y
     driver-class-name : org.mariadb.jdbc.Driver
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: aboutme2auth@gmail.com
+    password: ABOUTME!6
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
 logging :
   level :
     org :
