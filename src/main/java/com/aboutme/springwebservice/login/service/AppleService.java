@@ -1,6 +1,7 @@
 package com.aboutme.springwebservice.login.service;
 
 import com.aboutme.springwebservice.login.model.TokenResponse;
+import com.nimbusds.jose.Payload;
 import jdk.nashorn.internal.parser.Token;
 
 import java.util.Map;
@@ -15,6 +16,6 @@ public interface AppleService {
 
     Map<String, String> getLoginMetaInfo();
 
-    String getPayload(String id_token);
+    Payload getPayload(String id_token);
 
 }

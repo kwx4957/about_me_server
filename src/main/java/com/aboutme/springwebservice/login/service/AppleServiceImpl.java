@@ -2,6 +2,7 @@ package com.aboutme.springwebservice.login.service;
 
 import com.aboutme.springwebservice.login.model.TokenResponse;
 import com.aboutme.springwebservice.login.utils.AppleUtils;
+import com.nimbusds.jose.Payload;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +29,8 @@ public class AppleServiceImpl implements AppleService {
 
         return null;
     }
+
+
 
     /**
      * code 가 유효한지 Apple Server에 검증 요청
@@ -84,7 +87,7 @@ public class AppleServiceImpl implements AppleService {
      * @return
      */
     @Override
-    public String getPayload(String id_token) {
-        return appleUtils.decodeFromIdToken(id_token).toString();
+    public Payload getPayload(String id_token) {
+        return appleUtils.decodeFromIdToken(id_token);
     }
 }
