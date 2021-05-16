@@ -13,10 +13,9 @@ public class CommonResponse<T> extends BasicResponse{
 
     public CommonResponse(T body) {
         this.body = body;
-//        if(body instanceof List) {
-//            this.count = ((List<?>)body).size();
-//        } else {
-//            this.count = 1;
-//        }
+    }
+
+    public CommonResponse() {
+        this.body= (T) "ok";
     }
 }

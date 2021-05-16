@@ -31,19 +31,18 @@ public class UserCrushService {
 
     @Transactional
     public ResponseEntity<?extends BasicResponse>  crushLists(Long userId, String cursh){
-        char likeYn = 'Y', scarpYn = 'Y';
-        int commentCount = 0;
+        int likeYn = 1, scarpYn = 1;
+        int commentCount ;
         List<ResponseCrushList> responseBoardSeq  = new ArrayList<>();
         List<ResponseCrushList> responseCrushList = new ArrayList<>();
         List<BoardInteraction> boardInteractions;
         QnACategoryLevel qnACategoryLevel;
         QnACategory qnACategory;
         DefaultEnquiry defaultEnquiry;
-
+        //TODO: 추후 엔티티를 JPA 형식으로 변환후 고려 너무 많은 repository 접속
         //수정예정   코드 테스트용 유저 삽입
         UserInfo userInfo=UserInfo.builder().seq(userId).build();
 
-        //input:1일 경우 string index out of 0 예외처리 할 예정  케이스 1: 값에 Null 이있어서 케이스 2 likes에 값이 있지만 scarp에 값이 없어서
         if(cursh.equals("likes")){
              boardInteractions =  boardInteractionRepository.findByLikeUserAndLikeYn(userInfo,likeYn);
 
@@ -106,14 +105,14 @@ public class UserCrushService {
 
     //색 문자열로 변환
     private String convertColor(int color){
-        String Color="nothing";
+        String colorString="";
         switch (color) {
-            case 0: Color = "red"; break;
-            case 1: Color = "yellow"; break;
-            case 2: Color = "green"; break;
-            case 3: Color = "pink"; break;
-            case 4: Color = "purple"; break;
+            case 0: colorString = "red"; break;
+            case 1: colorString = "yellow"; break;
+            case 2: colorString = "green"; break;
+            case 3: colorString = "pink"; break;
+            case 4: colorString = "purple"; break;
         }
-        return Color;
+        return colorString;
     }
 }

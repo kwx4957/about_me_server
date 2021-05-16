@@ -13,7 +13,7 @@ import java.util.Optional;
 public interface BoardInteractionRepository extends JpaRepository<BoardInteraction,Long>{
     Optional<BoardInteraction> findByBoardAndLikeUser(QnACategoryLevel qnACategoryLevel, UserInfo userInfo);
 
-    List<BoardInteraction> findByLikeUserAndLikeYn(UserInfo userId, char likeYn);
+    List<BoardInteraction> findByLikeUserAndLikeYn(UserInfo userId, int likeYn);
 
-    List<BoardInteraction> findByLikeUserAndScrapYn(UserInfo userId, char scarpYn);
+    List<BoardInteraction> findByLikeUserAndScrapYn(UserInfo userId, int scarpYn);
 }

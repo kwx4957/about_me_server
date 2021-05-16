@@ -56,6 +56,7 @@ public class UserLevelService {
     public ArrayList<ArrayList<WeeklyProgressingVO>> getWeeklyProgressing(UserLevelDTO ulDTO) {
 
         String[] days= {"월", "화", "수", "목", "금", "토", "일"};
+        String[] en_days = {"Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"};
         String[] colors = {"red", "yellow", "green", "pink", "purple"};
         long userId = ulDTO.getUser_id();
         ArrayList<ArrayList<WeeklyProgressingVO>> res = new ArrayList<ArrayList<WeeklyProgressingVO>>();
@@ -92,7 +93,7 @@ public class UserLevelService {
             for(int j = 0, k = 0; j < 7; j++){
                 WeeklyProgressingVO weeklyProgressing;
 
-                if(k < resultList.size() && resultList.get(k)[2].equals(days[j])){
+                if(k < resultList.size() && resultList.get(k)[2].equals(en_days[j])){
                     int color = (Integer)resultList.get(k)[0];
                     k++;
 

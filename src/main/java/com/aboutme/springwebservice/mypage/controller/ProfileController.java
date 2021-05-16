@@ -16,6 +16,7 @@ import com.aboutme.springwebservice.mypage.model.response.ResponseWeeklyProgress
 import com.aboutme.springwebservice.mypage.model.response.ResponseProgressing;
 import com.aboutme.springwebservice.mypage.service.UserCrushService;
 import com.aboutme.springwebservice.mypage.service.UserLevelService;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -31,12 +32,11 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
+@AllArgsConstructor
 public class ProfileController {
     private UserLevelService userLevelService;
     private UserCrushService userCrushService;
 
-//    @Autowired
-//    private UserInfoRepository userInfoRepository;
     public UserInfoRepository userInfoRepository;
     public UserProfileRepository profileRepository;
 
