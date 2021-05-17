@@ -4,6 +4,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -16,13 +17,29 @@ public class UserProfile {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long seq;
-    private int userID;
+
+    @Column(name = "user_id")
+    private long userID;
+
+    @Column(name = "introduce")
     private String intro;
+
+    @Column(name = "nickname")
     private String nickname;
-    private int color;
+
+    @Column(name = "color")
+    private Integer color;
+
+    @Column(name = "theme_comment")
+    private Integer themeComment;
+
+    @Column(name = "push_yn")
     private char push_yn;
 
+    @Column(name = "reg_date")
     private LocalDateTime reg_date;
+
+    @Column(name = "update_time")
     private LocalDateTime update_date;
 
     @Builder

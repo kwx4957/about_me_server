@@ -34,6 +34,21 @@ import java.util.Set;
                 }
         ),
         @NamedStoredProcedureQuery(
+                name = QnACategoryLevel.getMyPostList,
+                procedureName = "aboutme_rds.getMyPost",
+                parameters = {
+                        @StoredProcedureParameter(name = "authorId", mode = ParameterMode.IN, type = Long.class),
+                        @StoredProcedureParameter(name = "color", mode = ParameterMode.IN, type = Integer.class),
+                }
+        ),
+        @NamedStoredProcedureQuery(
+                name = QnACategoryLevel.getPost,
+                procedureName = "aboutme_rds.getPost",
+                parameters = {
+                        @StoredProcedureParameter(name = "answerId", mode = ParameterMode.IN, type = Long.class),
+                }
+        ),
+        @NamedStoredProcedureQuery(
                 name = QnACategoryLevel.setDaily_step2,
                 procedureName = "aboutme_rds.setDaily2",   //실제 DB쪽 프로시저 이름
                 parameters = {
@@ -49,9 +64,11 @@ import java.util.Set;
 @Table(name="QnA_Category_Level")
 public class QnACategoryLevel  {
     public static final String setDaily_step2 = "aboutme_rds.setDaily2";
-    public static final String getLatestPost= "aboutme_rds.getLatestPost";
-    public static final String getPopularPost= "aboutme_rds.getPopularPost";
-    public static final String getMyPopularPostList= "aboutme_rds.getMyPopularPostList";
+    public static final String getLatestPost = "aboutme_rds.getLatestPost";
+    public static final String getPopularPost = "aboutme_rds.getPopularPost";
+    public static final String getPost = "aboutme_rds.getPost";
+    public static final String getMyPostList = "aboutme_rds.getMyPost";
+    public static final String getMyPopularPostList = "aboutme_rds.getMyPopularPostList";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

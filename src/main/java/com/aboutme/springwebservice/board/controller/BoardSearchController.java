@@ -54,7 +54,7 @@ public class BoardSearchController {
     public ResponseBoardList getLatestListSearchedByCategory(@PathVariable("userId") Long userId)
     {
         if(!userInfoRepository.existsById(userId)){
-            return new ResponseBoardList(500, "해당 유저가 존재하지 않습니다.", null);
+            return new ResponseBoardList(400, "해당 유저가 존재하지 않습니다.", null);
         }
 
         List postList = boardSearchService.getMyPopularList();
