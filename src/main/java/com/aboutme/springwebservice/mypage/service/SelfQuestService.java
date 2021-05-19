@@ -51,12 +51,14 @@ public class SelfQuestService {
         spq2.setParameter("_title", qaDto.getTitle());
         spq2.setParameter("_answer", qaDto.getAnswer());
         spq2.setParameter("_theme", qaDto.getTheme());
+        spq2.setParameter("_new", qaDto.getTheme_new());
         spq2.setParameter("_stages", qaDto.getStage());
         spq2.setParameter("_levels", qaDto.getLevels());
         spq2.execute();
 
         String returns = spq2.getOutputParameterValue("RESULT").toString();
         if(returns.equals("수정 완료")) return returns;
+        else if(returns.equals("수정하려는 제목은 이미 존재하는 제목입니다.")) return returns;
         else return "db에 저장 내역이 없습니다.";
     }
     @Transactional(readOnly = true)

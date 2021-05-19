@@ -48,13 +48,16 @@ public class SelfQuestionAnswerController {
 
     //한 주제에 대한 단계별 글 내용 하나 수정
     @PutMapping(value="/MyPage/10Q10A/updateAnswer")
-    public String updateSelfQnA(@RequestBody SelfRequestVO sq) throws JsonProcessingException {
+    public String updateSelfQnA(@RequestBody SelfRequestPutVO sq) throws JsonProcessingException {
         //input json {"user":1,"stage":1,"theme":"진로","answerLists":[{"level":1,"question":"질문이생겼다","answer":"몰라라라랄"}]} 바꿀리스트만 인풋
         QuestionAnswerDTO qaDto = new QuestionAnswerDTO();
 
+        String NEW = (sq.getTheme_new()=="" ||  sq.getTheme_new().equals(sq.getTheme())) ? sq.getTheme() : sq.getTheme_new() ;
+        System.out.println(NEW);
         JsonObject js = new JsonObject();
         qaDto.setUser(sq.getUser());
         qaDto.setTheme(sq.getTheme());
+        qaDto.setTheme_new(NEW);
         qaDto.setTitle(sq.getAnswerLists().get(0).getQuestion());
         qaDto.setAnswer(sq.getAnswerLists().get(0).getAnswer());
         qaDto.setStage(sq.getStage());
