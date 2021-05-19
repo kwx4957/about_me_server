@@ -174,39 +174,87 @@ public class ProfileController {
     }
     // 마이버튼 누를시 프로필및 내가쓴글 리스트 출력
     @GetMapping("/MyPage/{userId}")
-    public ResponseMyMain enterMyProfile(@PathVariable("userId") int userId){
-        Object[] resultList =  (Object[]) em.createNativeQuery(
-                "SELECT "+
-                        "up.nickname, " +
-                        "up.introduce , " +
-                        "case" +
-                        " when ul.color = 0 then 'red' " +
-                        " when ul.color = 1 then 'yellow' " +
-                        " when ul.color = 2 then 'green' " +
-                        " when ul.color = 3 then 'pink' " +
-                        " else 'purple' " +
-                        "end as color, " +
-                        "case " +
-                        " when ul.color = 0 then '열정충만' " +
-                        " when ul.color = 1 then '소소한일상' " +
-                        " when ul.color = 2 then '기억상자' " +
-                        " when ul.color = 3 then '관계의미학' " +
-                        " else '상상플러스' " +
-                        "end as color_tag " +
-                        "FROM User_Level ul " +
-                        "JOIN User_Profile up on up.user_id = ul.user_id " +
-                        "WHERE ul.user_id = :userId " +
-                        "ORDER BY ul.level desc ,ul.experience desc " +
-                        "limit 1 ")
-                .setParameter("userId", userId)
-                .getSingleResult();
-        ResponseMyMain response= new ResponseMyMain();
-        response.setUser_id(userId);
-        response.setNickName(resultList[0].toString());
-        response.setIntroduce(resultList[1].toString());
-        response.setColor(resultList[2].toString());
-        response.setColor_tag(resultList[3].toString());
-        // 여기에 내가쓴글 붙이기;
-        return response;
+    public ResponseMyMain enterMyProfile(@PathVariable("userId") long userId, @RequestParam(value="color", required = false) String color){
+        ResponseMyMain res = new ResponseMyMain();
+        int _color = -1; // color 입력 잘 못 되었는지 확인
+        if (!userInfoRepository.existsById(userId)) {
+            res.setCode(400);
+            res.setMessage("해당 유저가 존재하지 않습니다.");
+
+            return res;
+        }
+
+        if (color == null) {
+            _color = -1;
+        }
+        else {
+            switch (color) {
+                case "red":
+                    _color = 0;
+                    break;
+                case "yellow":
+                    _color = 1;
+                    break;
+                case "green":
+                    _color = 2;
+                    break;
+                case "pink":
+                    _color = 3;
+                    break;
+                case "purple":
+                    _color = 4;
+                    break;
+                default:
+                    res.setCode(400);
+                    res.setMessage("color 입력이 잘 못 되었습니다.");
+
+                    return res;
+            }
+        }
+
+        return myPageService.getMyprofile(userId,_color);
+    }
+    @GetMapping("/MyPage/{userId}/{otherID}")
+    public ResponseMyMain enterOtherProfile(@PathVariable("userId") long userId,
+                                         @PathVariable("otherID") long otherID,
+                                         @RequestParam(value="color", required = false) String color){
+        ResponseMyMain res = new ResponseMyMain();
+        int _color = -1; // color 입력 잘 못 되었는지 확인
+        if (!userInfoRepository.existsById(otherID)) {
+            res.setCode(400);
+            res.setMessage("찾으신 유저가 존재하지 않습니다.");
+
+            return res;
+        }
+
+        if (color == null) {
+            _color = -1;
+        }
+        else {
+            switch (color) {
+                case "red":
+                    _color = 0;
+                    break;
+                case "yellow":
+                    _color = 1;
+                    break;
+                case "green":
+                    _color = 2;
+                    break;
+                case "pink":
+                    _color = 3;
+                    break;
+                case "purple":
+                    _color = 4;
+                    break;
+                default:
+                    res.setCode(400);
+                    res.setMessage("color 입력이 잘 못 되었습니다.");
+
+                    return res;
+            }
+        }
+
+        return myPageService.getOtherProfile(otherID,_color);
     }
 }

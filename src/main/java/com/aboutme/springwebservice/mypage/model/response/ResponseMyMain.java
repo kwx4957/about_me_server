@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 public class ResponseMyMain {
@@ -14,4 +16,5 @@ public class ResponseMyMain {
     String introduce=""; // 한줄소개 -필수
     String color=""; // 주 색 카테고리
     String color_tag=""; // 색 별칭
+    List postList; // 내가쓴글
 }

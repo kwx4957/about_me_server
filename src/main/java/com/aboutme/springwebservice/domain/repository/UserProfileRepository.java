@@ -14,6 +14,7 @@ public interface UserProfileRepository extends JpaRepository<UserProfile, Long> 
 
     @Query(value = "UPDATE User_Profile SET color = ?1 WHERE user_id = ?2", nativeQuery = true)
     void updateUserColor(int color , long user);
+
     List<UserProfile> findByUserID(long authorId);
 
     UserProfile findOneByUserID(long authorId);

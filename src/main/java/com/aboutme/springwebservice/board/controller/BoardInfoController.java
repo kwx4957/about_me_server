@@ -131,7 +131,7 @@ public class BoardInfoController {
         ResponseDailyLists r = new ResponseDailyLists();
 
         if(!infoRepository.existsById((long)vo.getUser())){
-            r.setCode(500);
+            r.setCode(400);
             r.setMessage("해당 유저가 존재하지 않습니다.");
             return r;
         }
@@ -221,7 +221,7 @@ public class BoardInfoController {
     public ResponseDailyLists getDailyColors(HttpServletResponse response,@PathVariable(name = "user") int userId){
         if(!infoRepository.existsById((long)userId)){
             ResponseDailyLists r = new ResponseDailyLists();
-            r.setCode(500);
+            r.setCode(400);
             r.setMessage("해당 유저가 존재하지 않습니다.");
             return r;
         }

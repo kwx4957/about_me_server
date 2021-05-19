@@ -76,7 +76,7 @@ public class SelfQuestionAnswerController {
 
         JsonObject js = new JsonObject();
         if(!infoRepository.existsById((long)userId)){
-            js.addProperty("code",500);
+            js.addProperty("code",400);
             js.addProperty("message","해당 유저가 존재하지 않습니다.");
         }
         else {
@@ -103,7 +103,7 @@ public class SelfQuestionAnswerController {
 
         ResponseSelfQnAList r = new ResponseSelfQnAList();
         if(!infoRepository.existsById((long)userId)){
-            r.setCode(500);
+            r.setCode(400);
             r.setMessage("해당 유저가 존재하지 않습니다.");
         }
         else {
@@ -122,7 +122,7 @@ public class SelfQuestionAnswerController {
     public ResponseThemeList getStageList(@PathVariable(name = "user") int userId){
         if(!infoRepository.existsById((long)userId)){
             ResponseThemeList r = new ResponseThemeList();
-            r.setCode(500);
+            r.setCode(400);
             r.setMessage("해당 유저가 존재하지 않습니다.");
             return r;
         }
