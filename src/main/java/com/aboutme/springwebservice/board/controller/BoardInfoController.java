@@ -2,12 +2,18 @@ package com.aboutme.springwebservice.board.controller;
 
 import com.aboutme.springwebservice.board.entity.QnACategoryLevel;
 import com.aboutme.springwebservice.board.model.*;
+import com.aboutme.springwebservice.board.model.CommentDTO;
+import com.aboutme.springwebservice.board.model.response.ResponseComment;
 import com.aboutme.springwebservice.board.model.response.ResponseDailyLists;
 import com.aboutme.springwebservice.board.entity.QnACategory;
+import com.aboutme.springwebservice.board.model.response.ResponsePost;
+import com.aboutme.springwebservice.board.repository.BoardCommentRepository;
 import com.aboutme.springwebservice.board.repository.QnACategoryLevelRepository;
 import com.aboutme.springwebservice.board.repository.QnACategoryRepository;
 import com.aboutme.springwebservice.board.repository.QnACommentRepository;
 import com.aboutme.springwebservice.board.service.BoardDailyService;
+import com.aboutme.springwebservice.board.service.BoardInfoService;
+import com.aboutme.springwebservice.board.service.BoardCommentService;
 import com.aboutme.springwebservice.domain.repository.UserInfoRepository;
 import com.aboutme.springwebservice.mypage.service.UserLevelService;
 import com.google.gson.JsonObject;
@@ -34,14 +40,81 @@ public class BoardInfoController {
     public QnACommentRepository commRepository;
     public QnACategoryRepository questionRepository;
     public UserInfoRepository infoRepository;
+    public BoardCommentRepository boardCommentRepository;
 
     private final BoardDailyService boardDailyService;
     private final UserLevelService levelService;
+    private final BoardInfoService boardInfoService;
+    private final BoardCommentService boardCommentService;
 
     @GetMapping("/Board/info")
-    public BoardVO getBoardInfo()
+    public ResponsePost getBoardInfo(@RequestParam("answer_id") long answerId)
     {
-        return null;
+        ResponsePost res = new ResponsePost();
+        if(!answerRepository.existsById(answerId)){
+            res.setCode(400);
+            res.setMessage("해당 게시글이 존재하지 않습니다");
+
+            return res;
+        }
+
+        Object post = boardInfoService.getPost(answerId);
+        List<CommentDTO> comments = boardCommentService.getCommentList(answerId);
+
+        return new ResponsePost(200, "OK", post, comments);
+    }
+
+    @PostMapping("/Board/comment")
+    public ResponseComment saveComment(@RequestBody RequestComment requestComment){
+        long userId = requestComment.getAuthorId();
+        long answerId = requestComment.getAnswerId();
+        String comment = requestComment.getComment();
+        ResponseComment res = new ResponseComment();
+        CommentDTO commentDTO = new CommentDTO();
+
+        commentDTO.setAuthorId(userId);
+        commentDTO.setAnswerId(answerId);
+        commentDTO.setComment(comment);
+
+        if (!infoRepository.existsById(userId)) {
+            res.setCode(400);
+            res.setMessage("해당 유저가 존재하지 않습니다.");
+
+            return res;
+        }
+        if (!answerRepository.existsById(answerId)) {
+            res.setCode(400);
+            res.setMessage("해당 게시글이 존재하지 않습니다.");
+
+            return res;
+        }
+
+        CommentDTO c = boardCommentService.saveComment(commentDTO);
+
+        return new ResponseComment(201, "OK", c);
+    }
+
+    @DeleteMapping("/Board/comment")
+    public ResponseComment deleteComment(@RequestParam("commentId") long commentId, @RequestParam("userId") long userId) {
+        ResponseComment res = new ResponseComment();
+        CommentDTO commentDTO = new CommentDTO();
+
+        if (!boardCommentRepository.existsById(commentId)) {
+            res.setCode(400);
+            res.setMessage("해당 댓글이 존재하지 않습니다.");
+
+            return res;
+        }
+        if (!infoRepository.existsById(userId)) {
+            res.setCode(400);
+            res.setMessage("해당 유저가 존재하지 않습니다.");
+
+            return res;
+        }
+
+        commentDTO.setCommentId(commentId);
+
+        return boardCommentService.deleteComment(commentDTO, userId);
     }
 
     @GetMapping("/Board/info/replayList")

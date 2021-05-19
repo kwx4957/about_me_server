@@ -78,7 +78,7 @@ public class AppleController {
         }
 
         //하루단위로 엑세스 토근 업데이트 하는 로직을 만들것인지 확인 필요.
-        return new LoginResponse("실패");;
+        return new LoginResponse("실패");
     }
 
 

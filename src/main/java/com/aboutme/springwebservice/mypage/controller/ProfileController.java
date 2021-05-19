@@ -1,6 +1,6 @@
 package com.aboutme.springwebservice.mypage.controller;
 
-import com.aboutme.springwebservice.board.entity.QnACategory;
+import com.aboutme.springwebservice.board.model.response.ResponseBoardList;
 import com.aboutme.springwebservice.domain.UserInfo;
 import com.aboutme.springwebservice.domain.UserProfile;
 import com.aboutme.springwebservice.domain.repository.UserInfoRepository;
@@ -14,6 +14,7 @@ import com.aboutme.springwebservice.mypage.model.response.ResponseCrushList;
 import com.aboutme.springwebservice.mypage.model.response.ResponseMyMain;
 import com.aboutme.springwebservice.mypage.model.response.ResponseWeeklyProgressing;
 import com.aboutme.springwebservice.mypage.model.response.ResponseProgressing;
+import com.aboutme.springwebservice.mypage.service.MyPageService;
 import com.aboutme.springwebservice.mypage.service.UserCrushService;
 import com.aboutme.springwebservice.mypage.service.UserLevelService;
 import lombok.AllArgsConstructor;
@@ -36,6 +37,7 @@ import java.util.Optional;
 public class ProfileController {
     private UserLevelService userLevelService;
     private UserCrushService userCrushService;
+    private MyPageService myPageService;
 
     public UserInfoRepository userInfoRepository;
     public UserProfileRepository profileRepository;
@@ -54,7 +56,7 @@ public class ProfileController {
     public ResponseProgressing getProgressing(@PathVariable("userId") long userId){
 
         if(!userInfoRepository.existsById(userId)){
-            return new ResponseProgressing(500, "해당 유저가 존재하지 않습니다.", null);
+            return new ResponseProgressing(400, "해당 유저가 존재하지 않습니다.", null);
         }
 
         UserLevelDTO ulDTO = new UserLevelDTO();
@@ -81,7 +83,7 @@ public class ProfileController {
     public ResponseWeeklyProgressing getMonthlyProgressing(@PathVariable("userId") long userId){
 
         if (!userInfoRepository.existsById(userId)) {
-            return new ResponseWeeklyProgressing(500, "해당 유저가 존재하지 않습니다", null, null);
+            return new ResponseWeeklyProgressing(400, "해당 유저가 존재하지 않습니다", null, null);
         }
 
         UserLevelDTO ulDTO = new UserLevelDTO();
@@ -116,6 +118,53 @@ public class ProfileController {
         }
 
         return new ResponseWeeklyProgressing(200, "OK", date, resList);
+    }
+
+    @GetMapping("/MyPage/PostList/{userId}")
+    public ResponseBoardList getMyPostList(@PathVariable("userId") long userId, @RequestParam(value="color", required = false) String color) {
+        ResponseBoardList res = new ResponseBoardList();
+        int _color; // color 입력 잘 못 되었는지 확인
+
+        if (!userInfoRepository.existsById(userId)) {
+            res.setCode(400);
+            res.setMessage("해당 유저가 존재하지 않습니다.");
+
+            return res;
+        }
+
+        if (color == null) {
+            _color = -1;
+        }
+        else {
+            switch (color) {
+                case "red":
+                    _color = 0;
+                    break;
+                case "yellow":
+                    _color = 1;
+                    break;
+                case "green":
+                    _color = 2;
+                    break;
+                case "pink":
+                    _color = 3;
+                    break;
+                case "purple":
+                    _color = 4;
+                    break;
+                default:
+                    res.setCode(400);
+                    res.setMessage("color 입력이 잘 못 되었습니다.");
+
+                    return res;
+            }
+        }
+
+        res.setCode(200);
+        res.setMessage("OK");
+        res.setPostList(myPageService.getMyPostList(userId, _color));
+
+        return res;
     }
 
     //crush는 likes or scarp 으로 접근

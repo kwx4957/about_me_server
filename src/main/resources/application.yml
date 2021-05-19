@@ -43,3 +43,18 @@ logging :
         type :
           descriptor :
             sql : TRACE
+APPLE:
+  AUTH:
+    TOKEN:
+      URL: https://appleid.apple.com/auth/token
+  PUBLICKEY:
+    URL: https://appleid.apple.com/auth/keys
+  ISS: https://appleid.apple.com
+  WEBSITE:
+    URL: Website_URLs
+  AUD: Client_ID
+  TEAM:
+    ID: Team_ID
+  KEY:
+    ID: Key_ID
+    PATH: static/AuthKey_KeyID.p8
