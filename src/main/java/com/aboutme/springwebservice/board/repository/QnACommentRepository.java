@@ -7,4 +7,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface QnACommentRepository extends JpaRepository<BoardComment,Long> {
     int countByCategoryLevelId(long seq);
+
 }

@@ -23,13 +23,13 @@ public class BoardInteractionService {
         private  BoardInteractionRepository boardInteractionRepository;
         private  QnACategoryLevelRepository qnACategoryLevelRepository;
 
-        @Transactional //추후 작성자 유저아이디 별도 분류해야함
+        @Transactional
         public ResponseEntity<?extends BasicResponse> addLike(BoardInteractionVO vo) {
                 //임시 userId;
                 UserInfo likeUser= UserInfo.builder().seq(vo.getUserId()).build();
                 UserInfo authorUser= UserInfo.builder().seq(vo.getAuthorId()).build();
                 QnACategoryLevel qnACategoryLevel = qnACategoryLevelRepository.findById(vo.getQuestId())
-                                                                              .orElseThrow(() -> new IllegalArgumentException("해당 글이 존재하지 않습니다"));
+                                                                              .orElseThrow(()-> new IllegalArgumentException("해당 글이 존재하지 않습니다"));
                 if( likeUser.getSeq() == authorUser.getSeq() ){
                     return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                                          .body(new ErrorResponse("자신의 글에는 좋아요 할 수 없습니다","400"));
@@ -65,7 +65,7 @@ public class BoardInteractionService {
                 UserInfo likeUser= UserInfo.builder().seq(vo.getUserId()).build();
                 UserInfo authorUser= UserInfo.builder().seq(vo.getAuthorId()).build();
                 QnACategoryLevel qnACategoryLevel = qnACategoryLevelRepository.findById(vo.getQuestId())
-                                                                              .orElseThrow(() -> new IllegalArgumentException("해당 글이 존재하지 않습니다"));
+                                                                              .orElseThrow(() -> new IllegalStateException("해당 글이 존재하지 않습니다"));
 
                 if(likeUser.getSeq() == authorUser.getSeq() ){
                     return ResponseEntity.status(HttpStatus.BAD_REQUEST)
