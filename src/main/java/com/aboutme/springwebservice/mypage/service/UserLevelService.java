@@ -1,20 +1,25 @@
 package com.aboutme.springwebservice.mypage.service;
 
+import com.aboutme.springwebservice.domain.repository.UserProfileRepository;
+import com.aboutme.springwebservice.mypage.model.ProfileVO;
 import com.aboutme.springwebservice.mypage.model.UserLevelDTO;
 import com.aboutme.springwebservice.mypage.model.WeeklyProgressingVO;
 import com.aboutme.springwebservice.mypage.entity.UserLevel;
+import com.aboutme.springwebservice.mypage.model.response.ResponseMyMain;
+import com.aboutme.springwebservice.mypage.model.response.ResponseThemeList;
 import com.aboutme.springwebservice.mypage.repository.UserLevelRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -22,6 +27,7 @@ import java.util.List;
 public class UserLevelService {
 
     private UserLevelRepository userLevelRepository;
+    private UserProfileRepository profileRepository;
 
     @PersistenceContext
     private EntityManager em;
@@ -138,4 +144,5 @@ public class UserLevelService {
 
         return;
     }
+
 }

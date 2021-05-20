@@ -27,6 +27,7 @@ import javax.persistence.*;
                         @StoredProcedureParameter(name = "_title",mode = ParameterMode.IN, type = String.class),
                         @StoredProcedureParameter(name = "_answer",mode = ParameterMode.IN, type = String.class),
                         @StoredProcedureParameter(name = "_theme",mode = ParameterMode.IN, type = String.class),
+                        @StoredProcedureParameter(name = "_new",mode = ParameterMode.IN, type = String.class),
                         @StoredProcedureParameter(name = "_stages",mode = ParameterMode.IN, type = Integer.class),
                         @StoredProcedureParameter(name = "_levels",mode = ParameterMode.IN, type = Integer.class),
                         @StoredProcedureParameter(name = "RESULT",mode = ParameterMode.OUT, type = String.class)
@@ -66,16 +67,18 @@ public class SelfQuest {
     private String title;
 
     private String answer;
+    private String theme2;
 
     private long stage;
     private long levels;
 
     @Builder
-    public SelfQuest(int user,String theme,String title, String answer,int stage, int levels){
+    public SelfQuest(int user,String theme,String theme2,String title, String answer,int stage, int levels){
         this.user=user;
         this.title=title;
         this.answer =answer;
         this.theme =theme;
+        this.theme2=theme2;
         this.stage=stage;
         this.levels=levels;
     }

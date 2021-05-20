@@ -1,5 +1,6 @@
 package com.aboutme.springwebservice.board.controller;
 
+import com.aboutme.springwebservice.board.entity.QnACategoryLevel;
 import com.aboutme.springwebservice.board.model.*;
 import com.aboutme.springwebservice.board.model.CommentDTO;
 import com.aboutme.springwebservice.board.model.response.ResponseComment;
@@ -9,6 +10,7 @@ import com.aboutme.springwebservice.board.model.response.ResponsePost;
 import com.aboutme.springwebservice.board.repository.BoardCommentRepository;
 import com.aboutme.springwebservice.board.repository.QnACategoryLevelRepository;
 import com.aboutme.springwebservice.board.repository.QnACategoryRepository;
+import com.aboutme.springwebservice.board.repository.QnACommentRepository;
 import com.aboutme.springwebservice.board.service.BoardDailyService;
 import com.aboutme.springwebservice.board.service.BoardInfoService;
 import com.aboutme.springwebservice.board.service.BoardCommentService;
@@ -35,6 +37,7 @@ public class BoardInfoController {
     //TODO : list에서 담고 있는게 이 함수가 필요할까 확인 필요.
 
     public QnACategoryLevelRepository answerRepository;
+    public QnACommentRepository commRepository;
     public QnACategoryRepository questionRepository;
     public UserInfoRepository infoRepository;
     public BoardCommentRepository boardCommentRepository;
@@ -120,6 +123,7 @@ public class BoardInfoController {
         return null;
     }
 
+    //매일 받는 5색 질문 중 하나 저장
     @PostMapping(value = "/Board/dailyColors" , produces = "application/json;charset=UTF-8")
     public ResponseDailyLists saveDailyColors(@RequestBody BoardVO vo){
         DailyQuestDTO questDTO =  new DailyQuestDTO();
@@ -127,7 +131,7 @@ public class BoardInfoController {
         ResponseDailyLists r = new ResponseDailyLists();
 
         if(!infoRepository.existsById((long)vo.getUser())){
-            r.setCode(500);
+            r.setCode(400);
             r.setMessage("해당 유저가 존재하지 않습니다.");
             return r;
         }
@@ -181,6 +185,7 @@ public class BoardInfoController {
         }
 
     }
+    //매일 받는 5색 질문 중 하나 수정
     @PutMapping("/Board/dailyColors")
     public ResponseDailyLists updateDailyColors(@RequestBody DailyAnswerDTO ans){
             ResponseDailyLists r = new ResponseDailyLists();
@@ -191,11 +196,14 @@ public class BoardInfoController {
         }
         else return boardDailyService.setDailyStep2(ans);
     }
+    //매일 받는 5색 질문 중 하나 삭제
     @DeleteMapping("/Board/dailyColors/{cardSeq}")
     public String deleteDailyColors(@PathVariable(name="cardSeq") int categorySeq){
         JsonObject o = new JsonObject();
         Optional<QnACategory> quest = questionRepository.findById((long)categorySeq);
+
         if(quest.isPresent()){
+            commRepository.delCardComment(answerRepository.selectCard(categorySeq));
             answerRepository.delCardAnswer(categorySeq);
             questionRepository.delCardQuestion(categorySeq);
             levelService.updateUserLevelExperience( quest.get().getAuthor_id(),quest.get().getColor(),true); //진행도 감소
@@ -208,11 +216,12 @@ public class BoardInfoController {
         }
         return o.toString();
     }
+    //매일 받는 5색 질문 리스트 제공
     @GetMapping(path = "/Board/dailyColors/{user}")
     public ResponseDailyLists getDailyColors(HttpServletResponse response,@PathVariable(name = "user") int userId){
         if(!infoRepository.existsById((long)userId)){
             ResponseDailyLists r = new ResponseDailyLists();
-            r.setCode(500);
+            r.setCode(400);
             r.setMessage("해당 유저가 존재하지 않습니다.");
             return r;
         }

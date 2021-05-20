@@ -2,13 +2,16 @@ package com.aboutme.springwebservice.mypage.controller;
 
 import com.aboutme.springwebservice.board.model.response.ResponseBoardList;
 import com.aboutme.springwebservice.domain.UserInfo;
+import com.aboutme.springwebservice.domain.UserProfile;
 import com.aboutme.springwebservice.domain.repository.UserInfoRepository;
+import com.aboutme.springwebservice.domain.repository.UserProfileRepository;
 import com.aboutme.springwebservice.entity.BasicResponse;
 import com.aboutme.springwebservice.mypage.model.ProfileVO;
 import com.aboutme.springwebservice.mypage.model.ProgressingVO;
 import com.aboutme.springwebservice.mypage.model.UserLevelDTO;
 import com.aboutme.springwebservice.mypage.model.WeeklyProgressingVO;
 import com.aboutme.springwebservice.mypage.model.response.ResponseCrushList;
+import com.aboutme.springwebservice.mypage.model.response.ResponseMyMain;
 import com.aboutme.springwebservice.mypage.model.response.ResponseWeeklyProgressing;
 import com.aboutme.springwebservice.mypage.model.response.ResponseProgressing;
 import com.aboutme.springwebservice.mypage.service.MyPageService;
@@ -19,11 +22,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 @RestController
 @AllArgsConstructor
@@ -33,6 +40,10 @@ public class ProfileController {
     private MyPageService myPageService;
 
     public UserInfoRepository userInfoRepository;
+    public UserProfileRepository profileRepository;
+
+    @PersistenceContext
+    private EntityManager em;
 
     @PutMapping("/MyPage/profile")
     void updateProfile(@RequestBody ProfileVO profileVO)
@@ -160,5 +171,90 @@ public class ProfileController {
     @GetMapping("/MyPage/CrushList/{userId}/{crush}")
     public ResponseEntity<? extends BasicResponse> getCrushList(@PathVariable("userId") long userId , @PathVariable("crush") String crush){
         return userCrushService.crushLists(userId,crush);
+    }
+    // 마이버튼 누를시 프로필및 내가쓴글 리스트 출력
+    @GetMapping("/MyPage/{userId}")
+    public ResponseMyMain enterMyProfile(@PathVariable("userId") long userId, @RequestParam(value="color", required = false) String color){
+        ResponseMyMain res = new ResponseMyMain();
+        int _color = -1; // color 입력 잘 못 되었는지 확인
+        if (!userInfoRepository.existsById(userId)) {
+            res.setCode(400);
+            res.setMessage("해당 유저가 존재하지 않습니다.");
+
+            return res;
+        }
+
+        if (color == null) {
+            _color = -1;
+        }
+        else {
+            switch (color) {
+                case "red":
+                    _color = 0;
+                    break;
+                case "yellow":
+                    _color = 1;
+                    break;
+                case "green":
+                    _color = 2;
+                    break;
+                case "pink":
+                    _color = 3;
+                    break;
+                case "purple":
+                    _color = 4;
+                    break;
+                default:
+                    res.setCode(400);
+                    res.setMessage("color 입력이 잘 못 되었습니다.");
+
+                    return res;
+            }
+        }
+
+        return myPageService.getMyprofile(userId,_color);
+    }
+    @GetMapping("/MyPage/{userId}/{otherID}")
+    public ResponseMyMain enterOtherProfile(@PathVariable("userId") long userId,
+                                         @PathVariable("otherID") long otherID,
+                                         @RequestParam(value="color", required = false) String color){
+        ResponseMyMain res = new ResponseMyMain();
+        int _color = -1; // color 입력 잘 못 되었는지 확인
+        if (!userInfoRepository.existsById(otherID)) {
+            res.setCode(400);
+            res.setMessage("찾으신 유저가 존재하지 않습니다.");
+
+            return res;
+        }
+
+        if (color == null) {
+            _color = -1;
+        }
+        else {
+            switch (color) {
+                case "red":
+                    _color = 0;
+                    break;
+                case "yellow":
+                    _color = 1;
+                    break;
+                case "green":
+                    _color = 2;
+                    break;
+                case "pink":
+                    _color = 3;
+                    break;
+                case "purple":
+                    _color = 4;
+                    break;
+                default:
+                    res.setCode(400);
+                    res.setMessage("color 입력이 잘 못 되었습니다.");
+
+                    return res;
+            }
+        }
+
+        return myPageService.getOtherProfile(otherID,_color);
     }
 }
