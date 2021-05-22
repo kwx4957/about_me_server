@@ -29,6 +29,7 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -169,8 +170,40 @@ public class ProfileController {
 
     //crush는 likes or scarp 으로 접근
     @GetMapping("/MyPage/CrushList/{userId}/{crush}")
-    public ResponseEntity<? extends BasicResponse> getCrushList(@PathVariable("userId") long userId , @PathVariable("crush") String crush){
-        return userCrushService.crushLists(userId,crush);
+    public ResponseMyMain getCrushList(@PathVariable("userId") long userId ,
+                                                                @PathVariable("crush") String crush,
+                                                                @RequestParam(value="color", required = false) String color)
+    {
+        ResponseMyMain page = enterMyProfile(userId,color);
+        int _color = 0;
+
+        if (color == null) {
+            _color = -1;
+        }
+        else {
+            switch (color) {
+                case "red":
+                    _color = 0;
+                    break;
+                case "yellow":
+                    _color = 1;
+                    break;
+                case "green":
+                    _color = 2;
+                    break;
+                case "pink":
+                    _color = 3;
+                    break;
+                case "purple":
+                    _color = 4;
+                    break;
+                default:
+                    _color = -1;
+            }
+        }
+        page.setMessage("ok");
+        page.setPostList(Collections.singletonList(userCrushService.crushLists(userId, crush, _color).getBody()));
+        return page;
     }
     // 마이버튼 누를시 프로필및 내가쓴글 리스트 출력
     @GetMapping("/MyPage/{userId}")

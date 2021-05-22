@@ -30,7 +30,7 @@ public class UserCrushService {
     private DefaultEnquiryRepository defaultEnquiryRepository;
 
     @Transactional
-    public ResponseEntity<?extends BasicResponse>  crushLists(Long userId, String cursh){
+    public ResponseEntity<?extends BasicResponse>  crushLists(Long userId, String cursh,int color){
         int likeYn = 1, scarpYn = 1;
         int commentCount ;
         List<ResponseCrushList> responseBoardSeq  = new ArrayList<>();
@@ -60,8 +60,11 @@ public class UserCrushService {
                 commentCount     = qnACommentRepository.countByCategoryLevelId(responseBoardSeq.get(i).getBoardSeq());
                 qnACategory      = qnACategoryRepository.findBySeq(qnACategoryLevel.getCategory_id());
                 defaultEnquiry   = defaultEnquiryRepository.findBySeq(qnACategory.getTitle_id());
-                responseCrushList.add(this.convertList(qnACategoryLevel, commentCount,
-                                                       convertColor(qnACategory.getColor()), defaultEnquiry.getQuestion()));
+                if(qnACategory.getColor()==color||color==-1){
+                    responseCrushList.add(this.convertList(qnACategoryLevel, commentCount,
+                            convertColor(qnACategory.getColor()), defaultEnquiry.getQuestion()));
+                }
+
             }
 
         }else if(cursh.equals("scrap")){
@@ -78,11 +81,14 @@ public class UserCrushService {
 
             for(int i=0; i<responseBoardSeq.size(); i++) {
                 qnACategoryLevel = qnACategoryLevelRepository.findBySeq(responseBoardSeq.get(i).getBoardSeq());
-                commentCount     = qnACommentRepository.countByCategoryLevelId(responseBoardSeq.get(i).getBoardSeq());
-                qnACategory      = qnACategoryRepository.findBySeq(qnACategoryLevel.getCategory_id());
-                defaultEnquiry   = defaultEnquiryRepository.findBySeq(qnACategory.getTitle_id());
-                responseCrushList.add(this.convertList(qnACategoryLevel, commentCount,
-                                                       convertColor(qnACategory.getColor()), defaultEnquiry.getQuestion()));
+                commentCount = qnACommentRepository.countByCategoryLevelId(responseBoardSeq.get(i).getBoardSeq());
+                qnACategory = qnACategoryRepository.findBySeq(qnACategoryLevel.getCategory_id());
+                defaultEnquiry = defaultEnquiryRepository.findBySeq(qnACategory.getTitle_id());
+                if (qnACategory.getColor() == color||color==-1) {
+                    responseCrushList.add(this.convertList(qnACategoryLevel, commentCount,
+                            convertColor(qnACategory.getColor()), defaultEnquiry.getQuestion()));
+
+                }
             }
 
         }else{
