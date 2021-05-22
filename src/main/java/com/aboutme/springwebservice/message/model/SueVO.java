@@ -4,7 +4,8 @@ import lombok.Data;
 
 @Data
 public class SueVO {
-    String suedUserId;
-    String targetQuestionId;
-    String suedReason;
+    int suedUserId;
+    long targetQuestionId;
+    String sueReason;
+    String sueType;
 }
