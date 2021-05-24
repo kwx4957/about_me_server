@@ -6,21 +6,26 @@ import com.aboutme.springwebservice.board.repository.QnACategoryLevelRepository;
 import com.aboutme.springwebservice.board.repository.QnACategoryRepository;
 import com.aboutme.springwebservice.board.repository.QnACommentRepository;
 import com.aboutme.springwebservice.domain.UserInfo;
+import com.aboutme.springwebservice.domain.UserProfile;
+import com.aboutme.springwebservice.domain.repository.UserProfileRepository;
 import com.aboutme.springwebservice.entity.BasicResponse;
 import com.aboutme.springwebservice.entity.CommonResponse;
 import com.aboutme.springwebservice.entity.ErrorResponse;
 import com.aboutme.springwebservice.message.entity.DefaultReasonList;
 import com.aboutme.springwebservice.message.entity.UserVoc;
+import com.aboutme.springwebservice.message.model.SueJudgeVO;
 import com.aboutme.springwebservice.message.model.SueVO;
+import com.aboutme.springwebservice.message.model.response.ResponseSueList;
 import com.aboutme.springwebservice.message.repository.SueRepository;
 import lombok.AllArgsConstructor;
-import org.junit.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @AllArgsConstructor
@@ -31,6 +36,7 @@ public class SueService {
     private final QnACategoryLevelRepository qnACategoryLevelRepository;
     private final QnACommentRepository qnACommentRepository;
     private final QnACategoryRepository qnACategoryRepository;
+    private final UserProfileRepository userProfileRepository;
 
     @Transactional
     public ResponseEntity<?extends BasicResponse> sue(@RequestBody SueVO vo) {
@@ -42,16 +48,16 @@ public class SueService {
 
         if(vo.getSueType().equals("board")){
 
-            UserVoc userVoc= UserVoc.builder().authorId(authorId).questionId(qnACategoryLevel).reasonId(new DefaultReasonList(vo.getSueReason())).build();
+            UserVoc userVoc = UserVoc.builder().authorId(authorId).questionId(qnACategoryLevel).reasonId(new DefaultReasonList(vo.getSueReason())).build();
             sueRepository.save(userVoc);
             return  ResponseEntity.ok().body( new CommonResponse<>("신고가 접수되었습니다."));
 
         }else if(vo.getSueType().equals("comment")){
 
-            Optional<QnACategory> qnACategory=qnACategoryRepository.findById(qnACategoryLevel.getCategory_id());
+            Optional<QnACategory> qnACategory = qnACategoryRepository.findById(qnACategoryLevel.getCategory_id());
             qnACategory.orElseThrow(()-> new IllegalArgumentException("해당 댓글이 존재하지 않습니다"));
 
-            if(qnACategory.get().getAuthor_id()!=authorId.getSeq()){
+            if(qnACategory.get().getAuthor_id() != authorId.getSeq()){
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body( new ErrorResponse("글 작성자가 아닙니다.","403"));
             }
 
@@ -62,19 +68,52 @@ public class SueService {
 
     }
 
-//    @Transactional
-//    public List<SueVO> sueList(){
-//        //닉네임+닉네임 +내용으로 신고하엿습니다
-//        List<SueVO> suevo  = new ArrayList<>();
-//
-//        suevo.add(sueRepository.findAll(
-//
-//        ));
-//        retrun
-//    }
-//
-//    private SueVO convertSueVo(UserVoc userVoc){
-//        return SueVO. build();
-//    }
+    @Transactional
+    public ResponseEntity<?extends BasicResponse> sueList() {
+        List<ResponseSueList> responseSueLists  = new ArrayList<>();
+        List<UserVoc> userVoc;
+        UserProfile authorId;
+        UserProfile suedId;
+        QnACategory qnACategory;
+        QnACategoryLevel qnACategoryLevel;
+        userVoc = sueRepository.findAll(); //신고글이 없는경우 예외
+
+        for(UserVoc userVoc1:userVoc) {
+            qnACategory      = qnACategoryRepository.findBySeq(userVoc1.getQuestionId().getCategory_id());
+            authorId         = userProfileRepository.findOneByUserID(userVoc1.getAuthorId().getSeq());
+            suedId           = userProfileRepository.findOneByUserID(qnACategory.getAuthor_id());
+            qnACategoryLevel = qnACategoryLevelRepository.findBySeq(userVoc1.getAuthorId().getSeq()); //글이없는경우 예외처리
+            responseSueLists.add(ResponseSueList.builder().qnACategoryLevel(userVoc1.getQuestionId())
+                                                          .sue(this.convertSue(authorId ,suedId ,userVoc1.getReasonId()))
+                                                          .contents(qnACategoryLevel)
+                                                          .build());
+        }
+
+       return ResponseEntity.ok().body( new CommonResponse<List>(responseSueLists));
+   }
+
+   @Transactional
+   public ResponseEntity<?extends BasicResponse>  sueBoard(@RequestBody SueJudgeVO vo){
+
+        if(vo.getSueReason().equals("delete")){
+            qnACategoryLevelRepository.deleteById(vo.getBoardSeq()); //글이없는경우 예외처리
+            return ResponseEntity.ok().body( new CommonResponse<>("신고 접수된 글이 삭제되었습니다."));
+
+        }else if(vo.getSueReason().equals("reject")){
+            sueRepository.deleteByquestionId(QnACategoryLevel.builder().seq(vo.getBoardSeq()).build());  //글이없는경우 예외처리
+            return ResponseEntity.ok().body( new CommonResponse<>("신고 접수된 글이 반려되었습니다. "));
+
+        }else{
+            return  ResponseEntity.status(HttpStatus.BAD_REQUEST).body( new ErrorResponse("잘못된 입력입니다."));
+        }
+   }
+
+   private String convertSue(UserProfile authorId, UserProfile suedId, DefaultReasonList reason ){
+        String sueReason;
+        sueReason= authorId.getNickname()+"님이 "+suedId.getNickname()+"님을 "+reason.getReason()+"내용으로 신고하였습니다";
+        return sueReason;
+   }
 
 }
+
+
