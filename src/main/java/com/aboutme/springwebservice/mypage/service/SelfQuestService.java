@@ -78,7 +78,7 @@ public class SelfQuestService {
 
         String returns = spq2.getOutputParameterValue("RESULT").toString();
         System.out.println(returns);
-        if(returns.equals("수정 완료")||returns.equals("저장 완료")) return returns;
+        if(returns.equals("수정 완료")||returns.equals("저장 완료")||returns.equals("ok")) return returns;
         else if(returns.equals("수정하려는 제목은 이미 존재하는 제목입니다.")) return returns;
         else return "db에 저장/수정시 오류가 생겼습니다.";
 

@@ -46,7 +46,7 @@ public class SelfQuestionAnswerController {
             if(result.equals("저장 완료"))
                 js.addProperty("code",200);
             else  js.addProperty("code",500);
-            js.addProperty("message ", result);
+            js.addProperty("message", result);
         }
 
         return js.toString();
@@ -72,7 +72,7 @@ public class SelfQuestionAnswerController {
         if(result.equals("수정 완료"))
             js.addProperty("code",200);
         else  js.addProperty("code",500);
-        js.addProperty("message ", result);
+        js.addProperty("message", result);
 
         return js.toString();
     }
@@ -95,10 +95,10 @@ public class SelfQuestionAnswerController {
             qaDto.setLevels(sq.getAnswerLists().get(i).getLevel());
             //dto  생성자 순대로 할라고 이렇게 했슴
             String result =selfQuestService.storeSelfQuestionAnswer(qaDto);
-            if(result.equals("저장 완료")||result.equals("수정 완료"))
+            if(result.equals("저장 완료")||result.equals("수정 완료")||result.equals("ok"))
                 js.addProperty("code",200);
             else  js.addProperty("code",500);
-            js.addProperty("message ", result);
+            js.addProperty("message", result);
         }
 
         if(sq.getTheme_new() == null ||sq.getTheme_new().equals("") || sq.getTheme_new().equals(sq.getTheme())){
