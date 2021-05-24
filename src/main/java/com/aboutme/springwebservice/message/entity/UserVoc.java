@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "User_VOC")
-public class UserVoc {
+public class UserVoc  {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,7 +27,7 @@ public class UserVoc {
     @JoinColumn(name = "reason_id" )
     private DefaultReasonList reasonId;
 
-    @ManyToOne(targetEntity = QnACategoryLevel.class, fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    @ManyToOne(targetEntity = QnACategoryLevel.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "question_id" ,nullable = false)
     private QnACategoryLevel questionId;
 
