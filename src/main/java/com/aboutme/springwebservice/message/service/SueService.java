@@ -82,7 +82,7 @@ public class SueService {
             qnACategory      = qnACategoryRepository.findBySeq(userVoc1.getQuestionId().getCategory_id());
             authorId         = userProfileRepository.findOneByUserID(userVoc1.getAuthorId().getSeq());
             suedId           = userProfileRepository.findOneByUserID(qnACategory.getAuthor_id());
-            qnACategoryLevel = qnACategoryLevelRepository.findBySeq(userVoc1.getAuthorId().getSeq()); //글이없는경우 예외처리
+            qnACategoryLevel = qnACategoryLevelRepository.findBySeq(userVoc1.getAuthorId().getSeq());
             responseSueLists.add(ResponseSueList.builder().qnACategoryLevel(userVoc1.getQuestionId())
                                                           .sue(this.convertSue(authorId ,suedId ,userVoc1.getReasonId()))
                                                           .contents(qnACategoryLevel)
@@ -96,7 +96,7 @@ public class SueService {
    public ResponseEntity<?extends BasicResponse>  sueBoard(@RequestBody SueJudgeVO vo){
 
         if(vo.getSueReason().equals("delete")){
-            qnACategoryLevelRepository.deleteById(vo.getBoardSeq()); //글이없는경우 예외처리
+            qnACategoryLevelRepository.deleteById(vo.getBoardSeq()); //GlobalExceptionHander  EmptyResultDataAccessException
             return ResponseEntity.ok().body( new CommonResponse<>("신고 접수된 글이 삭제되었습니다."));
 
         }else if(vo.getSueReason().equals("reject")){

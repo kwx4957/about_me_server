@@ -5,6 +5,7 @@ import com.aboutme.springwebservice.message.model.SueJudgeVO;
 import com.aboutme.springwebservice.message.model.SueVO;
 import com.aboutme.springwebservice.message.service.SueService;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,7 +20,7 @@ public class SueController {
 
         //어드민 계정임을 확인하고 return
 //        if(user!=admin) {
-//            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrorResponse("인가된 사용자가 아닙니다.", "401"));
+//           return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorResponse("인가된 사용자가 아닙니다.", "401"));
 //        }
 
       return  sueService.sueList();
@@ -30,7 +31,7 @@ public class SueController {
 
         //어드민 계정임을 확인하고 return
     //        if(user!=admin) {
-    //            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrorResponse("인가된 사용자가 아닙니다.", "401"));
+    //            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorResponse("인가된 사용자가 아닙니다.", "401"));
     //        }
        return sueService.sueBoard(vo);
     }
