@@ -98,6 +98,7 @@ public class BoardSearchController {
         return res;
     }
 
+    // 취향순 글 보기
     @GetMapping("/Board/latestList/Category/{userId}")
     public ResponseBoardList getLatestListSearchedByCategory(@PathVariable("userId") Long userId,@RequestParam(value="color", required = false) String color)
     {
