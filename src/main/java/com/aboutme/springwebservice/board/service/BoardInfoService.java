@@ -41,6 +41,7 @@ public class BoardInfoService {
                 .getResultList();
 
         BoardInteraction boardInteraction = null;
+        // 좋아요 또는 스크랩한 기록이 있을 때
         if(Integer.parseInt(resultList.get(0)[8].toString()) > 0 || Integer.parseInt(resultList.get(0)[9].toString()) > 0){
             QnACategoryLevel qnACategoryLevel = qnACategoryLevelRepository.findBySeq(Long.parseLong(resultList.get(0)[0].toString()));
 
@@ -90,10 +91,10 @@ public class BoardInfoService {
 
         Long categoryId = qnACategoryLevel.getCategoryId();
 
-        List<QnACategoryLevel> qnACategoryList = qnACategoryLevelRepository.findByCategoryId(categoryId);
+        List<QnACategoryLevel> qnACategoryList = qnACategoryLevelRepository.findByCategoryIdOrderByLevelDesc(categoryId);
 
         for(QnACategoryLevel q : qnACategoryList) {
-            if(q.getSeq() == answerId) { // 해당 글을 제외
+            if(q.getSeq() >= answerId) { // 해당 글을 제외
                 continue;
             }
             LinkedHashMap<String, Object> map = new LinkedHashMap<String, Object>();
