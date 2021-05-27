@@ -40,11 +40,12 @@ public class BoardInteraction extends BaseTimeEntity {
     private UserInfo authorId;
 
     @Builder
-    public BoardInteraction(QnACategoryLevel board, UserInfo likeUser, int likeYn, UserInfo authorId){
+    public BoardInteraction(QnACategoryLevel board, UserInfo likeUser, int likeYn, UserInfo authorId, int scrapYn){
         this.board=board;
         this.likeUser=likeUser;
         this.likeYn=likeYn;
         this.authorId=authorId;
+        this.scrapYn=scrapYn;
     }
 
     public BoardInteraction(QnACategoryLevel board, UserInfo likeUser,UserInfo authorId, int scrapYn){

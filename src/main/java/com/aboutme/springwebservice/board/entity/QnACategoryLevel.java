@@ -74,16 +74,22 @@ public class QnACategoryLevel  {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long seq;
 
-    private long category_id;
+    @Column(name ="category_id")
+    private long categoryId;
 
+    @Column(name ="answer")
     private String answer;
 
+    @Column(name ="level")
     private int level;
 
+    @Column(name ="share_yn")
     private char share_yn;
 
+    @Column(name ="likes")
     private int likes;
 
+    @Column(name ="scraps")
     private int scraps;
 
     private LocalDateTime reg_date;
@@ -91,9 +97,9 @@ public class QnACategoryLevel  {
     private LocalDateTime update_date;
 
     @Builder
-    public QnACategoryLevel(long seq, long category_id, String answer, int level, char share_yn, int likes, int scraps, LocalDateTime reg_date, LocalDateTime update_date){
+    public QnACategoryLevel(long seq, long categoryId, String answer, int level, char share_yn, int likes, int scraps, LocalDateTime reg_date, LocalDateTime update_date){
         this.seq = seq;
-        this.category_id = category_id;
+        this.categoryId = categoryId;
         this.answer = answer;
         this.level = level;
         this.share_yn = share_yn;

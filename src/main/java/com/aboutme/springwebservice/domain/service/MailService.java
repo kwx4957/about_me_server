@@ -21,7 +21,6 @@ import java.util.Optional;
 @Service
 public class MailService {
 
-    @Autowired
     private JavaMailSender mailSender;
 
     private static final String FROM_ADDRESS = "aboutme2auth@gmail.com";

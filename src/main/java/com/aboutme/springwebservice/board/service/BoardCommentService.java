@@ -64,7 +64,7 @@ public class BoardCommentService {
         commentDTO = new CommentDTO(boardComment);
 
         QnACategoryLevel qnACategoryLevel = qnACategoryLevelRepository.findBySeq(commentDTO.getAnswerId());
-        QnACategory qnACategory = qnACategoryRepository.findBySeq(qnACategoryLevel.getCategory_id());
+        QnACategory qnACategory = qnACategoryRepository.findBySeq(qnACategoryLevel.getCategoryId());
 
         if (userId == qnACategory.getAuthor_id()) {
             boardCommentRepository.deleteById(boardComment.getSeq());
