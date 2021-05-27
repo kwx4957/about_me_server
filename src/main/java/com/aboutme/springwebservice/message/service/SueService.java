@@ -42,7 +42,7 @@ public class SueService {
     public ResponseEntity<?extends BasicResponse> sue(@RequestBody SueVO vo) {
 
         QnACategoryLevel qnACategoryLevel = qnACategoryLevelRepository.findById(vo.getTargetQuestionId())
-                                                                      .orElseThrow(()-> new IllegalArgumentException("해당 글이 존재하지 않습니다"));
+                                                                      .orElseThrow(()-> new IllegalArgumentException("해당 글이 존재하지 않습니다."));
         //임시Id
         UserInfo authorId = UserInfo.builder().seq(vo.getSuedUserId()).build();
 
@@ -55,7 +55,7 @@ public class SueService {
         }else if(vo.getSueType().equals("comment")){
 
             Optional<QnACategory> qnACategory = qnACategoryRepository.findById(qnACategoryLevel.getCategory_id());
-            qnACategory.orElseThrow(()-> new IllegalArgumentException("해당 댓글이 존재하지 않습니다"));
+            qnACategory.orElseThrow(()-> new IllegalArgumentException("해당 댓글이 존재하지 않습니다."));
 
             if(qnACategory.get().getAuthor_id() != authorId.getSeq()){
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body( new ErrorResponse("글 작성자가 아닙니다.","403"));
@@ -76,7 +76,11 @@ public class SueService {
         UserProfile suedId;
         QnACategory qnACategory;
         QnACategoryLevel qnACategoryLevel;
-        userVoc = sueRepository.findAll(); //신고글이 없는경우 예외
+        userVoc = sueRepository.findAll();
+
+        if(userVoc.isEmpty()){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body( new ErrorResponse("신고된 글이 존재하지 않습니다."));
+        }
 
         for(UserVoc userVoc1:userVoc) {
             qnACategory      = qnACategoryRepository.findBySeq(userVoc1.getQuestionId().getCategory_id());
