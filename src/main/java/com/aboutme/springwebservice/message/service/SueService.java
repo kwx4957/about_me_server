@@ -48,7 +48,7 @@ public class SueService {
 
         }else if(vo.getSueType().equals("comment")){
 
-            Optional<QnACategory> qnACategory=qnACategoryRepository.findById(qnACategoryLevel.getCategory_id());
+            Optional<QnACategory> qnACategory=qnACategoryRepository.findById(qnACategoryLevel.getCategoryId());
             qnACategory.orElseThrow(()-> new IllegalArgumentException("해당 댓글이 존재하지 않습니다"));
 
             if(qnACategory.get().getAuthor_id()!=authorId.getSeq()){

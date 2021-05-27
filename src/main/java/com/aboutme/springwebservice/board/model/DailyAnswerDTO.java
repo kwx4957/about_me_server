@@ -26,7 +26,7 @@ public class DailyAnswerDTO {
     }
     public QnACategoryLevel toEntity() {
         return QnACategoryLevel.builder()
-                .category_id(category_seq)
+                .categoryId(category_seq)
                 .level(level)
                 .answer(answer)
                 .share_yn(share)

@@ -3,6 +3,7 @@ package com.aboutme.springwebservice.board.controller;
 import com.aboutme.springwebservice.board.entity.QnACategoryLevel;
 import com.aboutme.springwebservice.board.model.*;
 import com.aboutme.springwebservice.board.model.CommentDTO;
+import com.aboutme.springwebservice.board.model.response.ResponseBoardList;
 import com.aboutme.springwebservice.board.model.response.ResponseComment;
 import com.aboutme.springwebservice.board.model.response.ResponseDailyLists;
 import com.aboutme.springwebservice.board.entity.QnACategory;
@@ -48,7 +49,7 @@ public class BoardInfoController {
     private final BoardCommentService boardCommentService;
 
     @GetMapping("/Board/info")
-    public ResponsePost getBoardInfo(@RequestParam("answer_id") long answerId)
+    public ResponsePost getBoardInfo(@RequestParam("answer_id") long answerId, @RequestParam("user_id") long userId)
     {
         ResponsePost res = new ResponsePost();
         if(!answerRepository.existsById(answerId)){
@@ -58,11 +59,39 @@ public class BoardInfoController {
             return res;
         }
 
-        Object post = boardInfoService.getPost(answerId);
+        Object post = boardInfoService.getPost(userId, answerId);
         List<CommentDTO> comments = boardCommentService.getCommentList(answerId);
 
         return new ResponsePost(200, "OK", post, comments);
     }
+
+    //지난 응답 화면
+    @GetMapping("/Board/pastResponse")
+    public ResponseBoardList getPastResponse(@RequestParam("answer_id") long answerId)
+    {
+        ResponseBoardList res = new ResponseBoardList();
+        if(!answerRepository.existsById(answerId)){
+            res.setCode(400);
+            res.setMessage("해당 게시글이 존재하지 않습니다");
+
+            return res;
+        }
+
+        List postList = boardInfoService.getPastResponse(answerId);
+        if(postList.size() == 0){
+            res.setCode(200);
+            res.setMessage("작성한 답변이 없습니다");
+
+            return res;
+        }
+
+        res.setCode(200);
+        res.setMessage("OK");
+        res.setPostList(postList);
+
+        return res;
+    }
+
 
     @PostMapping("/Board/comment")
     public ResponseComment saveComment(@RequestBody RequestComment requestComment){
