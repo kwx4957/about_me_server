@@ -11,6 +11,9 @@ import com.google.gson.JsonObject;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
 @RestController
 @AllArgsConstructor
 public class SelfQuestionAnswerController {
@@ -19,6 +22,9 @@ public class SelfQuestionAnswerController {
     public UserInfoRepository infoRepository;
 
     private final SelfQuestService selfQuestService;
+
+    @PersistenceContext
+    EntityManager em;
 
     //한 주제에 대한 단계별 글 내용 다 생성
     @PostMapping(value="/MyPage/10Q10A/answer")
@@ -40,7 +46,7 @@ public class SelfQuestionAnswerController {
             if(result.equals("저장 완료"))
                 js.addProperty("code",200);
             else  js.addProperty("code",500);
-            js.addProperty("message ", result);
+            js.addProperty("message", result);
         }
 
         return js.toString();
@@ -66,11 +72,43 @@ public class SelfQuestionAnswerController {
         if(result.equals("수정 완료"))
             js.addProperty("code",200);
         else  js.addProperty("code",500);
-        js.addProperty("message ", result);
+        js.addProperty("message", result);
 
         return js.toString();
     }
 
+    //한 주제에 대한 단계별 글 내용 다 생성 및 수정 다하기
+    @PostMapping(value="/MyPage/10Q10A/answer2")
+    public String storeSelfQnA(@RequestBody SelfRequestPutVO sq) throws JsonProcessingException {
+        //input json {"user":1,"stage":1,"theme":"진로","answerLists":[{"level":1,"question":"질문이생겼다","answer":"몰라라라랄"},{...}]}
+        QuestionAnswerDTO qaDto = new QuestionAnswerDTO();
+        String NEW = (sq.getTheme_new()=="" ||  sq.getTheme_new().equals(sq.getTheme())) ? sq.getTheme() : sq.getTheme_new() ;
+
+        JsonObject js = new JsonObject();
+        for(int i=0;i<sq.getAnswerLists().size();i++) {
+            qaDto.setUser(sq.getUser());
+            qaDto.setTheme(sq.getTheme());
+            qaDto.setTheme_new(NEW);
+            qaDto.setTitle(sq.getAnswerLists().get(i).getQuestion());
+            qaDto.setAnswer(sq.getAnswerLists().get(i).getAnswer());
+            qaDto.setStage(sq.getStage());
+            qaDto.setLevels(sq.getAnswerLists().get(i).getLevel());
+            //dto  생성자 순대로 할라고 이렇게 했슴
+            String result =selfQuestService.storeSelfQuestionAnswer(qaDto);
+            if(result.equals("저장 완료")||result.equals("수정 완료")||result.equals("ok"))
+                js.addProperty("code",200);
+            else  js.addProperty("code",500);
+            js.addProperty("message", result);
+        }
+
+        if(sq.getTheme_new() == null ||sq.getTheme_new().equals("") || sq.getTheme_new().equals(sq.getTheme())){
+            return js.toString();
+        }else{
+            selfQuestRepository.updateTitle(sq.getTheme_new(),sq.getUser(),sq.getTheme(),sq.getStage());
+            return js.toString();
+        }
+
+    }
     //한 주제에 대한 단계별 글 내용 다 삭제
     @DeleteMapping(path = "/MyPage/10Q10A/{user}/{stage}/{theme}")
     public String deleteSelfQuestTheme( @PathVariable(name = "user") int userId,

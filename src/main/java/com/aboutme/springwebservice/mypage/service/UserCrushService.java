@@ -24,10 +24,10 @@ import java.util.List;
 @Service
 public class UserCrushService {
     private final BoardInteractionRepository boardInteractionRepository;
-    private QnACategoryLevelRepository qnACategoryLevelRepository;
-    private QnACommentRepository qnACommentRepository;
-    private QnACategoryRepository qnACategoryRepository;
-    private DefaultEnquiryRepository defaultEnquiryRepository;
+    private final QnACategoryLevelRepository qnACategoryLevelRepository;
+    private final QnACommentRepository qnACommentRepository;
+    private final QnACategoryRepository qnACategoryRepository;
+    private final DefaultEnquiryRepository defaultEnquiryRepository;
 
     @Transactional
     public ResponseEntity<?extends BasicResponse>  crushLists(Long userId, String cursh,int color){
