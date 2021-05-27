@@ -6,6 +6,7 @@ import com.aboutme.springwebservice.domain.UserProfile;
 import com.aboutme.springwebservice.domain.repository.UserInfoRepository;
 import com.aboutme.springwebservice.domain.repository.UserProfileRepository;
 import com.aboutme.springwebservice.entity.BasicResponse;
+import com.aboutme.springwebservice.mypage.domainModel.Profile;
 import com.aboutme.springwebservice.mypage.model.ProfileVO;
 import com.aboutme.springwebservice.mypage.model.ProgressingVO;
 import com.aboutme.springwebservice.mypage.model.UserLevelDTO;
@@ -14,6 +15,7 @@ import com.aboutme.springwebservice.mypage.model.response.ResponseCrushList;
 import com.aboutme.springwebservice.mypage.model.response.ResponseMyMain;
 import com.aboutme.springwebservice.mypage.model.response.ResponseWeeklyProgressing;
 import com.aboutme.springwebservice.mypage.model.response.ResponseProgressing;
+import com.aboutme.springwebservice.mypage.repository.ProfileRepository;
 import com.aboutme.springwebservice.mypage.service.MyPageService;
 import com.aboutme.springwebservice.mypage.service.UserCrushService;
 import com.aboutme.springwebservice.mypage.service.UserLevelService;
@@ -50,6 +52,14 @@ public class ProfileController {
     void updateProfile(@RequestBody ProfileVO profileVO)
     {
         //TODO : 업데이트 구현
+
+
+    }
+
+    @GetMapping("/MyPage/profile")
+    UserProfile getProfile(@PathVariable("userId") long userId)
+    {
+        return profileRepository.findOneByUserID(userId);
     }
 
     // 진행도
