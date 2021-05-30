@@ -124,4 +124,29 @@ public class BoardSearchController {
         }
         return res;
     }
+    @GetMapping("/Board/{userId}/search")
+    public ResponseBoardList getSearchList(@PathVariable("userId") int userId,@RequestParam(value="keyword", required = false) String keyword){
+
+        String isTrim = keyword==null ? "" : keyword.trim();
+        ResponseBoardList res = new ResponseBoardList();
+        if(!userInfoRepository.existsById((long)userId)){
+            return new ResponseBoardList(400, "해당 유저가 존재하지 않습니다.", null);
+        }
+
+        if(keyword==null||isTrim.equals("")||keyword.length()<2|| isTrim.length()<2){
+            return new ResponseBoardList(400, "두 글자 이상의 검색어를 입력해주세요", null);
+        }
+
+        List postList = boardSearchService.getSearchList(userId,keyword);
+        if(postList.size()>0){
+            res.setCode(200);
+            res.setMessage("OK");
+            res.setPostList(postList);
+        }
+        else{
+            res.setCode(200);
+            res.setMessage("검색하신 내용이 담긴 게시글이 존재하지 않습니다.");
+        }
+        return res;
+    }
 }

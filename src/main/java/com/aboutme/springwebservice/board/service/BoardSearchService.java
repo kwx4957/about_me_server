@@ -14,9 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
+import java.util.*;
 
 @Service
 @AllArgsConstructor
@@ -201,5 +199,17 @@ public class BoardSearchService {
         }
 
         return postList;
+    }
+
+    public List getSearchList(int id, CharSequence keyword){
+
+        List list = getLatestPost(id, -1);
+        for(Iterator<LinkedHashMap<String, String>> it = list.iterator(); it.hasNext() ; ){
+            LinkedHashMap<String, String> search = it.next();
+            if(!search.get("answer").contains(keyword)){
+                it.remove();
+            }
+        }
+       return list;
     }
 }

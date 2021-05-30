@@ -54,8 +54,7 @@ public class SueService {
 
         }else if(vo.getSueType().equals("comment")){
 
-            Optional<QnACategory> qnACategory=qnACategoryRepository.findById(qnACategoryLevel.getCategoryId());
-
+            Optional<QnACategory> qnACategory = qnACategoryRepository.findById(qnACategoryLevel.getCategoryId());
             qnACategory.orElseThrow(()-> new IllegalArgumentException("해당 댓글이 존재하지 않습니다"));
 
             if(qnACategory.get().getAuthor_id() != authorId.getSeq()){
@@ -77,7 +76,11 @@ public class SueService {
         UserProfile suedId;
         QnACategory qnACategory;
         QnACategoryLevel qnACategoryLevel;
-        userVoc = sueRepository.findAll(); //신고글이 없는경우 예외
+        userVoc = sueRepository.findAll();
+
+        if(userVoc.isEmpty()){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body( new ErrorResponse("신고된 글이 존재하지 않습니다."));
+        }
 
         for(UserVoc userVoc1:userVoc) {
             qnACategory      = qnACategoryRepository.findBySeq(userVoc1.getQuestionId().getCategoryId());

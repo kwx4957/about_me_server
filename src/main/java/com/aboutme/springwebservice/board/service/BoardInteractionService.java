@@ -65,7 +65,7 @@ public class BoardInteractionService {
                 UserInfo likeUser= UserInfo.builder().seq(vo.getUserId()).build();
                 UserInfo authorUser= UserInfo.builder().seq(vo.getAuthorId()).build();
                 QnACategoryLevel qnACategoryLevel = qnACategoryLevelRepository.findById(vo.getQuestId())
-                                                                              .orElseThrow(() -> new IllegalStateException("해당 글이 존재하지 않습니다"));
+                                                                              .orElseThrow(() -> new IllegalArgumentException("해당 글이 존재하지 않습니다"));
 
                 if(likeUser.getSeq() == authorUser.getSeq() ){
                     return ResponseEntity.status(HttpStatus.BAD_REQUEST)
