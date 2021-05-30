@@ -37,6 +37,9 @@ dependencies {
     compile 'org.apache.httpcomponents:httpclient:4.5'
     implementation 'junit:junit:4.12'
     implementation group: 'net.minidev', name: 'json-smart', version: '2.3'
+    //json web token
+    compile group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
 }
 
 test {
