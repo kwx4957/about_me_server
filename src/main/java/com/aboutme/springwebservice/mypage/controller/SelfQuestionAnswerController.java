@@ -150,8 +150,8 @@ public class SelfQuestionAnswerController {
         else {
             r = selfQuestService.getSelfQuestList(userId, stage, theme);
             if (r.getAnswerLists().isEmpty()) {
-                r.setCode(500);
-                r.setMessage("해당 " + theme + " Ver." + stage + " 에 대한 내용이 존재하지 않습니다.");
+                r.setCode(200);
+                r.setMessage("데이터가 없습니다.");
                 return r;
             }
         }
@@ -161,13 +161,22 @@ public class SelfQuestionAnswerController {
     //주제별 리스트 get 프로시져 결과이미지: https://prnt.sc/120sewo
     @GetMapping(value = "MyPage/10Q10A/theme/{user}")
     public ResponseThemeList getStageList(@PathVariable(name = "user") int userId){
+        ResponseThemeList r = new ResponseThemeList();
+
         if(!infoRepository.existsById((long)userId)){
-            ResponseThemeList r = new ResponseThemeList();
             r.setCode(400);
             r.setMessage("해당 유저가 존재하지 않습니다.");
             return r;
         }
-        return selfQuestService.getThemeList(userId);
+        else {
+            r = selfQuestService.getThemeList(userId);
+            if (r.getThemeLists().isEmpty()) {
+                r.setCode(200);
+                r.setMessage("데이터가 없습니다.");
+                return r;
+            }
+        }
+        return r;
     }
 
     //TODO: 자문자답리스트, 관심리스트, 진행도 표출

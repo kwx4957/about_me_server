@@ -69,7 +69,7 @@ public class BoardSearchController {
         }
         else{
             res.setCode(200);
-            res.setMessage("최신글이 없습니다.");
+            res.setMessage("데이터가 없습니다");
         }
 
         return res;
@@ -92,7 +92,7 @@ public class BoardSearchController {
         }
         else{
             res.setCode(200);
-            res.setMessage("현재 인기글이 없습니다.");
+            res.setMessage("데이터가 없습니다");
         }
 
         return res;
@@ -120,7 +120,7 @@ public class BoardSearchController {
         }
         else{
             res.setCode(200);
-            res.setMessage("나의 컬러인 ["+myPageService.getMyprofile(userId,-1).getColor()+"] 로 작성된 글이 없습니다.");
+            res.setMessage("데이터가 없습니다");
         }
         return res;
     }
@@ -145,7 +145,7 @@ public class BoardSearchController {
         }
         else{
             res.setCode(200);
-            res.setMessage("검색하신 내용이 담긴 게시글이 존재하지 않습니다.");
+            res.setMessage("데이터가 없습니다");
         }
         return res;
     }
