@@ -2,6 +2,7 @@ package com.aboutme.springwebservice.auth.naver.security;
 
 import com.aboutme.springwebservice.auth.naver.security.filter.JwtTokenFilterConfigurer;
 import com.aboutme.springwebservice.auth.naver.security.service.JwtTokenProvider;
+import org.apache.http.protocol.HTTP;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -36,23 +37,24 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         //No session will be created by spring security
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-
         http.formLogin().disable()
                 .csrf().disable()
                 .headers().frameOptions().disable()
                 .and()
                     .authorizeRequests()
-                    .antMatchers("auth/signup").permitAll()
-                    .antMatchers("auth/signin").permitAll()
-                    .antMatchers("/auth/test").permitAll()
+                    .antMatchers("/auth/signup").permitAll()
+                    .antMatchers("/auth/signin").permitAll()
                     .antMatchers("/auth/refresh").authenticated()
-                    .antMatchers("/v1/**").authenticated();
+                    .anyRequest().authenticated();
 
         http.apply(new JwtTokenFilterConfigurer(jwtTokenProvider));
     }
 
     @Override
     public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers(AUTH_WHITELIST);
+        web.ignoring().antMatchers(AUTH_WHITELIST)
+        .and().ignoring().antMatchers("/auth/signup")
+        .and().ignoring().antMatchers("/auth/signin")
+        .and().ignoring().antMatchers("/**");
     }
 }
