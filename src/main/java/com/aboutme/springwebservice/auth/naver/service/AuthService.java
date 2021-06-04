@@ -6,7 +6,7 @@ import com.aboutme.springwebservice.auth.naver.exception.UserNotFoundException;
 import com.aboutme.springwebservice.auth.naver.model.NaverUser;
 import com.aboutme.springwebservice.auth.naver.model.response.AuthResponse;
 import com.aboutme.springwebservice.auth.naver.model.response.SignUpResponse;
-import com.aboutme.springwebservice.auth.naver.security.service.JwtTokenProvider;
+import com.aboutme.springwebservice.auth.security.service.JwtTokenProvider;
 import com.aboutme.springwebservice.domain.UserProfile;
 import com.aboutme.springwebservice.domain.repository.UserProfileRepository;
 import org.springframework.beans.factory.annotation.Autowired;

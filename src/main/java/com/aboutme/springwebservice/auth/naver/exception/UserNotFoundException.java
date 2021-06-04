@@ -1,6 +1,5 @@
 package com.aboutme.springwebservice.auth.naver.exception;
 
-import com.aboutme.springwebservice.auth.domainModel.User;
 import org.springframework.http.HttpStatus;
 
 public class UserNotFoundException extends BaseException{
