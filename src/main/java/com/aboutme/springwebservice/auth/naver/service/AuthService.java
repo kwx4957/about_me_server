@@ -8,15 +8,12 @@ import com.aboutme.springwebservice.auth.naver.model.response.AuthResponse;
 import com.aboutme.springwebservice.auth.naver.model.response.SignUpResponse;
 import com.aboutme.springwebservice.auth.naver.security.service.JwtTokenProvider;
 import com.aboutme.springwebservice.domain.UserProfile;
-import com.aboutme.springwebservice.user.entitiy.AppUserInfo;
-import com.aboutme.springwebservice.user.repository.AppUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Service
 public class AuthService {
