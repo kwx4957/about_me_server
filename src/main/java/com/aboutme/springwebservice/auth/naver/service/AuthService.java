@@ -8,6 +8,7 @@ import com.aboutme.springwebservice.auth.naver.model.response.AuthResponse;
 import com.aboutme.springwebservice.auth.naver.model.response.SignUpResponse;
 import com.aboutme.springwebservice.auth.naver.security.service.JwtTokenProvider;
 import com.aboutme.springwebservice.domain.UserProfile;
+import com.aboutme.springwebservice.domain.repository.UserProfileRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -21,7 +22,7 @@ public class AuthService {
     private NaverClient naverClient;
 
     @Autowired
-    private AppUserRepository userRepository;
+    private UserProfileRepository userRepository;
 
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
@@ -54,8 +55,11 @@ public class AuthService {
         NaverUser naverUser = naverClient.profile(naverAccessToken);
 
         System.out.println("[NaverUser] " + naverUser.toString());
-        UserProfile appUserInfo = userRepository.findByUserID(naverUser.getUserId())
-                .orElseThrow(() -> new UserNotFoundException("user not found"));
+        UserProfile appUserInfo = userRepository.findOneByUserID(naverUser.getUserId());
+
+        if (appUserInfo == null) {
+            throw new UserNotFoundException("user not found");
+        }
 
         return new AuthResponse(
                 jwtTokenProvider.createToken(appUserInfo.getUserID())
