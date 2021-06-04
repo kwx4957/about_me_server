@@ -1,6 +1,6 @@
 package com.aboutme.springwebservice.auth.security.filter;
 
-import com.aboutme.springwebservice.auth.naver.exception.BaseException;
+import com.aboutme.springwebservice.auth.exception.BaseException;
 import com.aboutme.springwebservice.auth.security.service.JwtTokenProvider;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;

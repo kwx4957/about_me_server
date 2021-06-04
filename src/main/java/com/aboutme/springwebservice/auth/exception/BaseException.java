@@ -1,4 +1,4 @@
-package com.aboutme.springwebservice.auth.naver.exception;
+package com.aboutme.springwebservice.auth.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

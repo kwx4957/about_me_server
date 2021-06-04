@@ -1,15 +1,15 @@
-package com.aboutme.springwebservice.auth.naver.model;
+package com.aboutme.springwebservice.auth.exception;
 
-import com.aboutme.springwebservice.auth.naver.exception.BaseException;
-import com.aboutme.springwebservice.auth.naver.exception.InvalidAuthException;
-import com.aboutme.springwebservice.auth.naver.exception.UserNotFoundException;
+import com.aboutme.springwebservice.auth.exception.BaseException;
+import com.aboutme.springwebservice.auth.exception.InvalidAuthException;
+import com.aboutme.springwebservice.auth.exception.UserNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.web.client.ResponseErrorHandler;
 
 import java.io.IOException;
 
-public class NaverClientErrorHandler implements ResponseErrorHandler {
+public class ClientErrorHandler implements ResponseErrorHandler {
     @Override
     public boolean hasError(ClientHttpResponse clientHttpResponse) throws IOException {
         return clientHttpResponse.getStatusCode().series() == HttpStatus.Series.CLIENT_ERROR ||
@@ -30,7 +30,7 @@ public class NaverClientErrorHandler implements ResponseErrorHandler {
                 throw new InvalidAuthException("Invalid access token");
             }
             if(clientHttpResponse.getStatusCode() == HttpStatus.NOT_FOUND) {
-                throw new UserNotFoundException("Naver user not found");
+                throw new UserNotFoundException("user not found");
             }
         }
     }

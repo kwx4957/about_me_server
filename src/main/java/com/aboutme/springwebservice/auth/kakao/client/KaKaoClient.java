@@ -2,9 +2,7 @@ package com.aboutme.springwebservice.auth.kakao.client;
 
 import com.aboutme.springwebservice.auth.kakao.model.KaKaoUser;
 import com.aboutme.springwebservice.auth.kakao.model.KaKaoUserResponse;
-import com.aboutme.springwebservice.auth.naver.model.NaverClientErrorHandler;
-import com.aboutme.springwebservice.auth.naver.model.NaverUser;
-import com.aboutme.springwebservice.auth.naver.model.NaverUserResponse;
+import com.aboutme.springwebservice.auth.exception.ClientErrorHandler;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -23,7 +21,7 @@ public class KaKaoClient {
 
     public KaKaoClient() {
         this.template = new RestTemplateBuilder()
-                .errorHandler(new NaverClientErrorHandler())
+                .errorHandler(new ClientErrorHandler())
                 .build();
     }
 

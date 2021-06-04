@@ -1,12 +1,13 @@
 package com.aboutme.springwebservice.auth.naver.service;
 
 import com.aboutme.springwebservice.auth.naver.client.NaverClient;
-import com.aboutme.springwebservice.auth.naver.exception.ResourceAlreadyExistsException;
-import com.aboutme.springwebservice.auth.naver.exception.UserNotFoundException;
+import com.aboutme.springwebservice.auth.exception.ResourceAlreadyExistsException;
+import com.aboutme.springwebservice.auth.exception.UserNotFoundException;
 import com.aboutme.springwebservice.auth.naver.model.NaverUser;
 import com.aboutme.springwebservice.auth.naver.model.response.AuthResponse;
 import com.aboutme.springwebservice.auth.naver.model.response.SignUpResponse;
 import com.aboutme.springwebservice.auth.security.service.JwtTokenProvider;
+import com.aboutme.springwebservice.auth.service.AuthService;
 import com.aboutme.springwebservice.domain.UserProfile;
 import com.aboutme.springwebservice.domain.repository.UserProfileRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,7 @@ import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 
 @Service
-public class AuthService {
+public class NaverAuthService implements AuthService {
     @Autowired
     private NaverClient naverClient;
 
