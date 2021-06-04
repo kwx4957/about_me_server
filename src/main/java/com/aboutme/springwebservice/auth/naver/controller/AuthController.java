@@ -1,6 +1,7 @@
 package com.aboutme.springwebservice.auth.naver.controller;
 
 import com.aboutme.springwebservice.auth.naver.model.response.AuthResponse;
+import com.aboutme.springwebservice.auth.naver.model.response.SignUpResponse;
 import com.aboutme.springwebservice.auth.naver.service.AuthService;
 import com.aboutme.springwebservice.user.model.request.SignupRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,9 +15,8 @@ public class AuthController {
     public AuthService authService;
 
     @PostMapping("/signup")
-    public AuthResponse signup(@RequestHeader String token,
-        @RequestBody SignupRequest signupRequest) {
-        return authService.signup(token, signupRequest);
+    public SignUpResponse signup(@RequestHeader String token) {
+        return authService.signup(token);
     }
 
     @GetMapping("/signin")

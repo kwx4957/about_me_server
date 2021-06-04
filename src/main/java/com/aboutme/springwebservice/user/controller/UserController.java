@@ -25,10 +25,6 @@ public class UserController {
         return userService.findUser(userNo);
     }
 
-    @GetMapping
-    public List<UserResponse> findAll() {
-        return userService.findUserAll();
-    }
 
     @DeleteMapping("/me")
     public void deleteMe(@AuthenticationPrincipal Long userNo) {

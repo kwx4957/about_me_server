@@ -1,34 +1,23 @@
 package com.aboutme.springwebservice.user.service;
 
+import com.aboutme.springwebservice.domain.repository.UserProfileRepository;
 import com.aboutme.springwebservice.user.model.response.UserResponse;
-import com.aboutme.springwebservice.user.repository.AppUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.List;
-import java.util.stream.Collectors;
 
-@Component
+@Service
 public class UserService {
     @Autowired
-    private AppUserRepository userRepository;
+    private UserProfileRepository userProfileRepository;
 
     public UserResponse findUser(Long userNo) {
-        return userRepository.findById(userNo)
-                .map(user -> new UserResponse(user.getId(), user.getName(), user.getEmail(), user.getProfileImage()))
-                .orElse(null);
-    }
-
-    public List<UserResponse> findUserAll() {
-        return userRepository.findAll()
-                .stream()
-                .map(user -> new UserResponse(user.getId(), user.getName(), user.getEmail(), user.getProfileImage()))
-                .collect(Collectors.toList());
+        return new UserResponse(userProfileRepository.findOneByUserID(userNo));
     }
 
     @Transactional
     public void deleteUser(Long userNo) {
-        userRepository.deleteById(userNo);
+        userProfileRepository.deleteById(userNo);
     }
 }

@@ -14,9 +14,6 @@ import java.time.LocalDateTime;
 @ToString
 public class UserProfile {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long seq;
-
     @Column(name = "user_id")
     private long userID;
 
@@ -47,4 +44,5 @@ public class UserProfile {
             throw new IllegalArgumentException("필수 파라미터 누락");
         }
         return UserProfileBuilder().userID(id);
-    }}
+    }
+}
