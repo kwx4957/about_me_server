@@ -78,7 +78,7 @@ public class MyPageService {
                 .setParameter("userId", userId)
                 .getSingleResult();
        // code =  getMyPostList(userId,color).size()>0?code:400;
-        msg = getMyPostList(userId,color).size()>0?"ok":"해당 조건에 대한 글 내역이 없습니다.";
+        msg = getMyPostList(userId,color).size()>0?"ok":"데이터가 없습니다.";
         ResponseMyMain response= new ResponseMyMain();
         //response.setCode(code);
         response.setMessage(msg);
@@ -145,7 +145,7 @@ public class MyPageService {
                 .setParameter("userId", userId)
                 .getSingleResult();
         //code =  postList.size()>0?code:400;
-        msg = postList.size()>0?"ok":"해당 조건에 대한 글 내역이 없습니다.";
+        msg = postList.size()>0?"ok":"데이터가 없습니다";
         ResponseMyMain response= new ResponseMyMain();
         //response.setCode(code);
         response.setMessage(msg);

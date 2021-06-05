@@ -28,11 +28,11 @@ public class AppUserInfo {
     @Column(length = 255, nullable = true)
     private String profileImage;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdDate;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     @Temporal(TemporalType.TIMESTAMP)
     private Date lastModifiedDate;
 

@@ -219,7 +219,7 @@ public class BoardInfoController {
     public ResponseDailyLists updateDailyColors(@RequestBody DailyAnswerDTO ans){
             ResponseDailyLists r = new ResponseDailyLists();
         if(!questionRepository.existsById((long)ans.getCategory_seq())){
-            r.setCode(500);
+            r.setCode(404);
             r.setMessage("해당 질답에 대한 정보가 존재하지 않습니다.");
             return r;
         }
@@ -240,7 +240,7 @@ public class BoardInfoController {
             o.addProperty("message","삭제완료");
         }
         else {
-            o.addProperty("code",500);
+            o.addProperty("code",404);
             o.addProperty("message","해당 질답에 대한 정보가 존재하지 않습니다.");
         }
         return o.toString();
