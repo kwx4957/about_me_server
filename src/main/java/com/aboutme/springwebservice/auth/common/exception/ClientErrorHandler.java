@@ -1,8 +1,5 @@
-package com.aboutme.springwebservice.auth.exception;
+package com.aboutme.springwebservice.auth.common.exception;
 
-import com.aboutme.springwebservice.auth.exception.BaseException;
-import com.aboutme.springwebservice.auth.exception.InvalidAuthException;
-import com.aboutme.springwebservice.auth.exception.UserNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.web.client.ResponseErrorHandler;

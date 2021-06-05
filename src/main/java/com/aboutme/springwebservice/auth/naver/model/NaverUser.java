@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 public class NaverUser {
     @JsonProperty("id")
     private Long userId;
-    @JsonProperty("name")
+    @JsonProperty("nickname")
     private String userName;
     @JsonProperty("email")
     private String email;

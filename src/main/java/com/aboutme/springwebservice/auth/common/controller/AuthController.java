@@ -1,11 +1,11 @@
-package com.aboutme.springwebservice.auth.controller;
+package com.aboutme.springwebservice.auth.common.controller;
 
-import com.aboutme.springwebservice.auth.AuthType;
+import com.aboutme.springwebservice.auth.common.AuthType;
 import com.aboutme.springwebservice.auth.kakao.service.KaKaoAuthService;
-import com.aboutme.springwebservice.auth.naver.model.response.AuthResponse;
-import com.aboutme.springwebservice.auth.naver.model.response.SignUpResponse;
+import com.aboutme.springwebservice.auth.common.model.response.AuthResponse;
+import com.aboutme.springwebservice.auth.common.model.response.SignUpResponse;
 import com.aboutme.springwebservice.auth.naver.service.NaverAuthService;
-import com.aboutme.springwebservice.auth.service.AuthService;
+import com.aboutme.springwebservice.auth.common.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;

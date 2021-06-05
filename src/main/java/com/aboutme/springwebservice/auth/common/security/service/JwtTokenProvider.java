@@ -1,6 +1,6 @@
-package com.aboutme.springwebservice.auth.security.service;
+package com.aboutme.springwebservice.auth.common.security.service;
 
-import com.aboutme.springwebservice.auth.exception.InvalidAuthException;
+import com.aboutme.springwebservice.auth.common.exception.InvalidAuthException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;

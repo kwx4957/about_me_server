@@ -1,4 +1,4 @@
-package com.aboutme.springwebservice.auth;
+package com.aboutme.springwebservice.auth.common;
 
 import lombok.Getter;
 

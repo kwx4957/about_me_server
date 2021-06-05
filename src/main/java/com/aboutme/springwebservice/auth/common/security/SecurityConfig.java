@@ -1,7 +1,7 @@
-package com.aboutme.springwebservice.auth.security;
+package com.aboutme.springwebservice.auth.common.security;
 
-import com.aboutme.springwebservice.auth.security.filter.JwtTokenFilterConfigurer;
-import com.aboutme.springwebservice.auth.security.service.JwtTokenProvider;
+import com.aboutme.springwebservice.auth.common.security.filter.JwtTokenFilterConfigurer;
+import com.aboutme.springwebservice.auth.common.security.service.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;

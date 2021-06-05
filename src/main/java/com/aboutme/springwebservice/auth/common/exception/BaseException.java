@@ -1,4 +1,4 @@
-package com.aboutme.springwebservice.auth.exception;
+package com.aboutme.springwebservice.auth.common.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

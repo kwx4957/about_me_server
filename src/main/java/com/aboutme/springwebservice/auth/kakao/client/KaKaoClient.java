@@ -2,7 +2,7 @@ package com.aboutme.springwebservice.auth.kakao.client;
 
 import com.aboutme.springwebservice.auth.kakao.model.KaKaoUser;
 import com.aboutme.springwebservice.auth.kakao.model.KaKaoUserResponse;
-import com.aboutme.springwebservice.auth.exception.ClientErrorHandler;
+import com.aboutme.springwebservice.auth.common.exception.ClientErrorHandler;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;

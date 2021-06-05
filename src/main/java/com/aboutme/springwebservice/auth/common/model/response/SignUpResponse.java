@@ -1,4 +1,4 @@
-package com.aboutme.springwebservice.auth.naver.model.response;
+package com.aboutme.springwebservice.auth.common.model.response;
 
 import lombok.Data;
 

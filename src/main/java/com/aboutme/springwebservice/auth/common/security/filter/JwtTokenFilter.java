@@ -1,7 +1,7 @@
-package com.aboutme.springwebservice.auth.security.filter;
+package com.aboutme.springwebservice.auth.common.security.filter;
 
-import com.aboutme.springwebservice.auth.exception.BaseException;
-import com.aboutme.springwebservice.auth.security.service.JwtTokenProvider;
+import com.aboutme.springwebservice.auth.common.exception.BaseException;
+import com.aboutme.springwebservice.auth.common.security.service.JwtTokenProvider;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;

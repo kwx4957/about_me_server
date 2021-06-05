@@ -1,6 +1,6 @@
 package com.aboutme.springwebservice.auth.naver.client;
 
-import com.aboutme.springwebservice.auth.exception.ClientErrorHandler;
+import com.aboutme.springwebservice.auth.common.exception.ClientErrorHandler;
 import com.aboutme.springwebservice.auth.naver.model.NaverUser;
 import com.aboutme.springwebservice.auth.naver.model.NaverUserResponse;
 import org.springframework.boot.web.client.RestTemplateBuilder;

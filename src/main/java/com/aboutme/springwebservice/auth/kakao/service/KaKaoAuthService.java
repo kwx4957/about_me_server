@@ -2,12 +2,12 @@ package com.aboutme.springwebservice.auth.kakao.service;
 
 import com.aboutme.springwebservice.auth.kakao.client.KaKaoClient;
 import com.aboutme.springwebservice.auth.kakao.model.KaKaoUser;
-import com.aboutme.springwebservice.auth.exception.ResourceAlreadyExistsException;
-import com.aboutme.springwebservice.auth.exception.UserNotFoundException;
-import com.aboutme.springwebservice.auth.naver.model.response.AuthResponse;
-import com.aboutme.springwebservice.auth.naver.model.response.SignUpResponse;
-import com.aboutme.springwebservice.auth.security.service.JwtTokenProvider;
-import com.aboutme.springwebservice.auth.service.AuthService;
+import com.aboutme.springwebservice.auth.common.exception.ResourceAlreadyExistsException;
+import com.aboutme.springwebservice.auth.common.exception.UserNotFoundException;
+import com.aboutme.springwebservice.auth.common.model.response.AuthResponse;
+import com.aboutme.springwebservice.auth.common.model.response.SignUpResponse;
+import com.aboutme.springwebservice.auth.common.security.service.JwtTokenProvider;
+import com.aboutme.springwebservice.auth.common.service.AuthService;
 import com.aboutme.springwebservice.domain.UserProfile;
 import com.aboutme.springwebservice.domain.repository.UserProfileRepository;
 import org.springframework.beans.factory.annotation.Autowired;
