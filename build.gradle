@@ -40,6 +40,9 @@ dependencies {
     //json web token
     compile group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
     implementation 'org.springframework.boot:spring-boot-starter-security'
+    //FCM
+    implementation 'com.google.firebase:firebase-admin:6.8.1'
+    implementation group: 'com.squareup.okhttp3',name:'okhttp',version: '4.2.2'
 }
 
 test {
