@@ -42,8 +42,9 @@ public class KaKaoUser {
         public class Profile {
 
             public String nickname;
-//            public String thumbnail_image_url;
-//            public String profile_image_url;
+            public String thumbnail_image_url;
+            public String profile_image_url;
+            public boolean is_default_image;
 
         }
     }
