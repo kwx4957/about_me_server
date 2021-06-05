@@ -1,17 +1,19 @@
 package com.aboutme.springwebservice.domain;
 
 import lombok.*;
+import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Getter
+@Data
 @Entity
 @Builder(builderMethodName = "UserProfileBuilder")
 @Table(name="User_Profile")
 @ToString
+@DynamicUpdate
 public class UserProfile {
     @Id
     @Column(name = "user_id")
@@ -30,7 +32,10 @@ public class UserProfile {
     private Integer themeComment;
 
     @Column(name = "push_yn")
-    private char push_yn;
+    private String push_yn;
+
+    @Column(name = "push_time")
+    private String push_time;
 
     @Column(name = "reg_date")
     private LocalDateTime reg_date;

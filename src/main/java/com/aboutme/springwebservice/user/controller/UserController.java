@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/v1/user")
+@RequestMapping("/user")
 public class UserController {
 
     @Autowired
@@ -24,7 +24,6 @@ public class UserController {
     public UserResponse findUser(@PathVariable("id") Long userNo) {
         return userService.findUser(userNo);
     }
-
 
     @DeleteMapping("/me")
     public void deleteMe(@AuthenticationPrincipal Long userNo) {

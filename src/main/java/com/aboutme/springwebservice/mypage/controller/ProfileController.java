@@ -26,6 +26,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
@@ -49,9 +50,16 @@ public class ProfileController {
     @PutMapping("/MyPage/profile")
     void updateProfile(@RequestBody ProfileVO profileVO)
     {
-        //TODO : 업데이트 구현
+        UserProfile userProfile = profileRepository.findOneByUserID(profileVO.getUserId());
 
+        userProfile.setColor(profileVO.getColor());
+        userProfile.setIntro(profileVO.getIntroduce());
+        userProfile.setNickname(profileVO.getNickName());
+        userProfile.setPush_time(profileVO.getPush_time());
+        userProfile.setPush_yn(profileVO.getPush_yn());
+        userProfile.setUpdate_date(LocalDateTime.now());
 
+        profileRepository.save(userProfile);
     }
 
     @GetMapping("/MyPage/profile")
