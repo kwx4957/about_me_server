@@ -44,6 +44,7 @@ public class NaverAuthService implements AuthService {
             return new SignUpResponse(
                     jwtTokenProvider.createToken(naverUser.getUserId()),
                     naverUser.getUserId(),
+                    naverUser.getUserName(),
                     naverUser.getEmail(),
                     naverUser.getProfileImage()
             );

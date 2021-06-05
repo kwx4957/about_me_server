@@ -44,6 +44,7 @@ public class KaKaoAuthService implements AuthService {
             return new SignUpResponse(
                     jwtTokenProvider.createToken(kaKaoUser.getId()),
                     kaKaoUser.getId(),
+                    kaKaoUser.getProperties().getNickname(),    
                     kaKaoUser.getKakao_account().getEmail(),
                     kaKaoUser.getProperties().getProfile_image()
                     );
