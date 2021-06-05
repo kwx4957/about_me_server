@@ -14,8 +14,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Service
 public class KaKaoAuthService implements AuthService {
@@ -33,6 +35,8 @@ public class KaKaoAuthService implements AuthService {
         KaKaoUser kaKaoUser = kakaoClient.profile(accessToken);
 
         try {
+            this.validateDuplicateUser(kaKaoUser.getId());
+            
             userRepository.save(
                     UserProfile.UserProfileBuilder()
                             .userID(kaKaoUser.getId())
@@ -73,4 +77,11 @@ public class KaKaoAuthService implements AuthService {
         );
     }
 
+    @Override
+    public void validateDuplicateUser(Long userNo) {
+        Optional<UserProfile> userProfile = Optional.ofNullable(userRepository.findOneByUserID(userNo));
+        userProfile.ifPresent(findUser -> {
+                throw new ResourceAlreadyExistsException("Alread use exists");
+        });
+    }
 }

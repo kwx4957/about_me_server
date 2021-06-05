@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Service
 public class NaverAuthService implements AuthService {
@@ -33,6 +34,8 @@ public class NaverAuthService implements AuthService {
         NaverUser naverUser = naverClient.profile(naverAccessToken);
 
         try {
+            this.validateDuplicateUser(naverUser.getUserId());
+
             userRepository.save(
                     UserProfile.UserProfileBuilder()
                         .userID(naverUser.getUserId())
@@ -72,5 +75,13 @@ public class NaverAuthService implements AuthService {
         return new AuthResponse(
                 jwtTokenProvider.createToken(userNo)
         );
+    }
+
+    @Override
+    public void validateDuplicateUser(Long userNo) {
+        Optional<UserProfile> userProfile = Optional.ofNullable(userRepository.findOneByUserID(userNo));
+        userProfile.ifPresent(findUser -> {
+            throw new ResourceAlreadyExistsException("Alread use exists");
+        });
     }
 }
