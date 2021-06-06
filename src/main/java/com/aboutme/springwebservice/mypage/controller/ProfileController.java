@@ -58,6 +58,7 @@ public class ProfileController {
         userProfile.setPush_time(profileVO.getPush_time());
         userProfile.setPush_yn(profileVO.getPush_yn());
         userProfile.setUpdate_date(LocalDateTime.now());
+        userProfile.setThemeComment(profileVO.getTheme_comment());
 
         profileRepository.save(userProfile);
     }

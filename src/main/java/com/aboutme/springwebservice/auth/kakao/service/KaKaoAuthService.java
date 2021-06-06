@@ -35,8 +35,9 @@ public class KaKaoAuthService implements AuthService {
         KaKaoUser kaKaoUser = kakaoClient.profile(accessToken);
 
         try {
+            System.out.println(kaKaoUser.toString());
             this.validateDuplicateUser(kaKaoUser.getId());
-            
+
             userRepository.save(
                     UserProfile.UserProfileBuilder()
                             .userID(kaKaoUser.getId())

@@ -10,4 +10,5 @@ public class ProfileVO {
     Integer color; // 주 색 카테고리
     String push_yn;
     String push_time;
+    Integer theme_comment;
 }

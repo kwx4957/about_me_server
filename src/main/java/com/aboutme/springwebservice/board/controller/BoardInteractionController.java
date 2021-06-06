@@ -26,4 +26,12 @@ public class BoardInteractionController {
     {
         return boardInteractionService.addScrap(vo);
     }
+
+    @PutMapping("/Board/shares/{cardSeq}/{level}")
+    public ResponseEntity<? extends BasicResponse> editIsShare(
+            @PathVariable("cardSeq") long cardSeq,
+            @PathVariable("level") int level){
+
+        return boardInteractionService.editIsShare(cardSeq,level);
+    }
 }
