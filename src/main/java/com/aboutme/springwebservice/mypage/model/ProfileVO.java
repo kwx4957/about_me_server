@@ -2,6 +2,8 @@ package com.aboutme.springwebservice.mypage.model;
 
 import lombok.Data;
 
+import java.time.LocalDateTime;
+
 @Data
 public class ProfileVO {
     Long UserId;
@@ -11,4 +13,5 @@ public class ProfileVO {
     String push_yn;
     String push_time;
     Integer theme_comment;
+    LocalDateTime birthday;
 }

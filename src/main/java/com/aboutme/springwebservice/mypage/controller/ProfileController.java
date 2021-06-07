@@ -10,10 +10,7 @@ import com.aboutme.springwebservice.mypage.model.ProfileVO;
 import com.aboutme.springwebservice.mypage.model.ProgressingVO;
 import com.aboutme.springwebservice.mypage.model.UserLevelDTO;
 import com.aboutme.springwebservice.mypage.model.WeeklyProgressingVO;
-import com.aboutme.springwebservice.mypage.model.response.ResponseCrushList;
-import com.aboutme.springwebservice.mypage.model.response.ResponseMyMain;
-import com.aboutme.springwebservice.mypage.model.response.ResponseWeeklyProgressing;
-import com.aboutme.springwebservice.mypage.model.response.ResponseProgressing;
+import com.aboutme.springwebservice.mypage.model.response.*;
 import com.aboutme.springwebservice.mypage.service.MyPageService;
 import com.aboutme.springwebservice.mypage.service.UserCrushService;
 import com.aboutme.springwebservice.mypage.service.UserLevelService;
@@ -48,7 +45,7 @@ public class ProfileController {
     private EntityManager em;
 
     @PutMapping("/MyPage/profile")
-    void updateProfile(@RequestBody ProfileVO profileVO)
+    ResponseProfile updateProfile(@RequestBody ProfileVO profileVO)
     {
         UserProfile userProfile = profileRepository.findOneByUserID(profileVO.getUserId());
 
@@ -59,8 +56,11 @@ public class ProfileController {
         userProfile.setPush_yn(profileVO.getPush_yn());
         userProfile.setUpdate_date(LocalDateTime.now());
         userProfile.setThemeComment(profileVO.getTheme_comment());
+        userProfile.setBirthday(profileVO.getBirthday());
 
         profileRepository.save(userProfile);
+
+        return new ResponseProfile(200, "profile update 성공", profileVO);
     }
 
     @GetMapping("/MyPage/profile")
