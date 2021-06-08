@@ -38,6 +38,23 @@ public class BoardCommentService {
             UserProfile user = userProfileRepository.findOneByUserID(authorId);
 
             comment.setNickname(user.getNickname());
+            switch(user.getColor()){
+                case 0:
+                    comment.setColor("red");
+                    break;
+                case 1:
+                    comment.setColor("yellow");
+                    break;
+                case 2:
+                    comment.setColor("green");
+                    break;
+                case 3:
+                    comment.setColor("pink");
+                    break;
+                case 4:
+                    comment.setColor("purple");
+                    break;
+            }
 
             responseCommentList.add(comment);
         }
