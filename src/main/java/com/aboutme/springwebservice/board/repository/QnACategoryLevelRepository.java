@@ -15,6 +15,9 @@ public interface QnACategoryLevelRepository extends JpaRepository<QnACategoryLev
     @Query(value = "SELECT seq  FROM QnA_Category_Level WHERE category_id = ?1", nativeQuery = true)
     int selectCard(int categorySeq);
 
+    @Query(value = "UPDATE QnA_Category_Level SET  share_yn = CASE WHEN share_yn ='Y' THEN 'N' ELSE 'Y' END WHERE seq = ?1 AND level = ?2", nativeQuery = true)
+    void updateCardIsShare(long categorySeq , int level);
+
     QnACategoryLevel findBySeq(long seq);
 
     List<QnACategoryLevel> findByCategoryId(Long categoryId);

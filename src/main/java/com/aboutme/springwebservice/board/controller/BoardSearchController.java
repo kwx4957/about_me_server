@@ -109,7 +109,6 @@ public class BoardSearchController {
             return new ResponseBoardList(400, "해당 유저가 존재하지 않습니다.", null);
         }
 
-        System.out.println(_color);
         List postList = boardSearchService.getMyPopularList(userId,_color);
 
 

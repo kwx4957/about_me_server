@@ -1,6 +1,7 @@
 package com.aboutme.springwebservice.board.service;
 
 import com.aboutme.springwebservice.board.entity.BoardInteraction;
+import com.aboutme.springwebservice.board.entity.QnACategory;
 import com.aboutme.springwebservice.board.entity.QnACategoryLevel;
 import com.aboutme.springwebservice.board.model.BoardInteractionVO;
 import com.aboutme.springwebservice.board.repository.BoardInteractionRepository;
@@ -22,6 +23,7 @@ public class BoardInteractionService {
 
         private  BoardInteractionRepository boardInteractionRepository;
         private  QnACategoryLevelRepository qnACategoryLevelRepository;
+        private  QnACategoryLevelRepository qnACategoryRepository;
 
         @Transactional
         public ResponseEntity<?extends BasicResponse> addLike(BoardInteractionVO vo) {
@@ -90,4 +92,14 @@ public class BoardInteractionService {
                     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                                          .body(new ErrorResponse("스크랩을 처리하지 못하였습니다","500"));
         }
+
+    @Transactional
+    public ResponseEntity<?extends BasicResponse> editIsShare(long cardSeq, int level) {
+        QnACategoryLevel qnACategoryLevel = qnACategoryLevelRepository.findById(cardSeq)
+                .orElseThrow(() -> new IllegalArgumentException("해당 글이 존재하지 않습니다"));
+
+        qnACategoryLevelRepository.updateCardIsShare(cardSeq,level);
+        return ResponseEntity.ok().body( new CommonResponse<>());
+
+    }
 }
