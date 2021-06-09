@@ -72,7 +72,7 @@ public class BoardInfoService {
             map.put("hasLiked", false);
         }
         map.put("scraps", resultList.get(0)[8]);
-        if(boardInteraction != null && boardInteraction.getLikeYn() == 1){
+        if(boardInteraction != null && boardInteraction.getScrapYn() == 1){
             map.put("hasScrapped", true);
         }
         else{

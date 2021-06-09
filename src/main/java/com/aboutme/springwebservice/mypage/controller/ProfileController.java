@@ -26,10 +26,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAdjusters;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @RestController
 @AllArgsConstructor
@@ -98,7 +95,7 @@ public class ProfileController {
 
     //주차별 진행도
     @GetMapping("/MyPage/WeeklyProgressing/{userId}")
-    public ResponseWeeklyProgressing getMonthlyProgressing(@PathVariable("userId") long userId){
+    public ResponseWeeklyProgressing getMonthlyProgressing(@PathVariable("userId") long userId, @RequestParam("year") int _year, @RequestParam("month") int _month, @RequestParam("day") int _day){
 
         if (!userInfoRepository.existsById(userId)) {
             return new ResponseWeeklyProgressing(400, "해당 유저가 존재하지 않습니다", null, null);
@@ -108,30 +105,71 @@ public class ProfileController {
         ulDTO.setUser_id(userId);
         ArrayList<ArrayList<WeeklyProgressingVO>> resList = userLevelService.getWeeklyProgressing(ulDTO);
 
-        LocalDate now = LocalDate.now();
-        LocalDate monday = LocalDate.of(now.getYear(), now.getMonth(), 1);
-        int weeks = (int)ChronoUnit.DAYS.between(monday.with(TemporalAdjusters.nextOrSame(DayOfWeek.MONDAY)), now) / 7 + 1;
+        LocalDate now = LocalDate.of(_year, _month, _day);
+        LocalDate firstDayOfMonth = LocalDate.of(now.getYear(), now.getMonth(), 1);
+        LocalDate firstMonday = firstDayOfMonth.with(TemporalAdjusters.nextOrSame(DayOfWeek.MONDAY));
+
+        int month = 0;
+        int weeks = 0;
+        boolean isNextMonth = false;
+
+        for(int i = now.getDayOfWeek().getValue(); i < 7; i++){
+            LocalDate t = now.plusDays(7-i);
+            if(t.getMonthValue() != now.getMonthValue()){
+                if(t.getDayOfWeek().getValue() <= 4) {
+                    month = now.getMonthValue() + 1;
+                    weeks = 1;
+                    isNextMonth = true;
+
+                    break;
+                }
+            }
+        }
+
+        if(!isNextMonth) {
+            if (firstMonday.getDayOfMonth() <= 4) {
+                if (now.getDayOfMonth() < firstMonday.getDayOfMonth()) {
+                    month = now.getMonthValue() - 1;
+                    weeks = 5;
+                } else {
+                    month = now.getMonthValue();
+                    weeks = (now.getDayOfMonth() - firstMonday.getDayOfMonth()) / 7 + 1;
+                }
+
+            } else {
+                if (now.getDayOfMonth() < firstMonday.getDayOfMonth()) {
+                    month = now.getMonthValue();
+                    weeks = 1;
+                } else {
+                    month = now.getMonthValue();
+                    weeks = (now.getDayOfMonth() + firstDayOfMonth.getDayOfWeek().getValue() - 1) / 7 + 1;
+                }
+            }
+        }
+
+        System.out.println(month);
+        System.out.println(weeks);
 
         String date = null;
         switch(weeks) {
             case 1: {
-                date = "2021년 " + now.getMonthValue() + "월 첫째주";
+                date = now.getYear() + "년 " + now.getMonthValue() + "월 첫째주";
                 break;
             }
             case 2: {
-                date = "2021년 " + now.getMonthValue() + "월 둘째주";
+                date = now.getYear() + "년 " + now.getMonthValue() + "월 둘째주";
                 break;
             }
             case 3: {
-                date = "2021년 " + now.getMonthValue() + "월 셋째주";
+                date = now.getYear() + "년 " + now.getMonthValue() + "월 셋째주";
                 break;
             }
             case 4: {
-                date = "2021년 " + now.getMonthValue() + "월 넷째주";
+                date = now.getYear() + "년 " + now.getMonthValue() + "월 넷째주";
                 break;
             }
             case 5: {
-                date = "2021년 " + now.getMonthValue() + "월 다섯째주";
+                date = now.getYear() + "년 " + now.getMonthValue() + "월 다섯째주";
             }
         }
 
