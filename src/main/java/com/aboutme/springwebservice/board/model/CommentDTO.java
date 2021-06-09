@@ -16,6 +16,7 @@ public class CommentDTO {
     private long commentId;
     private long answerId;
     private long authorId;
+    private String color;
     private String nickname;
     private String regDate;
     private String writtenDate;

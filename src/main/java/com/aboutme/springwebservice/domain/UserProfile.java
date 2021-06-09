@@ -43,6 +43,10 @@ public class UserProfile {
     @Column(name = "update_time")
     private LocalDateTime update_date;
 
+    @Column(name = "birthday")
+    private LocalDateTime birthday;
+
+
     @Builder
     public static UserProfileBuilder builder(Long id) {
         if(id == null) {
