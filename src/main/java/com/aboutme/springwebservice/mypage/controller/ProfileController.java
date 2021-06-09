@@ -95,7 +95,7 @@ public class ProfileController {
 
     //주차별 진행도
     @GetMapping("/MyPage/WeeklyProgressing/{userId}")
-    public ResponseWeeklyProgressing getMonthlyProgressing(@PathVariable("userId") long userId, @RequestParam("year") int _year, @RequestParam("month") int _month, @RequestParam("day") int _day){
+    public ResponseWeeklyProgressing getMonthlyProgressing(@PathVariable("userId") long userId){
 
         if (!userInfoRepository.existsById(userId)) {
             return new ResponseWeeklyProgressing(400, "해당 유저가 존재하지 않습니다", null, null);
@@ -103,14 +103,14 @@ public class ProfileController {
 
         UserLevelDTO ulDTO = new UserLevelDTO();
         ulDTO.setUser_id(userId);
-        ArrayList<ArrayList<WeeklyProgressingVO>> resList = userLevelService.getWeeklyProgressing(ulDTO);
 
-        LocalDate now = LocalDate.of(_year, _month, _day);
+        LocalDate now = LocalDate.now();
         LocalDate firstDayOfMonth = LocalDate.of(now.getYear(), now.getMonth(), 1);
         LocalDate firstMonday = firstDayOfMonth.with(TemporalAdjusters.nextOrSame(DayOfWeek.MONDAY));
 
         int month = 0;
         int weeks = 0;
+        int year = now.getYear();
         boolean isNextMonth = false;
 
         for(int i = now.getDayOfWeek().getValue(); i < 7; i++){
@@ -130,6 +130,10 @@ public class ProfileController {
             if (firstMonday.getDayOfMonth() <= 4) {
                 if (now.getDayOfMonth() < firstMonday.getDayOfMonth()) {
                     month = now.getMonthValue() - 1;
+                    if(month == 0){
+                        year = year - 1;
+                        month = 12;
+                    }
                     weeks = 5;
                 } else {
                     month = now.getMonthValue();
@@ -147,29 +151,29 @@ public class ProfileController {
             }
         }
 
-        System.out.println(month);
-        System.out.println(weeks);
+        ArrayList<ArrayList<WeeklyProgressingVO>> resList = userLevelService.getWeeklyProgressing(ulDTO, weeks);
 
         String date = null;
         switch(weeks) {
             case 1: {
-                date = now.getYear() + "년 " + now.getMonthValue() + "월 첫째주";
+                date = year + "년 " + month + "월 첫째주";
                 break;
             }
             case 2: {
-                date = now.getYear() + "년 " + now.getMonthValue() + "월 둘째주";
+                date = year + "년 " + month + "월 둘째주";
                 break;
             }
             case 3: {
-                date = now.getYear() + "년 " + now.getMonthValue() + "월 셋째주";
+                date = year + "년 " + month + "월 셋째주";
                 break;
             }
             case 4: {
-                date = now.getYear() + "년 " + now.getMonthValue() + "월 넷째주";
+                date = year + "년 " + month + "월 넷째주";
                 break;
             }
             case 5: {
-                date = now.getYear() + "년 " + now.getMonthValue() + "월 다섯째주";
+                date = year + "년 " + month + "월 다섯째주";
+                break;
             }
         }
 
