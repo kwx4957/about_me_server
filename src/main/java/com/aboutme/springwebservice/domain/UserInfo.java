@@ -1,5 +1,6 @@
 package com.aboutme.springwebservice.domain;
 
+import com.sun.xml.bind.v2.TODO;
 import lombok.*;
 
 import javax.persistence.*;
@@ -29,6 +30,11 @@ public class UserInfo {
 
     @Column
     LocalDateTime last_login;
+
+    //TODO 관리자, 유저 판별 컬럼 
+    //@Column(nullable = false)
+    //@Enumerated(EnumType.STRING)
+   // private Role role;
 
     @Column
     LocalDate reg_date;
