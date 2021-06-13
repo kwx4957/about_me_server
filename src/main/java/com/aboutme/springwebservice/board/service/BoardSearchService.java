@@ -59,24 +59,26 @@ public class BoardSearchService {
                 map.put("userId", res[3]);
                 map.put("nickname", res[4]);
                 map.put("answer", res[5]);
-                map.put("level", res[6]);
-                map.put("likes", res[7]);
+                if(res[6].equals("N")) map.put("shareYN",false);
+                else map.put("shareYN",true);
+                map.put("level", res[7]);
+                map.put("likes", res[8]);
                 if(boardInteraction != null && boardInteraction.getLikeYn() == 1){
                     map.put("hasLiked", true);
                 }
                 else{
                     map.put("hasLiked", false);
                 }
-                map.put("scraps", res[8]);
+                map.put("scraps", res[9]);
                 if(boardInteraction != null && boardInteraction.getLikeYn() == 1){
                     map.put("hasScrapped", true);
                 }
                 else{
                     map.put("hasScrapped", false);
                 }
-                map.put("comments", res[9]);
-                map.put("regDate", res[10]);
-                map.put("writtenDate", res[11]);
+                map.put("comments", res[10]);
+                map.put("regDate", res[11]);
+                map.put("writtenDate", res[12]);
 
                 postList.add(map);
             }
@@ -117,24 +119,26 @@ public class BoardSearchService {
                 map.put("userId", res[3]);
                 map.put("nickname", res[4]);
                 map.put("answer", res[5]);
-                map.put("level", res[6]);
-                map.put("likes", res[7]);
+                if(res[6].equals("N")) map.put("shareYN",false);
+                else map.put("shareYN",true);
+                map.put("level", res[7]);
+                map.put("likes", res[8]);
                 if(boardInteraction != null && boardInteraction.getLikeYn() == 1){
                     map.put("hasLiked", true);
                 }
                 else{
                     map.put("hasLiked", false);
                 }
-                map.put("scraps", res[8]);
+                map.put("scraps", res[9]);
                 if(boardInteraction != null && boardInteraction.getLikeYn() == 1){
                     map.put("hasScrapped", true);
                 }
                 else{
                     map.put("hasScrapped", false);
                 }
-                map.put("comments", res[9]);
-                map.put("regDate", res[10]);
-                map.put("writtenDate", res[11]);
+                map.put("comments", res[10]);
+                map.put("regDate", res[11]);
+                map.put("writtenDate", res[12]);
 
                 postList.add(map);
             }
@@ -175,24 +179,26 @@ public class BoardSearchService {
                 map.put("userId", res[3]);
                 map.put("nickname", res[4]);
                 map.put("answer", res[5]);
-                map.put("level", res[6]);
-                map.put("likes", res[7]);
+                if(res[6].equals("N")) map.put("shareYN",false);
+                else map.put("shareYN",true);
+                map.put("level", res[7]);
+                map.put("likes", res[8]);
                 if(boardInteraction != null && boardInteraction.getLikeYn() == 1){
                     map.put("hasLiked", true);
                 }
                 else{
                     map.put("hasLiked", false);
                 }
-                map.put("scraps", res[8]);
+                map.put("scraps", res[9]);
                 if(boardInteraction != null && boardInteraction.getLikeYn() == 1){
                     map.put("hasScrapped", true);
                 }
                 else{
                     map.put("hasScrapped", false);
                 }
-                map.put("comments", res[9]);
-                map.put("regDate", res[10]);
-                map.put("writtenDate", res[11]);
+                map.put("comments", res[10]);
+                map.put("regDate", res[11]);
+                map.put("writtenDate", res[12]);
 
                 postList.add(map);
             }
