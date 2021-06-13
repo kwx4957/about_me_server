@@ -15,6 +15,7 @@ public class ResponseCrushList {
     private String question;
     private String color;
     private String answer;
+    private boolean shareYN;
     private int level;
     private int likes;
     private int scraps;
@@ -32,6 +33,10 @@ public class ResponseCrushList {
         this.color        = color;
         this.boardSeq     = entity.getSeq();
         this.answer       = entity.getAnswer();
+        if(entity.getShare_yn()=='N')
+            this.shareYN     = false;
+       else
+            this.shareYN     = true;
         this.level        = entity.getLevel();
         this.likes        = entity.getLikes();
         this.scraps       = entity.getScraps();

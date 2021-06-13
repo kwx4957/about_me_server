@@ -62,7 +62,8 @@ public class BoardInfoService {
         map.put("userId", resultList.get(0)[3]);
         map.put("nickname", resultList.get(0)[4]);
         map.put("answer", resultList.get(0)[5]);
-        map.put("shareYN", resultList.get(0)[6]);
+        if(resultList.get(0)[6].equals("N")) map.put("shareYN",false);
+        else map.put("shareYN",true);
         map.put("level", resultList.get(0)[7]);
         map.put("likes", resultList.get(0)[8]);
         if(boardInteraction != null && boardInteraction.getLikeYn() == 1){
