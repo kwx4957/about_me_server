@@ -1,12 +1,9 @@
 package com.aboutme.springwebservice.mypage.service;
 
 import com.aboutme.springwebservice.domain.repository.UserProfileRepository;
-import com.aboutme.springwebservice.mypage.model.ProfileVO;
 import com.aboutme.springwebservice.mypage.model.UserLevelDTO;
 import com.aboutme.springwebservice.mypage.model.WeeklyProgressingVO;
 import com.aboutme.springwebservice.mypage.entity.UserLevel;
-import com.aboutme.springwebservice.mypage.model.response.ResponseMyMain;
-import com.aboutme.springwebservice.mypage.model.response.ResponseThemeList;
 import com.aboutme.springwebservice.mypage.repository.UserLevelRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,10 +13,8 @@ import javax.persistence.PersistenceContext;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -53,7 +48,7 @@ public class UserLevelService {
     }
 
     @Transactional
-    public ArrayList<ArrayList<WeeklyProgressingVO>> getWeeklyProgressing(UserLevelDTO ulDTO) {
+    public ArrayList<ArrayList<WeeklyProgressingVO>> getWeeklyProgressing(UserLevelDTO ulDTO, int _weeks) {
 
         String[] days= {"월", "화", "수", "목", "금", "토", "일"};
         String[] en_days = {"Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"};
@@ -62,31 +57,25 @@ public class UserLevelService {
         ArrayList<ArrayList<WeeklyProgressingVO>> res = new ArrayList<ArrayList<WeeklyProgressingVO>>();
 
         LocalDate now = LocalDate.now();
-        LocalDate monday = LocalDate.of(now.getYear(), now.getMonth(), 1);
-        long weeks = ChronoUnit.DAYS.between(monday.with(TemporalAdjusters.nextOrSame(DayOfWeek.MONDAY)), now) / 7 + 1;
+        LocalDate monday = now.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
+
+        int weeks = _weeks - 1;
+        while((weeks--) != 0){
+            monday = monday.with(TemporalAdjusters.previous(DayOfWeek.MONDAY));
+        }
 
         monday = monday.with(TemporalAdjusters.nextOrSame(DayOfWeek.MONDAY));
         monday = monday.minusWeeks(1);
 
-        for(int i = 0; i < weeks; i++){
+        for(int i = 0; i < _weeks; i++){
             monday = monday.plusWeeks(1);
             LocalDate nextMonday = monday.plusWeeks(1);
 
-            List<Object[]> resultList = em.createNativeQuery(
-                    "SELECT " +
-                            "de.color, " +
-                            "date_format(qacl.reg_date, '%Y.%m.%d'), " +
-                            "date_format(qacl.reg_date, '%a') " +
-                            "FROM QnA_Category_Level qacl " +
-                            "JOIN QnA_Category qac ON qacl.category_id = qac.seq " +
-                            "JOIN Default_Enquiry de ON de.seq = qac.title_id " +
-                            "WHERE qac.author_id = :userId " +
-                            "AND qacl.reg_date >= date(:monday) " +
-                            "AND qacl.reg_date < date(:nextMonday) " +
-                            "ORDER BY qacl.reg_date")
+            List<Object[]> resultList = em
+                    .createNamedStoredProcedureQuery(UserLevel.getWeeklyProgressing)
                     .setParameter("userId", userId)
-                    .setParameter("monday", monday.toString())
-                    .setParameter("nextMonday", nextMonday.toString())
+                    .setParameter("monday", monday)
+                    .setParameter("nextMonday", nextMonday)
                     .getResultList();
 
             ArrayList<WeeklyProgressingVO> weeklyProgressingList = new ArrayList<WeeklyProgressingVO>();
