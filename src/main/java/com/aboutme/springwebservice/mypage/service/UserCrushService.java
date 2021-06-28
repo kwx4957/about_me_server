@@ -46,11 +46,6 @@ public class UserCrushService {
         if(cursh.equals("likes")){
              boardInteractions =  boardInteractionRepository.findByLikeUserAndLikeYn(userInfo,likeYn);
 
-             if(boardInteractions.isEmpty()){
-                 return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                                      .body(new ErrorResponse("해당 유저의 좋아요 글이 없습니다"));
-             }
-
             for(BoardInteraction boardInteraction : boardInteractions){
                 responseBoardSeq.add(this.convertBoardSeq(boardInteraction));
             }
@@ -69,12 +64,6 @@ public class UserCrushService {
 
         }else if(cursh.equals("scrap")){
              boardInteractions   = boardInteractionRepository.findByLikeUserAndScrapYn(userInfo, scarpYn);
-
-            if(boardInteractions.isEmpty()){
-                return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                                     .body(new ErrorResponse("해당 유저의 스크랩 글이 없습니다"));
-            }
-
 
             for(BoardInteraction boardInteraction : boardInteractions){
                 responseBoardSeq.add(this.convertBoardSeq(boardInteraction));
