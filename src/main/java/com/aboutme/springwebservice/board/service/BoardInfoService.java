@@ -103,7 +103,8 @@ public class BoardInfoService {
             QnACategory qnACategory = qnACategoryRepository.findBySeq(q.getCategoryId());
             DefaultEnquiry defaultEnquiry = defaultEnquiryRepository.findBySeq(qnACategory.getTitle_id());
 
-            map.put("answerId", q.getSeq());
+            map.put("cardSeq", q.getSeq());
+            map.put("quest_id", defaultEnquiry.getSeq());
             map.put("question", defaultEnquiry.getQuestion());
             switch(defaultEnquiry.getColor()) {
                 case 0:
@@ -122,6 +123,7 @@ public class BoardInfoService {
                     map.put("color", "purple");
                     break;
             }
+            map.put("isShare", q.getShare_yn());
             map.put("answer", q.getAnswer());
             map.put("level", q.getLevel());
 
