@@ -103,7 +103,7 @@ public class BoardInfoService {
             QnACategory qnACategory = qnACategoryRepository.findBySeq(q.getCategoryId());
             DefaultEnquiry defaultEnquiry = defaultEnquiryRepository.findBySeq(qnACategory.getTitle_id());
 
-            map.put("cardSeq", q.getSeq());
+            map.put("cardSeq", q.getCategoryId()); // 카드 수정시 필요한 cardSeq는 qnACategory seq인데 qnACategorylevel의 seq가져옴....수정
             map.put("quest_id", defaultEnquiry.getSeq());
             map.put("question", defaultEnquiry.getQuestion());
             switch(defaultEnquiry.getColor()) {
