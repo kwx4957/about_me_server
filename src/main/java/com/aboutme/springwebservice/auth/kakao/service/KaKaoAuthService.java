@@ -54,7 +54,7 @@ public class KaKaoAuthService implements AuthService {
                     kaKaoUser.getProperties().getProfile_image()
                     );
         } catch (DataIntegrityViolationException e) {
-            throw new ResourceAlreadyExistsException("Alread use exists " + accessToken);
+            throw new ResourceAlreadyExistsException("Already use exists " + accessToken);
         }
     }
 
@@ -82,7 +82,7 @@ public class KaKaoAuthService implements AuthService {
     public void validateDuplicateUser(Long userNo) {
         Optional<UserProfile> userProfile = Optional.ofNullable(userRepository.findOneByUserID(userNo));
         userProfile.ifPresent(findUser -> {
-                throw new ResourceAlreadyExistsException("Alread use exists");
+                throw new ResourceAlreadyExistsException("Already user exists");
         });
     }
 }

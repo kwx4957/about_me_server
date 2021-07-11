@@ -1,7 +1,9 @@
 package com.aboutme.springwebservice.auth.common.exception;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.client.ClientHttpResponse;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.client.ResponseErrorHandler;
 
 import java.io.IOException;
@@ -18,7 +20,7 @@ public class ClientErrorHandler implements ResponseErrorHandler {
 
         if (clientHttpResponse.getStatusCode().series() == HttpStatus.Series.SERVER_ERROR) {
             if(clientHttpResponse.getStatusCode() == HttpStatus.INTERNAL_SERVER_ERROR) {
-                throw new BaseException("Authroizationnnnn error", HttpStatus.INTERNAL_SERVER_ERROR);
+                throw new BaseException("Authroization error", HttpStatus.INTERNAL_SERVER_ERROR);
             }
         }
 

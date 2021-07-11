@@ -52,7 +52,7 @@ public class NaverAuthService implements AuthService {
                     naverUser.getProfileImage()
             );
         } catch (DataIntegrityViolationException e) {
-            throw new ResourceAlreadyExistsException("Alread use exists " + naverAccessToken);
+            throw new ResourceAlreadyExistsException("Already use exists " + naverAccessToken);
         }
     }
 
@@ -81,7 +81,7 @@ public class NaverAuthService implements AuthService {
     public void validateDuplicateUser(Long userNo) {
         Optional<UserProfile> userProfile = Optional.ofNullable(userRepository.findOneByUserID(userNo));
         userProfile.ifPresent(findUser -> {
-            throw new ResourceAlreadyExistsException("Alread use exists");
+            throw new ResourceAlreadyExistsException("Already user exists");
         });
     }
 }
