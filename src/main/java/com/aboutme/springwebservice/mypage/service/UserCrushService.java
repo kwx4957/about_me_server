@@ -46,11 +46,6 @@ public class UserCrushService {
         if(cursh.equals("likes")){
              boardInteractions =  boardInteractionRepository.findByLikeUserAndLikeYn(userInfo,likeYn);
 
-             if(boardInteractions.isEmpty()){
-                 return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                                      .body(new ErrorResponse("해당 유저의 좋아요 글이 없습니다"));
-             }
-
             for(BoardInteraction boardInteraction : boardInteractions){
                 responseBoardSeq.add(this.convertBoardSeq(boardInteraction));
             }
@@ -62,18 +57,13 @@ public class UserCrushService {
                 defaultEnquiry   = defaultEnquiryRepository.findBySeq(qnACategory.getTitle_id());
                 if(qnACategory.getColor()==color||color==-1){
                     responseCrushList.add(this.convertList(qnACategoryLevel, commentCount,
-                            convertColor(qnACategory.getColor()), defaultEnquiry.getQuestion()));
+                            convertColor(qnACategory.getColor()), defaultEnquiry.getQuestion(),responseBoardSeq.get(i)));
                 }
 
             }
 
         }else if(cursh.equals("scrap")){
              boardInteractions   = boardInteractionRepository.findByLikeUserAndScrapYn(userInfo, scarpYn);
-
-            if(boardInteractions.isEmpty()){
-                return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                                     .body(new ErrorResponse("해당 유저의 스크랩 글이 없습니다"));
-            }
 
             for(BoardInteraction boardInteraction : boardInteractions){
                 responseBoardSeq.add(this.convertBoardSeq(boardInteraction));
@@ -86,7 +76,7 @@ public class UserCrushService {
                 defaultEnquiry = defaultEnquiryRepository.findBySeq(qnACategory.getTitle_id());
                 if (qnACategory.getColor() == color||color==-1) {
                     responseCrushList.add(this.convertList(qnACategoryLevel, commentCount,
-                            convertColor(qnACategory.getColor()), defaultEnquiry.getQuestion()));
+                            convertColor(qnACategory.getColor()), defaultEnquiry.getQuestion(),responseBoardSeq.get(i)));
 
                 }
             }
@@ -101,12 +91,15 @@ public class UserCrushService {
 
     //좋아요 글번호추출
     private ResponseCrushList convertBoardSeq(BoardInteraction boardInteraction){
-        return ResponseCrushList.builder().seq( boardInteraction.getBoard().getSeq() ).build();
+        return ResponseCrushList.builder().seq(boardInteraction.getBoard().getSeq())
+                                          .hasliked(boardInteraction.getLikeYn())
+                                          .hasscraped(boardInteraction.getScrapYn())
+                                          .build();
     }
 
     //글번호로 리스트 변환
-    private ResponseCrushList convertList(QnACategoryLevel qnACategoryLevel, int commentCount, String color, String question){
-        return new ResponseCrushList(qnACategoryLevel, commentCount, color, question);
+    private ResponseCrushList convertList(QnACategoryLevel qnACategoryLevel, int commentCount, String color, String question, ResponseCrushList responseCrushList){
+        return new ResponseCrushList(qnACategoryLevel, commentCount, color, question , responseCrushList);
     }
 
     //색 문자열로 변환

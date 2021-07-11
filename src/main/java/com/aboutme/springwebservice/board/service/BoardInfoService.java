@@ -62,7 +62,8 @@ public class BoardInfoService {
         map.put("userId", resultList.get(0)[3]);
         map.put("nickname", resultList.get(0)[4]);
         map.put("answer", resultList.get(0)[5]);
-        map.put("shareYN", resultList.get(0)[6]);
+        if(resultList.get(0)[6].equals("N")) map.put("shareYN",false);
+        else map.put("shareYN",true);
         map.put("level", resultList.get(0)[7]);
         map.put("likes", resultList.get(0)[8]);
         if(boardInteraction != null && boardInteraction.getLikeYn() == 1){
@@ -71,8 +72,8 @@ public class BoardInfoService {
         else{
             map.put("hasLiked", false);
         }
-        map.put("scraps", resultList.get(0)[8]);
-        if(boardInteraction != null && boardInteraction.getLikeYn() == 1){
+        map.put("scraps", resultList.get(0)[9]);
+        if(boardInteraction != null && boardInteraction.getScrapYn() == 1){
             map.put("hasScrapped", true);
         }
         else{
@@ -102,7 +103,8 @@ public class BoardInfoService {
             QnACategory qnACategory = qnACategoryRepository.findBySeq(q.getCategoryId());
             DefaultEnquiry defaultEnquiry = defaultEnquiryRepository.findBySeq(qnACategory.getTitle_id());
 
-            map.put("answerId", q.getSeq());
+            map.put("cardSeq", q.getCategoryId()); // 카드 수정시 필요한 cardSeq는 qnACategory seq인데 qnACategorylevel의 seq가져옴....수정
+            map.put("quest_id", defaultEnquiry.getSeq());
             map.put("question", defaultEnquiry.getQuestion());
             switch(defaultEnquiry.getColor()) {
                 case 0:
@@ -121,6 +123,7 @@ public class BoardInfoService {
                     map.put("color", "purple");
                     break;
             }
+            map.put("isShare", q.getShare_yn());
             map.put("answer", q.getAnswer());
             map.put("level", q.getLevel());
 

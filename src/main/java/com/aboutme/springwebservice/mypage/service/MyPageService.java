@@ -41,7 +41,8 @@ public class MyPageService {
             map.put("level", res[7]);
             map.put("question", res[2]);
             map.put("answer", res[3]);
-            map.put("shareYN", res[4]);
+            if(res[4].equals("N")) map.put("shareYN",false);
+            else map.put("shareYN",true);
             map.put("regDate", res[5]);
             map.put("writtenDate", res[6]);
 
@@ -111,7 +112,8 @@ public class MyPageService {
                 map.put("level", res[7]);
                 map.put("question", res[2]);
                 map.put("answer", res[3]);
-                map.put("shareYN", res[4]);
+                if(res[4].equals("N")) map.put("shareYN",false);
+                else map.put("shareYN",true);
                 map.put("regDate", res[5]);
                 map.put("writtenDate", res[6]);
 

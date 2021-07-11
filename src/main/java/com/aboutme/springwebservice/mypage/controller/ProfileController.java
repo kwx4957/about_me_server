@@ -26,10 +26,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAdjusters;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @RestController
 @AllArgsConstructor
@@ -106,32 +103,77 @@ public class ProfileController {
 
         UserLevelDTO ulDTO = new UserLevelDTO();
         ulDTO.setUser_id(userId);
-        ArrayList<ArrayList<WeeklyProgressingVO>> resList = userLevelService.getWeeklyProgressing(ulDTO);
 
         LocalDate now = LocalDate.now();
-        LocalDate monday = LocalDate.of(now.getYear(), now.getMonth(), 1);
-        int weeks = (int)ChronoUnit.DAYS.between(monday.with(TemporalAdjusters.nextOrSame(DayOfWeek.MONDAY)), now) / 7 + 1;
+        LocalDate firstDayOfMonth = LocalDate.of(now.getYear(), now.getMonth(), 1);
+        LocalDate firstMonday = firstDayOfMonth.with(TemporalAdjusters.nextOrSame(DayOfWeek.MONDAY));
+
+        int month = 0;
+        int weeks = 0;
+        int year = now.getYear();
+        boolean isNextMonth = false;
+
+        for(int i = now.getDayOfWeek().getValue(); i < 7; i++){
+            LocalDate t = now.plusDays(7-i);
+            if(t.getMonthValue() != now.getMonthValue()){
+                if(t.getDayOfWeek().getValue() <= 4) {
+                    month = now.getMonthValue() + 1;
+                    weeks = 1;
+                    isNextMonth = true;
+
+                    break;
+                }
+            }
+        }
+
+        if(!isNextMonth) {
+            if (firstMonday.getDayOfMonth() <= 4) {
+                if (now.getDayOfMonth() < firstMonday.getDayOfMonth()) {
+                    month = now.getMonthValue() - 1;
+                    if(month == 0){
+                        year = year - 1;
+                        month = 12;
+                    }
+                    weeks = 5;
+                } else {
+                    month = now.getMonthValue();
+                    weeks = (now.getDayOfMonth() - firstMonday.getDayOfMonth()) / 7 + 1;
+                }
+
+            } else {
+                if (now.getDayOfMonth() < firstMonday.getDayOfMonth()) {
+                    month = now.getMonthValue();
+                    weeks = 1;
+                } else {
+                    month = now.getMonthValue();
+                    weeks = (now.getDayOfMonth() + firstDayOfMonth.getDayOfWeek().getValue() - 1) / 7 + 1;
+                }
+            }
+        }
+
+        ArrayList<ArrayList<WeeklyProgressingVO>> resList = userLevelService.getWeeklyProgressing(ulDTO, weeks);
 
         String date = null;
         switch(weeks) {
             case 1: {
-                date = "2021년 " + now.getMonthValue() + "월 첫째주";
+                date = year + "년 " + month + "월 첫째주";
                 break;
             }
             case 2: {
-                date = "2021년 " + now.getMonthValue() + "월 둘째주";
+                date = year + "년 " + month + "월 둘째주";
                 break;
             }
             case 3: {
-                date = "2021년 " + now.getMonthValue() + "월 셋째주";
+                date = year + "년 " + month + "월 셋째주";
                 break;
             }
             case 4: {
-                date = "2021년 " + now.getMonthValue() + "월 넷째주";
+                date = year + "년 " + month + "월 넷째주";
                 break;
             }
             case 5: {
-                date = "2021년 " + now.getMonthValue() + "월 다섯째주";
+                date = year + "년 " + month + "월 다섯째주";
+                break;
             }
         }
 

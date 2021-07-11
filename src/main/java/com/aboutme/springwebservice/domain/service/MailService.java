@@ -9,7 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.MailSender;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,8 +20,8 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Service
 public class MailService {
-
-    private JavaMailSender mailSender;
+    @Autowired
+    private MailSender mailSender;
 
     private static final String FROM_ADDRESS = "aboutme2auth@gmail.com";
     private final UserInfoRepository infoRepository;
@@ -59,7 +59,7 @@ public class MailService {
                 break;
         }
         message.setText(mailDto.getMessage());
-        message.setSentDate(currentTime);
+        message.setSentDate(new java.util.Date());
 
        try {
            mailSender.send(message);
