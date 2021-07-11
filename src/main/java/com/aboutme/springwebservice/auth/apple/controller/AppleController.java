@@ -8,13 +8,12 @@ import com.nimbusds.jose.Payload;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 
+@RestController
+@RequestMapping("/apple/auth")
 public class AppleController {
 
     private Logger logger = LoggerFactory.getLogger(AppleController.class);
@@ -28,20 +27,20 @@ public class AppleController {
     /**
      * Apple Login 유저 정보를 받은 후 권한 생성
      *
-     * @param signInRequest
+     * @param signUpRequest
      * @return
      */
-    @PostMapping(value = "/sign-in")
+    @PostMapping(value = "/signUp")
     @ResponseBody
-    public TokenResponse SignIn(SignInRequest signInRequest) {
+    public TokenResponse SignUp(SignUpRequest signUpRequest) {
 
-        if (signInRequest == null) {
+        if (signUpRequest == null) {
             return null;
         }
 
-        String code = signInRequest.getCode();
-        String client_secret = appleService.getAppleClientSecret(signInRequest.getId_token());
-        Payload payload = appleService.getPayload(signInRequest.getId_token());
+        String code = signUpRequest.getCode();
+        String client_secret = appleService.getAppleClientSecret(signUpRequest.getId_token());
+        Payload payload = appleService.getPayload(signUpRequest.getId_token());
 
         TokenResponse response = appleService.requestCodeValidations(client_secret, code);
 

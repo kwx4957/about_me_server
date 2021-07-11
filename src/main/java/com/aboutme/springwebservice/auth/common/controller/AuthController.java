@@ -44,8 +44,6 @@ public class AuthController {
             authService = naverAuthService;
         } else if(type == AuthType.Kakao) {
             authService = kaKaoAuthService;
-        } else if (type == AuthType.Apple) {
-
         }
     }
 }

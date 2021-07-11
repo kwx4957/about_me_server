@@ -3,7 +3,7 @@ package com.aboutme.springwebservice.auth.apple.model;
 import lombok.Data;
 
 @Data
-public class SignInRequest {
+public class SignUpRequest {
 
     private String state;
     private String code;
