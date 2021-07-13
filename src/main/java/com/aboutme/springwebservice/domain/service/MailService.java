@@ -18,7 +18,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Service
 public class MailService {
-//    @Autowired
+    @Autowired
     private MailSender mailSender;
 
     private static final String FROM_ADDRESS = "aboutme2auth@gmail.com";
