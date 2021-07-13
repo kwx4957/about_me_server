@@ -4,7 +4,6 @@ import com.aboutme.springwebservice.domain.MailDto;
 import com.aboutme.springwebservice.domain.UserInfo;
 import com.aboutme.springwebservice.domain.repository.UserInfoRepository;
 import com.google.gson.JsonObject;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
@@ -13,14 +12,13 @@ import org.springframework.mail.MailSender;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalTime;
 import java.util.Date;
 import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
 public class MailService {
-    @Autowired
+//    @Autowired
     private MailSender mailSender;
 
     private static final String FROM_ADDRESS = "aboutme2auth@gmail.com";

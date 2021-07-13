@@ -9,8 +9,8 @@ import java.util.List;
 
 public interface QnACategoryLevelRepository extends JpaRepository<QnACategoryLevel, Long> {
 
-    @Query(value = "DELETE FROM QnA_Category_Level WHERE category_id = ?1", nativeQuery = true)
-    void delCardAnswer(int categorySeq);
+    @Query(value = "DELETE FROM QnA_Category_Level WHERE seq = ?1", nativeQuery = true)
+    void delCardAnswer(long categorySeq);
 
     @Query(value = "SELECT seq  FROM QnA_Category_Level WHERE category_id = ?1", nativeQuery = true)
     int selectCard(int categorySeq);

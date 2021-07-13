@@ -1,11 +1,9 @@
 package com.aboutme.springwebservice.mypage.controller;
 
 import com.aboutme.springwebservice.board.model.response.ResponseBoardList;
-import com.aboutme.springwebservice.domain.UserInfo;
 import com.aboutme.springwebservice.domain.UserProfile;
 import com.aboutme.springwebservice.domain.repository.UserInfoRepository;
 import com.aboutme.springwebservice.domain.repository.UserProfileRepository;
-import com.aboutme.springwebservice.entity.BasicResponse;
 import com.aboutme.springwebservice.mypage.model.ProfileVO;
 import com.aboutme.springwebservice.mypage.model.ProgressingVO;
 import com.aboutme.springwebservice.mypage.model.UserLevelDTO;
@@ -15,8 +13,6 @@ import com.aboutme.springwebservice.mypage.service.MyPageService;
 import com.aboutme.springwebservice.mypage.service.UserCrushService;
 import com.aboutme.springwebservice.mypage.service.UserLevelService;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityManager;
@@ -24,7 +20,6 @@ import javax.persistence.PersistenceContext;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAdjusters;
 import java.util.*;
 
@@ -98,7 +93,7 @@ public class ProfileController {
     public ResponseWeeklyProgressing getMonthlyProgressing(@PathVariable("userId") long userId){
 
         if (!userInfoRepository.existsById(userId)) {
-            return new ResponseWeeklyProgressing(400, "해당 유저가 존재하지 않습니다", null, null);
+            return new ResponseWeeklyProgressing(400, "해당 유저가 존재하지 않습니다", null);
         }
 
         UserLevelDTO ulDTO = new UserLevelDTO();
@@ -151,33 +146,27 @@ public class ProfileController {
             }
         }
 
-        ArrayList<ArrayList<WeeklyProgressingVO>> resList = userLevelService.getWeeklyProgressing(ulDTO, weeks);
+        int max_weeks = 0;
 
-        String date = null;
-        switch(weeks) {
-            case 1: {
-                date = year + "년 " + month + "월 첫째주";
-                break;
-            }
-            case 2: {
-                date = year + "년 " + month + "월 둘째주";
-                break;
-            }
-            case 3: {
-                date = year + "년 " + month + "월 셋째주";
-                break;
-            }
-            case 4: {
-                date = year + "년 " + month + "월 넷째주";
-                break;
-            }
-            case 5: {
-                date = year + "년 " + month + "월 다섯째주";
-                break;
-            }
+        if(firstMonday.getDayOfMonth() > 4){
+            ++max_weeks;
         }
+        LocalDate t = firstMonday;
+        while(t.getMonthValue() == month){
+            t = t.plusDays(7);
+            System.out.println(t.getDayOfMonth());
+            System.out.println(t.getMonthValue());
+            ++max_weeks;
+        }
+        if(t.getDayOfMonth() > 4){
+            --max_weeks;
+        }
+        System.out.println(max_weeks);
+        System.out.println(month);
 
-        return new ResponseWeeklyProgressing(200, "OK", date, resList);
+        ArrayList<WeeklyProgressingVO> resList = userLevelService.getWeeklyProgressing(ulDTO, year, month, weeks, max_weeks);
+
+        return new ResponseWeeklyProgressing(200, "OK", resList);
     }
 
     @GetMapping("/MyPage/PostList/{userId}")
