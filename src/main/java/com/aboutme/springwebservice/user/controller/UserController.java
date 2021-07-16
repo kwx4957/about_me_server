@@ -15,18 +15,13 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @GetMapping("/me")
-    public UserResponse me(@AuthenticationPrincipal Long userNo) {
-        return userService.findUser(userNo);
-    }
-
     @GetMapping("/{id}")
     public UserResponse findUser(@PathVariable("id") Long userNo) {
         return userService.findUser(userNo);
     }
 
-    @DeleteMapping("/me")
-    public void deleteMe(@AuthenticationPrincipal Long userNo) {
+    @DeleteMapping("")
+    public void deleteUser(@RequestParam Long userNo) {
         userService.deleteUser(userNo);
     }
 }
