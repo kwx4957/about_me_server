@@ -1,5 +1,6 @@
 package com.aboutme.springwebservice.message.service;
 
+import com.aboutme.springwebservice.board.entity.BoardComment;
 import com.aboutme.springwebservice.board.entity.QnACategory;
 import com.aboutme.springwebservice.board.entity.QnACategoryLevel;
 import com.aboutme.springwebservice.board.repository.QnACategoryLevelRepository;
@@ -41,12 +42,12 @@ public class SueService {
     @Transactional
     public ResponseEntity<?extends BasicResponse> sue(@RequestBody SueVO vo) {
 
-        QnACategoryLevel qnACategoryLevel = qnACategoryLevelRepository.findById(vo.getTargetQuestionId())
-                                                                      .orElseThrow(()-> new IllegalArgumentException("해당 글이 존재하지 않습니다"));
         //임시Id
         UserInfo authorId = UserInfo.builder().seq(vo.getSuedUserId()).build();
 
         if(vo.getSueType().equals("board")){
+            QnACategoryLevel qnACategoryLevel = qnACategoryLevelRepository.findById(vo.getTargetQuestionId())
+                                                                          .orElseThrow(()-> new IllegalArgumentException("해당 글이 존재하지 않습니다"));
 
             UserVoc userVoc = UserVoc.builder().authorId(authorId).questionId(qnACategoryLevel).reasonId(new DefaultReasonList(vo.getSueReason())).build();
             sueRepository.save(userVoc);
@@ -54,15 +55,17 @@ public class SueService {
 
         }else if(vo.getSueType().equals("comment")){
 
-            Optional<QnACategory> qnACategory = qnACategoryRepository.findById(qnACategoryLevel.getCategoryId());
-            qnACategory.orElseThrow(()-> new IllegalArgumentException("해당 댓글이 존재하지 않습니다"));
+            BoardComment boardComment = qnACommentRepository.findById(vo.getTargetQuestionId())
+                                                             .orElseThrow(() -> new IllegalArgumentException("해당 댓글이 존재하지 않습니다") );
+            QnACategory qnACategory =qnACategoryRepository.findById(boardComment.getCategoryLevelId())
+                                                            .orElseThrow(() -> new IllegalArgumentException("해당 글이 존재하지 않습니다"));
 
-            if(qnACategory.get().getAuthor_id() != authorId.getSeq()){
+            if(qnACategory.getAuthor_id() != authorId.getSeq()){
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body( new ErrorResponse("글 작성자가 아닙니다.","403"));
             }
-
             qnACommentRepository.deleteById(vo.getTargetQuestionId());
-            return  ResponseEntity.ok().body( new CommonResponse<>());
+
+            return  ResponseEntity.ok().body( new CommonResponse<>("댓글이 삭제되었습니다"));
         }else
             return  ResponseEntity.status(HttpStatus.BAD_REQUEST).body( new ErrorResponse("잘못된 입력입니다."));
 

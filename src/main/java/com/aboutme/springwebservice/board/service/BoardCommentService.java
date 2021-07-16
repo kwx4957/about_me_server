@@ -80,14 +80,11 @@ public class BoardCommentService {
 
         commentDTO = new CommentDTO(boardComment);
 
-        QnACategoryLevel qnACategoryLevel = qnACategoryLevelRepository.findBySeq(commentDTO.getAnswerId());
-        QnACategory qnACategory = qnACategoryRepository.findBySeq(qnACategoryLevel.getCategoryId());
-
-        if (userId == qnACategory.getAuthor_id()) {
+        if (commentDTO.getAuthorId() == userId) {
             boardCommentRepository.deleteById(boardComment.getSeq());
 
             return new ResponseComment(200, "Deleted", commentDTO);
         }
-        return new ResponseComment(400, "다른 사람의 글에 있는 댓글은 삭제할 수 없습니다.", null);
+        return new ResponseComment(400, "다른 사람의 댓글은 삭제할 수 없습니다.", null);
     }
 }

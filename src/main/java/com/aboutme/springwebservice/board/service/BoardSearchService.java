@@ -70,7 +70,7 @@ public class BoardSearchService {
                     map.put("hasLiked", false);
                 }
                 map.put("scraps", res[9]);
-                if(boardInteraction != null && boardInteraction.getLikeYn() == 1){
+                if(boardInteraction != null && boardInteraction.getScrapYn() == 1){
                     map.put("hasScrapped", true);
                 }
                 else{
@@ -130,7 +130,7 @@ public class BoardSearchService {
                     map.put("hasLiked", false);
                 }
                 map.put("scraps", res[9]);
-                if(boardInteraction != null && boardInteraction.getLikeYn() == 1){
+                if(boardInteraction != null && boardInteraction.getScrapYn() == 1){
                     map.put("hasScrapped", true);
                 }
                 else{
@@ -190,7 +190,7 @@ public class BoardSearchService {
                     map.put("hasLiked", false);
                 }
                 map.put("scraps", res[9]);
-                if(boardInteraction != null && boardInteraction.getLikeYn() == 1){
+                if(boardInteraction != null && boardInteraction.getScrapYn() == 1){
                     map.put("hasScrapped", true);
                 }
                 else{

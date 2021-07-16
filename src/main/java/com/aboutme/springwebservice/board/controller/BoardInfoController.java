@@ -227,15 +227,21 @@ public class BoardInfoController {
     }
     //매일 받는 5색 질문 중 하나 삭제
     @DeleteMapping("/Board/dailyColors/{cardSeq}")
-    public String deleteDailyColors(@PathVariable(name="cardSeq") int categorySeq){
+    public String deleteDailyColors(@PathVariable(name="cardSeq") long categoryLevelSeq){
         JsonObject o = new JsonObject();
-        Optional<QnACategory> quest = questionRepository.findById((long)categorySeq);
+        Optional<QnACategoryLevel> quest = answerRepository.findById(categoryLevelSeq);
+        long categoryId = quest.get().getCategoryId();
+        Optional<QnACategory> category = questionRepository.findById(categoryId);
 
-        if(quest.isPresent()){
-            commRepository.delCardComment(answerRepository.selectCard(categorySeq));
-            answerRepository.delCardAnswer(categorySeq);
-            questionRepository.delCardQuestion(categorySeq);
-            levelService.updateUserLevelExperience( quest.get().getAuthor_id(),quest.get().getColor(),true); //진행도 감소
+
+        if(quest.isPresent() && category.isPresent()){
+            commRepository.delCardComment(categoryLevelSeq);
+            answerRepository.delCardAnswer(categoryLevelSeq);
+            List<QnACategoryLevel> otherAnswers = answerRepository.findByCategoryId(categoryId);
+            if(otherAnswers.isEmpty()){
+                questionRepository.delCardQuestion(category.get().getSeq());
+            }
+            levelService.updateUserLevelExperience( category.get().getAuthor_id(), category.get().getColor(),true); //진행도 감소
             o.addProperty("code",200);
             o.addProperty("message","삭제완료");
         }

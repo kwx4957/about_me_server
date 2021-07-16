@@ -9,5 +9,5 @@ import org.springframework.stereotype.Repository;
 public interface QnACommentRepository extends JpaRepository<BoardComment,Long> {
     int countByCategoryLevelId(long seq);
     @Query(value = "DELETE FROM QnA_Comment WHERE category_level_id = ?1", nativeQuery = true)
-    void delCardComment(int catgLevelSeq);
+    void delCardComment(long catgLevelSeq);
 }

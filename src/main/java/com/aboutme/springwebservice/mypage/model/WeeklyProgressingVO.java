@@ -2,11 +2,16 @@ package com.aboutme.springwebservice.mypage.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import java.util.List;
 
 @Getter
+@Setter
 @AllArgsConstructor
+@NoArgsConstructor
 public class WeeklyProgressingVO {
-    private String color;
-    private String day;
-    private Boolean isWritten;
+    String date;
+    List week;
 }

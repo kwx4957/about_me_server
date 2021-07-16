@@ -15,6 +15,5 @@ import java.util.ArrayList;
 public class ResponseWeeklyProgressing {
     private int code;
     private String message;
-    private String date;
-    private ArrayList<ArrayList<WeeklyProgressingVO>> weeklyProgressingList;
+    private ArrayList<WeeklyProgressingVO> weeklyProgressingList;
 }
