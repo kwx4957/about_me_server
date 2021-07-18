@@ -83,6 +83,7 @@ public class BoardDailyService{
         map.put("level", daily[5]);
         map.put("isShare", daily[6]);
         map.put("color", daily[7]);
+        map.put("answer_id", daily[8]);
         list_02.add(map);
 
         dailyLists.setUser(Integer.parseInt(daily[0].toString()));
