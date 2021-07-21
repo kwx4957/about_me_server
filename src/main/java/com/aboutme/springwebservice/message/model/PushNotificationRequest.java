@@ -15,4 +15,10 @@ public class PushNotificationRequest {
     public void setTopic(String topic) {
         this.topic = topic;
     }
+    public String  getTopic(){
+        return topic;
+    }
+    public String getToken(){
+        return token;
+    }
 }
