@@ -4,6 +4,7 @@ import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
@@ -44,8 +45,13 @@ public class UserProfile {
     private LocalDateTime update_date;
 
     @Column(name = "birthday")
-    private LocalDateTime birthday;
+    private LocalDate birthday;
 
+    @Column(name = "gender")
+    private String gender;
+
+    @Column(name = "email")
+    private String email;
 
     @Builder
     public static UserProfileBuilder builder(Long id) {

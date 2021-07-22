@@ -49,6 +49,8 @@ public class ProfileController {
         userProfile.setUpdate_date(LocalDateTime.now());
         userProfile.setThemeComment(profileVO.getTheme_comment());
         userProfile.setBirthday(profileVO.getBirthday());
+        userProfile.setGender(profileVO.getGender());
+        userProfile.setEmail(profileVO.getEmail());
 
         profileRepository.save(userProfile);
 
