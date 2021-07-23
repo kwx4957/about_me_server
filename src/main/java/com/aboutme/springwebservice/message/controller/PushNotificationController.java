@@ -23,13 +23,12 @@ public class PushNotificationController {
      @PostMapping("/Message/push")
      public void  sendPushNotification(@RequestBody PushNotificationRequest request ) throws Exception {
          pushNotificationService.sendPushNotification(request);
-         return;
         }
 
     @Scheduled(cron = "0 0 08 * * ?")
     public void sendAutoNotification(){
         PushNotificationRequest request = new PushNotificationRequest();
-        request.setToken("chsac4qNy0vPjIZWzhPtrH:APA91bGIpM3-24VuDldkFdfU28lqW2LKuN_EBQvkhJwEBuzldr6zEmfDxsw3daf2yFRv09cJrVdAE9zTn2v9xnl-Nz5YDwP5M7lRPcYMi8ekmwsdLIOhWbJ2gd_O4oms8S7sdx8YBvik");
+        request.setToken("cwYMmejr-kAFrhXLbyuvoh:APA91bHgSN3Bk6grCAip5wTMt-PHToFvghOyFmPX-5cIrC0-Iuo8nmsUh6Ix7M_q7TsPoqpTFqi-v4RRdHjnr1Xv3yAtR0-bg1NPIQxPZHkC-Pz6USLteUb2S_ohsY5ugLdPwRQVwr-5");
         request.setTitle("오늘의나");
         request.setTopic("global");
         request.setMessage("오늘은 질문 해주시는거죠?");
