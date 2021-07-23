@@ -49,7 +49,7 @@ public class FCMService {
                 //.putHeader("apns-priority","5")
                 //.putHeader("apns-push-type","background")
                 .putCustomData("badge","1")
-                .setAps(Aps.builder().setCategory(topic).setContentAvailable(true).setSound("default").build()).build();
+                .setAps(Aps.builder().setCategory(topic).setContentAvailable(true).setBadge(1).setSound("default").build()).build();
     }
 
     private Message getPreconfiguredMessageToToken(PushNotificationRequest request) {
