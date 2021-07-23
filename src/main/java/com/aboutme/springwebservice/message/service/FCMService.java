@@ -47,7 +47,7 @@ public class FCMService {
         return ApnsConfig.builder()
                 .putHeader("apns-priority","5")
                 .putHeader("apns-push-type","background")
-                .setAps(Aps.builder().setCategory(topic).setContentAvailable(true).setSound("default").setBadge(1).build()).build();
+                .setAps(Aps.builder().setCategory(topic).setThreadId(topic).setContentAvailable(true).setSound("default").setBadge(1).build()).build();
     }
 
     private Message getPreconfiguredMessageToToken(PushNotificationRequest request) {
