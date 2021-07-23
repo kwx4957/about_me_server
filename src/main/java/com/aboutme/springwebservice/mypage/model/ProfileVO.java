@@ -11,7 +11,7 @@ public class ProfileVO {
     Long UserId;
     String nickName; // 활동닉네임 -필수
     String introduce; // 한줄소개 -필수
-        Integer color; // 주 색 카테고리
+    Integer color; // 주 색 카테고리
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "Y")
     String push_yn;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "08")

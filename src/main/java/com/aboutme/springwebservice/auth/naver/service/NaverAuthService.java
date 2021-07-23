@@ -67,13 +67,17 @@ public class NaverAuthService implements AuthService {
         }
 
         return new AuthResponse(
-                jwtTokenProvider.createToken(appUserInfo.getUserID())
+                jwtTokenProvider.createToken(appUserInfo.getUserID()),
+                appUserInfo.getUserID(),
+                appUserInfo.getNickname()
         );
     }
 
     public AuthResponse refresh(Long userNo) {
         return new AuthResponse(
-                jwtTokenProvider.createToken(userNo)
+                jwtTokenProvider.createToken(userNo),
+                null,
+                null
         );
     }
 
