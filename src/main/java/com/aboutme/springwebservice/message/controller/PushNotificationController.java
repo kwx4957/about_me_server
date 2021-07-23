@@ -25,10 +25,10 @@ public class PushNotificationController {
          pushNotificationService.sendPushNotification(request);
         }
 
-    @Scheduled(cron = "0 0 08 * * ?")
+    @Scheduled(cron = "0 0 09 * * ?")
     public void sendAutoNotification(){
         PushNotificationRequest request = new PushNotificationRequest();
-        request.setToken("cwYMmejr-kAFrhXLbyuvoh:APA91bHgSN3Bk6grCAip5wTMt-PHToFvghOyFmPX-5cIrC0-Iuo8nmsUh6Ix7M_q7TsPoqpTFqi-v4RRdHjnr1Xv3yAtR0-bg1NPIQxPZHkC-Pz6USLteUb2S_ohsY5ugLdPwRQVwr-5");
+        request.setToken("fvsJWhOnNU8vigBvqEdhhH:APA91bHSbxnLUvyII20kXUUqQPoT4bo5M2Di0OE8C6nEP9-BRfpxxzd78IIgLuoKg3_BKMzOU-rGoJQCmVedKW8PNzWsL8ehPicZoUsDuSJY3LJQZ9Yym3qeKd-_GGegYefxfW580ViD ");
         request.setTitle("오늘의나");
         request.setTopic("global");
         request.setMessage("오늘은 질문 해주시는거죠?");

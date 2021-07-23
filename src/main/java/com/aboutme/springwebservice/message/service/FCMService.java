@@ -48,7 +48,6 @@ public class FCMService {
                 //왜 인지 모르겠지만 헤더값을 추가할 경우 알림이 디바이스로 가질 않음
                 //.putHeader("apns-priority","5")
                 //.putHeader("apns-push-type","background")
-                .putCustomData("badge","1")
                 .setAps(Aps.builder().setCategory(topic).setContentAvailable(true).setBadge(1).setSound("default").build()).build();
     }
 
