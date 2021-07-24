@@ -226,7 +226,7 @@ public class BoardInfoController {
         else return boardDailyService.setDailyStep2(ans);
     }
     //매일 받는 5색 질문 중 하나 삭제
-    @DeleteMapping("/Board/dailyColors/{answerId}/{level}")
+    @DeleteMapping("/Board/dailyColors/{answerId}")
     public String deleteDailyColors(@PathVariable(name="answerId") long categoryLevelSeq){
         JsonObject o = new JsonObject();
         Optional<QnACategoryLevel> quest = answerRepository.findById(categoryLevelSeq);
