@@ -29,16 +29,18 @@ public class QnACategory {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long seq;
 
-    private long author_id;
+    @Column(name ="author_id")
+    private long authorId;
 
-    private long title_id;
+    @Column(name ="title_id")
+    private long titleId;
 
     private int color;
 
     @Builder
     public QnACategory(long author_id, long title_id, int color){
-        this.author_id = author_id;
-        this.title_id = title_id;
+        this.authorId = author_id;
+        this.titleId = title_id;
         this.color = color;
     }
 }

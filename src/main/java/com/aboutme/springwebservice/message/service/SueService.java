@@ -60,7 +60,7 @@ public class SueService {
             QnACategory qnACategory =qnACategoryRepository.findById(boardComment.getCategoryLevelId())
                                                             .orElseThrow(() -> new IllegalArgumentException("해당 글이 존재하지 않습니다"));
 
-            if(qnACategory.getAuthor_id() != authorId.getSeq()){
+            if(qnACategory.getAuthorId() != authorId.getSeq()){
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body( new ErrorResponse("글 작성자가 아닙니다.","403"));
             }
             qnACommentRepository.deleteById(vo.getTargetQuestionId());
@@ -88,7 +88,7 @@ public class SueService {
         for(UserVoc userVoc1:userVoc) {
             qnACategory      = qnACategoryRepository.findBySeq(userVoc1.getQuestionId().getCategoryId());
             authorId         = userProfileRepository.findOneByUserID(userVoc1.getAuthorId().getSeq());
-            suedId           = userProfileRepository.findOneByUserID(qnACategory.getAuthor_id());
+            suedId           = userProfileRepository.findOneByUserID(qnACategory.getAuthorId());
             qnACategoryLevel = qnACategoryLevelRepository.findBySeq(userVoc1.getAuthorId().getSeq());
             responseSueLists.add(ResponseSueList.builder().qnACategoryLevel(userVoc1.getQuestionId())
                                                           .sue(this.convertSue(authorId ,suedId ,userVoc1.getReasonId()))

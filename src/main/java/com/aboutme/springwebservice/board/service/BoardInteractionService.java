@@ -33,7 +33,7 @@ public class BoardInteractionService {
                 QnACategoryLevel qnACategoryLevel = qnACategoryLevelRepository.findById(vo.getQuestId())
                                                                               .orElseThrow(()-> new IllegalArgumentException("해당 글이 존재하지 않습니다"));
                 QnACategory qnACategory = qnACategoryRepository.findBySeq(qnACategoryLevel.getCategoryId());
-                UserInfo authorUser= UserInfo.builder().seq(qnACategory.getAuthor_id()).build();
+                UserInfo authorUser= UserInfo.builder().seq(qnACategory.getAuthorId()).build();
                 if( likeUser.getSeq() == authorUser.getSeq() ){
                     return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                                          .body(new ErrorResponse("자신의 글에는 좋아요 할 수 없습니다","400"));
@@ -70,7 +70,7 @@ public class BoardInteractionService {
                 QnACategoryLevel qnACategoryLevel = qnACategoryLevelRepository.findById(vo.getQuestId())
                                                                               .orElseThrow(() -> new IllegalArgumentException("해당 글이 존재하지 않습니다"));
                 QnACategory qnACategory = qnACategoryRepository.findBySeq(qnACategoryLevel.getCategoryId());
-                UserInfo authorUser= UserInfo.builder().seq(qnACategory.getAuthor_id()).build();
+                UserInfo authorUser= UserInfo.builder().seq(qnACategory.getAuthorId()).build();
                 if(likeUser.getSeq() == authorUser.getSeq() ){
                     return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                                          .body(new ErrorResponse("자신의 글에는 스크랩 할 수 없습니다","400"));

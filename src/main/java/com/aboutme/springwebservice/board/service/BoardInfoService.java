@@ -86,7 +86,7 @@ public class BoardInfoService {
         return map;
     }
 
-    public List getPastResponse(Long answerId) {
+    public List getPastResponse(Long answerId, boolean getCurrentAnswer) {
         List postList = new ArrayList<ResponseBoardList>();
         QnACategoryLevel qnACategoryLevel = qnACategoryLevelRepository.findBySeq(answerId);
 
@@ -95,13 +95,15 @@ public class BoardInfoService {
         List<QnACategoryLevel> qnACategoryList = qnACategoryLevelRepository.findByCategoryIdOrderByLevelDesc(categoryId);
 
         for(QnACategoryLevel q : qnACategoryList) {
-            if(q.getSeq() >= answerId) { // 해당 글을 제외
-                continue;
+            if(getCurrentAnswer == false){
+                if(q.getSeq() >= answerId) { // 해당 글을 제외
+                    continue;
+                }
             }
             LinkedHashMap<String, Object> map = new LinkedHashMap<String, Object>();
 
             QnACategory qnACategory = qnACategoryRepository.findBySeq(q.getCategoryId());
-            DefaultEnquiry defaultEnquiry = defaultEnquiryRepository.findBySeq(qnACategory.getTitle_id());
+            DefaultEnquiry defaultEnquiry = defaultEnquiryRepository.findBySeq(qnACategory.getTitleId());
 
             map.put("cardSeq", q.getCategoryId()); // 카드 수정시 필요한 cardSeq는 qnACategory seq인데 qnACategorylevel의 seq가져옴....수정
             map.put("quest_id", defaultEnquiry.getSeq());
@@ -131,5 +133,13 @@ public class BoardInfoService {
         }
 
         return postList;
+    }
+
+    public long getAnswerIdFromQuestId(long userId, long questId) {
+        QnACategory qnACategory = qnACategoryRepository.findByAuthorIdAndTitleId(userId, questId);
+        System.out.println(qnACategory.getSeq());
+        List<QnACategoryLevel> qnACategoryLevelList = qnACategoryLevelRepository.findByCategoryId(qnACategory.getSeq());
+        System.out.println(qnACategoryLevelList.get(0).getSeq());
+        return qnACategoryLevelList.get(0).getSeq();
     }
 }

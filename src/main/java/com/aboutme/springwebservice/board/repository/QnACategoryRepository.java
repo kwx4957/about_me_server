@@ -12,4 +12,5 @@ public interface QnACategoryRepository extends JpaRepository<QnACategory, Long> 
 
     QnACategory findBySeq(long seq);
 
+    QnACategory findByAuthorIdAndTitleId(long userId, long questId);
 }

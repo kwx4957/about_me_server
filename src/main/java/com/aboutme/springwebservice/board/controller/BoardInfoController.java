@@ -8,10 +8,7 @@ import com.aboutme.springwebservice.board.model.response.ResponseComment;
 import com.aboutme.springwebservice.board.model.response.ResponseDailyLists;
 import com.aboutme.springwebservice.board.entity.QnACategory;
 import com.aboutme.springwebservice.board.model.response.ResponsePost;
-import com.aboutme.springwebservice.board.repository.BoardCommentRepository;
-import com.aboutme.springwebservice.board.repository.QnACategoryLevelRepository;
-import com.aboutme.springwebservice.board.repository.QnACategoryRepository;
-import com.aboutme.springwebservice.board.repository.QnACommentRepository;
+import com.aboutme.springwebservice.board.repository.*;
 import com.aboutme.springwebservice.board.service.BoardDailyService;
 import com.aboutme.springwebservice.board.service.BoardInfoService;
 import com.aboutme.springwebservice.board.service.BoardCommentService;
@@ -42,6 +39,7 @@ public class BoardInfoController {
     public QnACategoryRepository questionRepository;
     public UserInfoRepository infoRepository;
     public BoardCommentRepository boardCommentRepository;
+    public DefaultEnquiryRepository defaultEnquiryRepository;
 
     private final BoardDailyService boardDailyService;
     private final UserLevelService levelService;
@@ -67,27 +65,56 @@ public class BoardInfoController {
 
     //지난 응답 화면
     @GetMapping("/Board/pastResponse")
-    public ResponseBoardList getPastResponse(@RequestParam("answer_id") long answerId)
+    public ResponseBoardList getPastResponse(@RequestParam("user_id") long userId, @RequestParam(value = "answer_id", required = false, defaultValue = "-1") long answerId, @RequestParam(value = "quest_id", required = false, defaultValue = "-1") long questId)
     {
         ResponseBoardList res = new ResponseBoardList();
-        if(!answerRepository.existsById(answerId)){
+        if((answerId == -1 && questId == -1) || (answerId != -1 && questId != -1)){
             res.setCode(400);
-            res.setMessage("해당 게시글이 존재하지 않습니다");
+            res.setMessage("파라미터 입력이 잘못 되었습니다.");
 
             return res;
         }
 
-        List postList = boardInfoService.getPastResponse(answerId);
-        if(postList.size() == 0){
+        if(answerId == -1 && questId != -1){
+            if(!defaultEnquiryRepository.existsById(questId)){
+                res.setCode(200);
+                res.setMessage("해당 질문이 존재하지 않습니다.");
+
+                return res;
+            }
+            answerId = boardInfoService.getAnswerIdFromQuestId(userId, questId);
+
+
+            List postList = boardInfoService.getPastResponse(answerId, true);
+            if (postList.size() == 0) {
+                res.setCode(200);
+                res.setMessage("작성한 답변이 없습니다");
+
+                return res;
+            }
             res.setCode(200);
-            res.setMessage("작성한 답변이 없습니다");
-
-            return res;
+            res.setMessage("OK");
+            res.setPostList(postList);
         }
+        else {
+            if (!answerRepository.existsById(answerId)) {
+                res.setCode(400);
+                res.setMessage("해당 게시글이 존재하지 않습니다");
 
-        res.setCode(200);
-        res.setMessage("OK");
-        res.setPostList(postList);
+                return res;
+            }
+
+            List postList = boardInfoService.getPastResponse(answerId, false);
+            if (postList.size() == 0) {
+                res.setCode(200);
+                res.setMessage("작성한 답변이 없습니다");
+
+                return res;
+            }
+            res.setCode(200);
+            res.setMessage("OK");
+            res.setPostList(postList);
+        }
 
         return res;
     }
@@ -241,7 +268,7 @@ public class BoardInfoController {
             if(otherAnswers.isEmpty()){
                 questionRepository.delCardQuestion(category.get().getSeq());
             }
-            levelService.updateUserLevelExperience( category.get().getAuthor_id(), category.get().getColor(),true); //진행도 감소
+            levelService.updateUserLevelExperience( category.get().getAuthorId(), category.get().getColor(),true); //진행도 감소
             o.addProperty("code",200);
             o.addProperty("message","삭제완료");
         }
