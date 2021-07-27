@@ -41,7 +41,6 @@ public class PushNotificationService {
         Map<String, String> pushData = new HashMap<>();
         pushData.put("title", "오늘의나");
         pushData.put("message", "오늘도 질문에 답변 하실꺼죠?");
-        pushData.put("url", "http://3.36.188.237:8080/Board/dailyColors/1");
         pushData.put("topic", "global");
         return pushData;
     }

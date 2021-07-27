@@ -28,7 +28,7 @@ public class PushNotificationController {
     @Scheduled(cron = "0 0 09 * * ?")
     public void sendAutoNotification(){
         PushNotificationRequest request = new PushNotificationRequest();
-        request.setToken("fvsJWhOnNU8vigBvqEdhhH:APA91bHSbxnLUvyII20kXUUqQPoT4bo5M2Di0OE8C6nEP9-BRfpxxzd78IIgLuoKg3_BKMzOU-rGoJQCmVedKW8PNzWsL8ehPicZoUsDuSJY3LJQZ9Yym3qeKd-_GGegYefxfW580ViD ");
+        request.setToken("fWs7iOUjLkL5tExH0qq2Rl:APA91bFPh34RD63hy_6MZgVQ4nA927FKC6JjKgyoskBSnPBLgcWQSGXpPTsdLY7G8NvSRUTSA5VX4ummqzfF3UuFiA12mbXaJfJs7G6WEjGlR1tJs-LSBFiP5E4xl1Nca-orgDpTmnJ7");
         request.setTitle("오늘의나");
         request.setTopic("global");
         request.setMessage("오늘은 질문 해주시는거죠?");
