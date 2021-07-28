@@ -1,12 +1,10 @@
 package com.aboutme.springwebservice.message.model;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
-@Setter
+@Builder
 @Getter
-@NoArgsConstructor
+@AllArgsConstructor
 public class PushNotificationRequest {
     private String title;
     private String message;

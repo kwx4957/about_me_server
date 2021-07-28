@@ -1,15 +1,19 @@
 package com.aboutme.springwebservice.board.service;
 
 import com.aboutme.springwebservice.board.entity.BoardComment;
+import com.aboutme.springwebservice.board.entity.DefaultEnquiry;
 import com.aboutme.springwebservice.board.entity.QnACategory;
 import com.aboutme.springwebservice.board.entity.QnACategoryLevel;
 import com.aboutme.springwebservice.board.model.CommentDTO;
 import com.aboutme.springwebservice.board.model.response.ResponseComment;
 import com.aboutme.springwebservice.board.repository.BoardCommentRepository;
+import com.aboutme.springwebservice.board.repository.DefaultEnquiryRepository;
 import com.aboutme.springwebservice.board.repository.QnACategoryLevelRepository;
 import com.aboutme.springwebservice.board.repository.QnACategoryRepository;
 import com.aboutme.springwebservice.domain.UserProfile;
 import com.aboutme.springwebservice.domain.repository.UserProfileRepository;
+import com.aboutme.springwebservice.message.model.PushNotificationRequest;
+import com.aboutme.springwebservice.message.service.PushNotificationService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,6 +29,8 @@ public class BoardCommentService {
     private UserProfileRepository userProfileRepository;
     private QnACategoryLevelRepository qnACategoryLevelRepository;
     private QnACategoryRepository qnACategoryRepository;
+    private DefaultEnquiryRepository defaultEnquiryRepository;
+    private PushNotificationService pushNotificationService;
 
     @Transactional(readOnly = false)
     public ArrayList<CommentDTO> getCommentList(long categoryLevelId){
@@ -70,6 +76,15 @@ public class BoardCommentService {
         CommentDTO res = new CommentDTO(commentResult);
         UserProfile user = userProfileRepository.findOneByUserID(commentResult.getAuthorId());
         res.setNickname(user.getNickname());
+
+        QnACategory qnACategory = qnACategoryRepository.findBySeq(res.getAnswerId());
+        DefaultEnquiry title = defaultEnquiryRepository.findBySeq(qnACategory.getTitleId());
+        PushNotificationRequest request = PushNotificationRequest.builder()
+                                          .message(user.getNickname()+" "+title.getQuestion() +"에 댓글을 남겼습니다") //글 작성자에게 알림
+                                          .title("오늘의나")
+                                          .token("fWs7iOUjLkL5tExH0qq2Rl:APA91bFPh34RD63hy_6MZgVQ4nA927FKC6JjKgyoskBSnPBLgcWQSGXpPTsdLY7G8NvSRUTSA5VX4ummqzfF3UuFiA12mbXaJfJs7G6WEjGlR1tJs-LSBFiP5E4xl1Nca-orgDpTmnJ7")
+                                          .topic("global").build();
+        pushNotificationService.sendPushNotificationToToken(request);
 
         return res;
     }

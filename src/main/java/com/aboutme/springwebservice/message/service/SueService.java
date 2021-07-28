@@ -1,8 +1,10 @@
 package com.aboutme.springwebservice.message.service;
 
 import com.aboutme.springwebservice.board.entity.BoardComment;
+import com.aboutme.springwebservice.board.entity.DefaultEnquiry;
 import com.aboutme.springwebservice.board.entity.QnACategory;
 import com.aboutme.springwebservice.board.entity.QnACategoryLevel;
+import com.aboutme.springwebservice.board.repository.DefaultEnquiryRepository;
 import com.aboutme.springwebservice.board.repository.QnACategoryLevelRepository;
 import com.aboutme.springwebservice.board.repository.QnACategoryRepository;
 import com.aboutme.springwebservice.board.repository.QnACommentRepository;
@@ -14,6 +16,7 @@ import com.aboutme.springwebservice.entity.CommonResponse;
 import com.aboutme.springwebservice.entity.ErrorResponse;
 import com.aboutme.springwebservice.message.entity.DefaultReasonList;
 import com.aboutme.springwebservice.message.entity.UserVoc;
+import com.aboutme.springwebservice.message.model.PushNotificationRequest;
 import com.aboutme.springwebservice.message.model.SueJudgeVO;
 import com.aboutme.springwebservice.message.model.SueVO;
 import com.aboutme.springwebservice.message.model.response.ResponseSueList;
@@ -38,6 +41,8 @@ public class SueService {
     private final QnACommentRepository qnACommentRepository;
     private final QnACategoryRepository qnACategoryRepository;
     private final UserProfileRepository userProfileRepository;
+    private final DefaultEnquiryRepository defaultEnquiryRepository;
+    private PushNotificationService pushNotificationService;
 
     @Transactional
     public ResponseEntity<?extends BasicResponse> sue(@RequestBody SueVO vo) {
@@ -48,8 +53,17 @@ public class SueService {
         if(vo.getSueType().equals("board")){
             QnACategoryLevel qnACategoryLevel = qnACategoryLevelRepository.findById(vo.getTargetQuestionId())
                                                                           .orElseThrow(()-> new IllegalArgumentException("해당 글이 존재하지 않습니다"));
+            //알림
+            QnACategory qnACategory = qnACategoryRepository.findBySeq(qnACategoryLevel.getCategoryId());
+            DefaultEnquiry defaultEnquiry = defaultEnquiryRepository.findBySeq(qnACategory.getTitleId());
 
             UserVoc userVoc = UserVoc.builder().authorId(authorId).questionId(qnACategoryLevel).reasonId(new DefaultReasonList(vo.getSueReason())).build();
+            PushNotificationRequest request = PushNotificationRequest.builder()
+                                                .message(defaultEnquiry.getQuestion()+"글에 신고가 들어왔어요.") //글작성자에게
+                                                .title("오늘의나")
+                                                .token("fWs7iOUjLkL5tExH0qq2Rl:APA91bFPh34RD63hy_6MZgVQ4nA927FKC6JjKgyoskBSnPBLgcWQSGXpPTsdLY7G8NvSRUTSA5VX4ummqzfF3UuFiA12mbXaJfJs7G6WEjGlR1tJs-LSBFiP5E4xl1Nca-orgDpTmnJ7")
+                                                .topic("global").build();
+            pushNotificationService.sendPushNotificationToToken(request);
             sueRepository.save(userVoc);
             return  ResponseEntity.ok().body( new CommonResponse<>("신고가 접수되었습니다."));
 
