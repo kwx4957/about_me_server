@@ -39,7 +39,6 @@ public class UserCrushService {
         QnACategoryLevel qnACategoryLevel;
         QnACategory qnACategory;
         DefaultEnquiry defaultEnquiry;
-        //TODO: 추후 엔티티를 JPA 형식으로 변환후 고려 너무 많은 repository 접속
         //수정예정   코드 테스트용 유저 삽입
         UserInfo userInfo=UserInfo.builder().seq(userId).build();
 
