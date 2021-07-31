@@ -86,17 +86,13 @@ public class BoardInfoService {
         return map;
     }
 
-    public List getPastResponse(Long answerId, boolean getCurrentAnswer) {
+    public List getPastResponse(ArrayList<Long> levelSeqList, boolean getCurrentAnswer, long answerId, long userId) {
         List postList = new ArrayList<ResponseBoardList>();
-        QnACategoryLevel qnACategoryLevel = qnACategoryLevelRepository.findBySeq(answerId);
 
-        Long categoryId = qnACategoryLevel.getCategoryId();
-
-        List<QnACategoryLevel> qnACategoryList = qnACategoryLevelRepository.findByCategoryIdOrderByLevelDesc(categoryId);
-
-        for(QnACategoryLevel q : qnACategoryList) {
+        for(Long seq : levelSeqList) {
+            QnACategoryLevel q = qnACategoryLevelRepository.findBySeq(seq);
             if(getCurrentAnswer == false){
-                if(q.getSeq() >= answerId) { // 해당 글을 제외
+                if(q.getSeq() == answerId) { // 해당 글을 제외
                     continue;
                 }
             }
@@ -105,7 +101,8 @@ public class BoardInfoService {
             QnACategory qnACategory = qnACategoryRepository.findBySeq(q.getCategoryId());
             DefaultEnquiry defaultEnquiry = defaultEnquiryRepository.findBySeq(qnACategory.getTitleId());
 
-            map.put("cardSeq", q.getCategoryId()); // 카드 수정시 필요한 cardSeq는 qnACategory seq인데 qnACategorylevel의 seq가져옴....수정
+            map.put("cardSeq", q.getCategoryId());
+            map.put("answer_id", q.getSeq());
             map.put("quest_id", defaultEnquiry.getSeq());
             map.put("question", defaultEnquiry.getQuestion());
             switch(defaultEnquiry.getColor()) {
@@ -135,11 +132,17 @@ public class BoardInfoService {
         return postList;
     }
 
-    public long getAnswerIdFromQuestId(long userId, long questId) {
-        QnACategory qnACategory = qnACategoryRepository.findByAuthorIdAndTitleId(userId, questId);
-        System.out.println(qnACategory.getSeq());
-        List<QnACategoryLevel> qnACategoryLevelList = qnACategoryLevelRepository.findByCategoryId(qnACategory.getSeq());
-        System.out.println(qnACategoryLevelList.get(0).getSeq());
-        return qnACategoryLevelList.get(0).getSeq();
+    public ArrayList<Long> getAnswerIdFromUserIdAndColor(long userId, int color) {
+        List<QnACategory> qnACategory = qnACategoryRepository.findByAuthorIdAndColor(userId, color);
+
+        ArrayList<Long> levelSeq = new ArrayList<>();
+        for(int i = 0; i < qnACategory.size(); i++){
+            List<QnACategoryLevel> qnACategoryLevelList = qnACategoryLevelRepository.findByCategoryIdOrderByLevelDesc(qnACategory.get(i).getSeq());
+            for(int j = 0; j < qnACategoryLevelList.size(); j++){
+                levelSeq.add(qnACategoryLevelList.get(j).getSeq());
+                System.out.println(qnACategoryLevelList.get(j).getSeq());
+            }
+        }
+        return levelSeq;
     }
 }

@@ -1,5 +1,6 @@
 package com.aboutme.springwebservice.board.controller;
 
+import com.aboutme.springwebservice.board.entity.DefaultEnquiry;
 import com.aboutme.springwebservice.board.entity.QnACategoryLevel;
 import com.aboutme.springwebservice.board.model.*;
 import com.aboutme.springwebservice.board.model.CommentDTO;
@@ -26,6 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -82,10 +84,12 @@ public class BoardInfoController {
 
                 return res;
             }
-            answerId = boardInfoService.getAnswerIdFromQuestId(userId, questId);
+            DefaultEnquiry defaultEnquiry = defaultEnquiryRepository.findBySeq(questId);
+            int color = defaultEnquiry.getColor();
+            ArrayList<Long> levelSeqList = boardInfoService.getAnswerIdFromUserIdAndColor(userId, color);
 
 
-            List postList = boardInfoService.getPastResponse(answerId, true);
+            List postList = boardInfoService.getPastResponse(levelSeqList, true, -1, userId);
             if (postList.size() == 0) {
                 res.setCode(200);
                 res.setMessage("작성한 답변이 없습니다");
@@ -103,8 +107,18 @@ public class BoardInfoController {
 
                 return res;
             }
+            QnACategory qnACategory = questionRepository.findBySeq(answerRepository.findBySeq(answerId).getCategoryId());
+            if(qnACategory.getAuthorId() != userId){
+                res.setCode(400);
+                res.setMessage("입력이 잘 못 되었습니다");
 
-            List postList = boardInfoService.getPastResponse(answerId, false);
+                return res;
+            }
+            int color = qnACategory.getColor();
+
+            ArrayList<Long> levelSeqList = boardInfoService.getAnswerIdFromUserIdAndColor(userId, color);
+
+            List postList = boardInfoService.getPastResponse(levelSeqList, false, answerId, userId);
             if (postList.size() == 0) {
                 res.setCode(200);
                 res.setMessage("작성한 답변이 없습니다");

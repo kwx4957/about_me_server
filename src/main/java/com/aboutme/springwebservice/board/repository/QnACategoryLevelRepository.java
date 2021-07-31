@@ -22,5 +22,5 @@ public interface QnACategoryLevelRepository extends JpaRepository<QnACategoryLev
 
     List<QnACategoryLevel> findByCategoryId(Long categoryId);
 
-    List<QnACategoryLevel> findByCategoryIdOrderByLevelDesc(Long categoryId);
+    List<QnACategoryLevel> findByCategoryIdOrderByLevelDesc(long seq);
 }
