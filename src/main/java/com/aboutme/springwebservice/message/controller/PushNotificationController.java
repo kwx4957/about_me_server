@@ -14,8 +14,8 @@ public class PushNotificationController {
     @Autowired
     PushNotificationService pushNotificationService;
 
-    @GetMapping("Message/Push/List") //
-    public ResponseEntity<? extends BasicResponse> getPushNoticationList(@RequestParam long userId){
+    @GetMapping("Message/Push/{userId}/List") //
+    public ResponseEntity<? extends BasicResponse> getPushNoticationList(@PathVariable("userId") long userId){
 
         return pushNotificationService.pushNotificationList(userId);
     }
