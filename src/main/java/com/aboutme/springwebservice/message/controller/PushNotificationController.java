@@ -1,18 +1,24 @@
 package com.aboutme.springwebservice.message.controller;
 
+import com.aboutme.springwebservice.entity.BasicResponse;
 import com.aboutme.springwebservice.message.model.PushNotificationRequest;
 import com.aboutme.springwebservice.message.service.PushNotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class PushNotificationController {
 
     @Autowired
     PushNotificationService pushNotificationService;
+
+    @GetMapping("Message/Push/{userId}/List") //
+    public ResponseEntity<? extends BasicResponse> getPushNoticationList(@PathVariable("userId") long userId){
+
+        return pushNotificationService.pushNotificationList(userId);
+    }
 
      @PostMapping("/Message/push")
      public void  sendPushNotification(@RequestBody PushNotificationRequest request ) throws Exception {

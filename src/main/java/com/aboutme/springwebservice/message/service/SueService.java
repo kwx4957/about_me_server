@@ -15,11 +15,13 @@ import com.aboutme.springwebservice.entity.BasicResponse;
 import com.aboutme.springwebservice.entity.CommonResponse;
 import com.aboutme.springwebservice.entity.ErrorResponse;
 import com.aboutme.springwebservice.message.entity.DefaultReasonList;
+import com.aboutme.springwebservice.message.entity.NotificationList;
 import com.aboutme.springwebservice.message.entity.UserVoc;
 import com.aboutme.springwebservice.message.model.PushNotificationRequest;
 import com.aboutme.springwebservice.message.model.SueJudgeVO;
 import com.aboutme.springwebservice.message.model.SueVO;
 import com.aboutme.springwebservice.message.model.response.ResponseSueList;
+import com.aboutme.springwebservice.message.repository.NotificationRepository;
 import com.aboutme.springwebservice.message.repository.SueRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -42,6 +44,7 @@ public class SueService {
     private final QnACategoryRepository qnACategoryRepository;
     private final UserProfileRepository userProfileRepository;
     private final DefaultEnquiryRepository defaultEnquiryRepository;
+    private final NotificationRepository notificationRepository;
     private PushNotificationService pushNotificationService;
 
     @Transactional
@@ -49,7 +52,6 @@ public class SueService {
 
         //임시Id
         UserInfo authorId = UserInfo.builder().seq(vo.getSuedUserId()).build();
-
         if(vo.getSueType().equals("board")){
             QnACategoryLevel qnACategoryLevel = qnACategoryLevelRepository.findById(vo.getTargetQuestionId())
                                                                           .orElseThrow(()-> new IllegalArgumentException("해당 글이 존재하지 않습니다"));
@@ -58,11 +60,18 @@ public class SueService {
             DefaultEnquiry defaultEnquiry = defaultEnquiryRepository.findBySeq(qnACategory.getTitleId());
 
             UserVoc userVoc = UserVoc.builder().authorId(authorId).questionId(qnACategoryLevel).reasonId(new DefaultReasonList(vo.getSueReason())).build();
+            UserInfo userinfo = UserInfo.builder().seq(qnACategory.getAuthorId()).build();
             PushNotificationRequest request = PushNotificationRequest.builder()
                                                 .message(defaultEnquiry.getQuestion()+"글에 신고가 들어왔어요.") //글작성자에게
                                                 .title("오늘의나")
                                                 .token("fWs7iOUjLkL5tExH0qq2Rl:APA91bFPh34RD63hy_6MZgVQ4nA927FKC6JjKgyoskBSnPBLgcWQSGXpPTsdLY7G8NvSRUTSA5VX4ummqzfF3UuFiA12mbXaJfJs7G6WEjGlR1tJs-LSBFiP5E4xl1Nca-orgDpTmnJ7")
                                                 .topic("global").build();
+            NotificationList noti = NotificationList.builder()
+                                                    .message(request.getMessage())
+                                                    .aulthorId(userinfo)
+                                                    .color(6)
+                                                    .build();
+            notificationRepository.save(noti);
             pushNotificationService.sendPushNotificationToToken(request);
             sueRepository.save(userVoc);
             return  ResponseEntity.ok().body( new CommonResponse<>("신고가 접수되었습니다."));

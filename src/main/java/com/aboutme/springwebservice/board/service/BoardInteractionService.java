@@ -15,14 +15,22 @@ import com.aboutme.springwebservice.domain.repository.UserProfileRepository;
 import com.aboutme.springwebservice.entity.BasicResponse;
 import com.aboutme.springwebservice.entity.CommonResponse;
 import com.aboutme.springwebservice.entity.ErrorResponse;
+import com.aboutme.springwebservice.message.entity.NotificationList;
 import com.aboutme.springwebservice.message.model.PushNotificationRequest;
+import com.aboutme.springwebservice.message.repository.NotificationRepository;
 import com.aboutme.springwebservice.message.service.PushNotificationService;
+import com.aboutme.springwebservice.mypage.model.response.ResponseCrushList;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.Map;
 
 @AllArgsConstructor
 @Service
@@ -33,11 +41,15 @@ public class BoardInteractionService {
         private final QnACategoryRepository qnACategoryRepository;
         private final DefaultEnquiryRepository defaultEnquiryRepository;
         private final UserProfileRepository userProfileRepository;
-        private PushNotificationService pushNotificationService;
+        private final NotificationRepository notificationRepository;
+        @Autowired
+        private final PushNotificationService pushNotificationService;
 
-
-        @Transactional
+    @Transactional
         public ResponseEntity<?extends BasicResponse> addLike(BoardInteractionVO vo) {
+                Map<String, String> data = new HashMap<>();
+                ResponseCrushList time = new ResponseCrushList();
+
                 //임시 userId;
                 UserInfo likeUser = UserInfo.builder().seq(vo.getUserId()).build();
                 UserProfile nickname = userProfileRepository.findOneByUserID(vo.getUserId());
@@ -59,16 +71,23 @@ public class BoardInteractionService {
                                                                                              .likeYn(0)
                                                                                              .authorId(authorUser)
                                                                                              .build());
+
                 if(boardInteraction.getLikeYn() == 0){
                     PushNotificationRequest request = PushNotificationRequest.builder()
                                                                             .message(nickname.getNickname()+"님이 "+defaultEnquiry.getQuestion()+"에 공감해주었어요.")
                                                                             .title("오늘의나")
                                                                             .token("fWs7iOUjLkL5tExH0qq2Rl:APA91bFPh34RD63hy_6MZgVQ4nA927FKC6JjKgyoskBSnPBLgcWQSGXpPTsdLY7G8NvSRUTSA5VX4ummqzfF3UuFiA12mbXaJfJs7G6WEjGlR1tJs-LSBFiP5E4xl1Nca-orgDpTmnJ7")
                                                                             .topic("global").build();
+                    NotificationList noti = NotificationList.builder()
+                                                            .message(request.getMessage())
+                                                            .color(nickname.getColor())
+                                                            .aulthorId(authorUser)
+                                                            .build();
                     boardInteraction.likeYes();
                     boardInteraction.getBoard().addLikesCount();
+                    pushNotificationService.sendPushNotificationToTokenWithData(data,request);
+                    notificationRepository.save(noti);
                     boardInteractionRepository.save(boardInteraction);
-                    pushNotificationService.sendPushNotificationToToken(request);
                     return ResponseEntity.ok().body( new CommonResponse<>());
                 }
                 else if(boardInteraction.getLikeYn() == 1){

@@ -2,21 +2,19 @@ package com.aboutme.springwebservice.message.model;
 
 import lombok.*;
 
-@Builder
 @Getter
-@AllArgsConstructor
-public class PushNotificationRequest {
+@NoArgsConstructor
+public class PushNotificationRequest  {
     private String title;
     private String message;
     private String topic;
     private String token;
-    public void setTopic(String topic) {
+
+    @Builder
+    public  PushNotificationRequest(String title, String message, String topic, String token){
+        this.title = title;
+        this.message = message;
         this.topic = topic;
-    }
-    public String  getTopic(){
-        return topic;
-    }
-    public String getToken(){
-        return token;
+        this.token = token;
     }
 }

@@ -58,7 +58,7 @@ public class ResponseCrushList {
         }
     }
 
-    private String converTime(LocalDateTime update_date){
+    public String converTime(LocalDateTime update_date){
         LocalDateTime currentTime= LocalDateTime.now();
         if((currentTime.getDayOfYear() - update_date.getDayOfYear())== 0) {
             if ((currentTime.getHour() - update_date.getHour()) > 0) {
