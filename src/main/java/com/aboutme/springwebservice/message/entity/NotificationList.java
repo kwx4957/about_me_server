@@ -5,6 +5,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -26,6 +27,7 @@ public class NotificationList {
     private String message;
 
     @Column(name = "color")
+    @ColumnDefault("6")
     private int color;
 
     @Column(name = "reg_date")

@@ -52,7 +52,6 @@ public class SueService {
 
         //임시Id
         UserInfo authorId = UserInfo.builder().seq(vo.getSuedUserId()).build();
-        UserProfile color = UserProfile.UserProfileBuilder().userID(vo.getSuedUserId()).build();
         if(vo.getSueType().equals("board")){
             QnACategoryLevel qnACategoryLevel = qnACategoryLevelRepository.findById(vo.getTargetQuestionId())
                                                                           .orElseThrow(()-> new IllegalArgumentException("해당 글이 존재하지 않습니다"));
@@ -70,7 +69,7 @@ public class SueService {
             NotificationList noti = NotificationList.builder()
                                                     .message(request.getMessage())
                                                     .aulthorId(userinfo)
-                                                    .color(color.getColor())
+                                                    .color(6)
                                                     .build();
             notificationRepository.save(noti);
             pushNotificationService.sendPushNotificationToToken(request);
