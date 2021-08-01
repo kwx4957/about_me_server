@@ -13,6 +13,7 @@ import com.aboutme.springwebservice.mypage.service.MyPageService;
 import com.aboutme.springwebservice.mypage.service.UserCrushService;
 import com.aboutme.springwebservice.mypage.service.UserLevelService;
 import lombok.AllArgsConstructor;
+import org.apache.tomcat.jni.Local;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityManager;
@@ -91,8 +92,8 @@ public class ProfileController {
     }
 
     //주차별 진행도
-    @GetMapping("/MyPage/WeeklyProgressing/{userId}")
-    public ResponseWeeklyProgressing getMonthlyProgressing(@PathVariable("userId") long userId){
+    @GetMapping("/MyPage/WeeklyProgressing/{userId}/{mon}/{d}")
+    public ResponseWeeklyProgressing getMonthlyProgressing(@PathVariable("userId") long userId, @PathVariable("mon") int mon, @PathVariable("d") int d){
 
         if (!userInfoRepository.existsById(userId)) {
             return new ResponseWeeklyProgressing(400, "해당 유저가 존재하지 않습니다", null);
@@ -101,7 +102,8 @@ public class ProfileController {
         UserLevelDTO ulDTO = new UserLevelDTO();
         ulDTO.setUser_id(userId);
 
-        LocalDate now = LocalDate.now();
+//        LocalDate now = LocalDate.now();
+        LocalDate now = LocalDate.of(2021,mon,d);
         LocalDate firstDayOfMonth = LocalDate.of(now.getYear(), now.getMonth(), 1);
         LocalDate firstMonday = firstDayOfMonth.with(TemporalAdjusters.nextOrSame(DayOfWeek.MONDAY));
 
@@ -110,10 +112,10 @@ public class ProfileController {
         int year = now.getYear();
         boolean isNextMonth = false;
 
-        for(int i = now.getDayOfWeek().getValue(); i < 7; i++){
-            LocalDate t = now.plusDays(7-i);
-            if(t.getMonthValue() != now.getMonthValue()){
-                if(t.getDayOfWeek().getValue() <= 4) {
+        for(int i = now.getDayOfWeek().getValue(); i < 7; i++) {
+            LocalDate t = now.plusDays(7 - i);
+            if (t.getMonthValue() != now.getMonthValue()) {
+                if (t.getDayOfWeek().getValue() <= 4) {
                     month = now.getMonthValue() + 1;
                     weeks = 1;
                     isNextMonth = true;
@@ -163,10 +165,16 @@ public class ProfileController {
         if(t.getDayOfMonth() > 4){
             --max_weeks;
         }
-        System.out.println(max_weeks);
-        System.out.println(month);
+//        System.out.println("max:" + max_weeks);
+//        System.out.println("month: "+month);
+//        System.out.println("weeks: "+weeks);
+//        System.out.println("max_weeks: "+max_weeks);
 
-        ArrayList<WeeklyProgressingVO> resList = userLevelService.getWeeklyProgressing(ulDTO, year, month, weeks, max_weeks);
+        if(max_weeks == 4 && weeks > max_weeks){
+            weeks = max_weeks;
+        }
+
+        ArrayList<WeeklyProgressingVO> resList = userLevelService.getWeeklyProgressing(ulDTO, year, month, weeks, max_weeks, now);
 
         return new ResponseWeeklyProgressing(200, "OK", resList);
     }
