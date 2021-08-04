@@ -10,6 +10,7 @@ import com.aboutme.springwebservice.auth.common.security.service.JwtTokenProvide
 import com.aboutme.springwebservice.auth.common.service.AuthService;
 import com.aboutme.springwebservice.domain.UserProfile;
 import com.aboutme.springwebservice.domain.repository.UserProfileRepository;
+import com.aboutme.springwebservice.message.controller.PushNotificationController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -28,6 +29,9 @@ public class NaverAuthService implements AuthService {
 
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
+
+    @Autowired
+    private PushNotificationController fcmSender;
 
     @Transactional
     public SignUpResponse signup(String naverAccessToken) {
@@ -56,7 +60,7 @@ public class NaverAuthService implements AuthService {
         }
     }
 
-    public AuthResponse signin(String naverAccessToken) {
+    public AuthResponse signin(String naverAccessToken,String fcmToken) {
         NaverUser naverUser = naverClient.profile(naverAccessToken);
 
         System.out.println("[NaverUser] " + naverUser.toString());
@@ -65,6 +69,8 @@ public class NaverAuthService implements AuthService {
         if (appUserInfo == null) {
             throw new UserNotFoundException("user not found");
         }
+
+        fcmSender.insertFCMToken(fcmToken, naverUser.getUserId());
 
         return new AuthResponse(
                 jwtTokenProvider.createToken(appUserInfo.getUserID()),
