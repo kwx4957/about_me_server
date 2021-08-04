@@ -2,7 +2,9 @@ package com.aboutme.springwebservice.message.controller;
 
 import com.aboutme.springwebservice.entity.BasicResponse;
 import com.aboutme.springwebservice.message.model.PushNotificationRequest;
+import com.aboutme.springwebservice.message.service.FCMService;
 import com.aboutme.springwebservice.message.service.PushNotificationService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -14,9 +16,11 @@ public class PushNotificationController {
     @Autowired
     PushNotificationService pushNotificationService;
 
+    @Autowired
+    FCMService fcmService;
+
     @GetMapping("Message/Push/{userId}/List") //
     public ResponseEntity<? extends BasicResponse> getPushNoticationList(@PathVariable("userId") long userId){
-
         return pushNotificationService.pushNotificationList(userId);
     }
 
@@ -24,6 +28,11 @@ public class PushNotificationController {
      public void  sendPushNotification(@RequestBody PushNotificationRequest request ) throws Exception {
          pushNotificationService.sendPushNotification(request);
         }
+
+     @PostMapping("/Message/FCMToken")
+     public void insertFCMToken(@RequestParam String token,@RequestParam long userId){
+        fcmService.saveFCMToken(token,userId);
+     }
 
     @Scheduled(cron = "0 0 09 * * ?")
     public void sendAutoNotification(){

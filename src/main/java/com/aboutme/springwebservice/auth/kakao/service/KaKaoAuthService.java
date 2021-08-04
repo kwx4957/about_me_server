@@ -10,6 +10,9 @@ import com.aboutme.springwebservice.auth.common.security.service.JwtTokenProvide
 import com.aboutme.springwebservice.auth.common.service.AuthService;
 import com.aboutme.springwebservice.domain.UserProfile;
 import com.aboutme.springwebservice.domain.repository.UserProfileRepository;
+import com.aboutme.springwebservice.message.controller.PushNotificationController;
+import com.aboutme.springwebservice.message.service.FCMService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -29,6 +32,9 @@ public class KaKaoAuthService implements AuthService {
 
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
+
+    @Autowired
+    private PushNotificationController fcmSender;
 
     @Transactional
     public SignUpResponse signup(String accessToken) {
@@ -58,7 +64,7 @@ public class KaKaoAuthService implements AuthService {
         }
     }
 
-    public AuthResponse signin(String accessToken) {
+    public AuthResponse signin(String accessToken,String fcmToken) {
         KaKaoUser kaKaoUser = kakaoClient.profile(accessToken);
 
         UserProfile appUserInfo = userRepository.findOneByUserID(kaKaoUser.getId());
@@ -66,6 +72,8 @@ public class KaKaoAuthService implements AuthService {
         if (appUserInfo == null) {
             throw new UserNotFoundException("user not found");
         }
+
+        fcmSender.insertFCMToken(fcmToken, kaKaoUser.getId());
 
         return new AuthResponse(
                 jwtTokenProvider.createToken(appUserInfo.getUserID()),
