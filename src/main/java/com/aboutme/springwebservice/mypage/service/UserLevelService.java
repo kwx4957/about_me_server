@@ -49,7 +49,7 @@ public class UserLevelService {
     }
 
     @Transactional
-    public ArrayList<WeeklyProgressingVO> getWeeklyProgressing(UserLevelDTO ulDTO, int _year, int _month, int _weeks, int max_weeks) {
+    public ArrayList<WeeklyProgressingVO> getWeeklyProgressing(UserLevelDTO ulDTO, int _year, int _month, int _weeks, int max_weeks, LocalDate n) {
 
         String[] days= {"월", "화", "수", "목", "금", "토", "일"};
         String[] en_days = {"Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"};
@@ -57,7 +57,7 @@ public class UserLevelService {
         long userId = ulDTO.getUser_id();
         ArrayList<WeeklyProgressingVO> res = new ArrayList<WeeklyProgressingVO>();
 
-        LocalDate now = LocalDate.now();
+        LocalDate now = n;
         LocalDate monday = now.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
 
         int weeks = _weeks - 1;
@@ -68,7 +68,7 @@ public class UserLevelService {
         monday = monday.with(TemporalAdjusters.nextOrSame(DayOfWeek.MONDAY));
         monday = monday.minusWeeks(1);
 
-        for(int i = 0; i < max_weeks; i++){
+        for(int i = 0; i < _weeks; i++){
             monday = monday.plusWeeks(1);
             LocalDate nextMonday = monday.plusWeeks(1);
 
