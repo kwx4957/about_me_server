@@ -30,9 +30,9 @@ public class AuthController {
     }
 
     @GetMapping("/signin")
-    public AuthResponse signin(@RequestHeader String token, @RequestParam AuthType type, @RequestParam String fcmToken) {
+    public AuthResponse signin(@RequestHeader String token, @RequestParam AuthType type) {
         chooseAuthService(type);
-        return authService.signin(token,fcmToken);
+        return authService.signin(token);
     }
 
     @GetMapping("/refresh")

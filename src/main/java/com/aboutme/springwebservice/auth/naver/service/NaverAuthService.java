@@ -60,7 +60,7 @@ public class NaverAuthService implements AuthService {
         }
     }
 
-    public AuthResponse signin(String naverAccessToken,String fcmToken) {
+    public AuthResponse signin(String naverAccessToken) {
         NaverUser naverUser = naverClient.profile(naverAccessToken);
 
         System.out.println("[NaverUser] " + naverUser.toString());
@@ -70,7 +70,7 @@ public class NaverAuthService implements AuthService {
             throw new UserNotFoundException("user not found");
         }
 
-        fcmSender.insertFCMToken(fcmToken, naverUser.getUserId());
+        //fcmSender.insertFCMToken(fcmToken, naverUser.getUserId());
 
         return new AuthResponse(
                 jwtTokenProvider.createToken(appUserInfo.getUserID()),
