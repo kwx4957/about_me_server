@@ -36,7 +36,7 @@ public class FCMService {
     @Autowired
     private ObjectMapper objectMapper;
 
-    private final UserInfoRepository userInfoRepository;
+    private final UserProfileRepository userProfileRepository;
 
 //    @Transactional
 //    public void callUrl() throws JsonProcessingException {
@@ -56,9 +56,9 @@ public class FCMService {
 
     @Transactional
     public void saveFCMToken(String fcmToken,long userID){
-           UserInfo user = userInfoRepository.findOneBySeq(userID);
+           UserProfile user = userProfileRepository.findOneByUserID(userID);
            user.savefcmToken(fcmToken);
-           userInfoRepository.save(user);
+           userProfileRepository.save(user);
     }
 
 

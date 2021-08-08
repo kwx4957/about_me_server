@@ -39,9 +39,6 @@ public class UserInfo {
    // private Role role;
 
     @Column
-    String fcmToken;
-
-    @Column
     LocalDate reg_date;
 
     @Column
@@ -60,7 +57,4 @@ public class UserInfo {
         this.update_date = update_date;
     }
 
-    public void savefcmToken(String fcmToken){
-        this.fcmToken = fcmToken;
-    }
 }
