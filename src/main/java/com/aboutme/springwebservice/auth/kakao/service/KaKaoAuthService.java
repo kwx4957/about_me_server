@@ -64,7 +64,7 @@ public class KaKaoAuthService implements AuthService {
         }
     }
 
-    public AuthResponse signin(String accessToken) {
+    public AuthResponse signin(String accessToken,String fcmToken) {
         KaKaoUser kaKaoUser = kakaoClient.profile(accessToken);
 
         UserProfile appUserInfo = userRepository.findOneByUserID(kaKaoUser.getId());
@@ -73,7 +73,7 @@ public class KaKaoAuthService implements AuthService {
             throw new UserNotFoundException("user not found");
         }
 
-        //fcmSender.insertFCMToken(fcmToken, kaKaoUser.getId());
+        fcmSender.insertFCMToken(fcmToken, kaKaoUser.getId());
 
         return new AuthResponse(
                 jwtTokenProvider.createToken(appUserInfo.getUserID()),
