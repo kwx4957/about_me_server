@@ -5,6 +5,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -26,6 +27,7 @@ public class NotificationList {
     private String message;
 
     @Column(name = "color")
+    @ColumnDefault("6") //기본값이 6인 이유 신고의 경우에는 color가 불필요 null값 삽입이 int형에 따른 0이 삽입된다
     private int color;
 
     @Column(name = "reg_date")

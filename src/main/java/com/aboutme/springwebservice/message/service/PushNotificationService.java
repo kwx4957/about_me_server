@@ -34,17 +34,18 @@ public class PushNotificationService {
     public ResponseEntity<?extends BasicResponse> pushNotificationList(long userId){
 
         List<ResponseNotiList> responseNotiLists  = new ArrayList<>();
-
         UserInfo user = UserInfo.builder().seq(userId).build();
         List<NotificationList> notificationList = notificationRepository.findAllByAulthorId(user);
+
         for(NotificationList responseNoti:notificationList){
-            ResponseNotiList responseNotiList = ResponseNotiList.builder()
-                    .color(this.convertColor(responseNoti.getColor()))
-                    .message(responseNoti.getMessage())
-                    .updateDate(this.converTime(responseNoti.getRegDate()))
-                    .build();
-            responseNotiLists.add(responseNotiList);
+
+            responseNotiLists.add( ResponseNotiList.builder()
+                                                   .color(this.convertColor(responseNoti.getColor()))
+                                                   .message(responseNoti.getMessage())
+                                                   .updateDate(this.converTime(responseNoti.getRegDate()))
+                                                   .build());
         }
+
         return ResponseEntity.ok().body( new CommonResponse<List>(responseNotiLists));
     }
 

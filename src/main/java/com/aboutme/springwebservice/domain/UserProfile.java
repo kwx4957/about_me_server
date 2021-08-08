@@ -53,11 +53,17 @@ public class UserProfile {
     @Column(name = "email")
     private String email;
 
+    @Column
+    private String fcmToken;
+
     @Builder
     public static UserProfileBuilder builder(Long id) {
         if(id == null) {
             throw new IllegalArgumentException("필수 파라미터 누락");
         }
         return UserProfileBuilder().userID(id);
+    }
+    public void savefcmToken(String fcmToken){
+        this.fcmToken = fcmToken;
     }
 }
