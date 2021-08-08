@@ -4,11 +4,8 @@ import com.aboutme.springwebservice.board.entity.DefaultEnquiry;
 import com.aboutme.springwebservice.board.entity.QnACategoryLevel;
 import com.aboutme.springwebservice.board.model.*;
 import com.aboutme.springwebservice.board.model.CommentDTO;
-import com.aboutme.springwebservice.board.model.response.ResponseBoardList;
-import com.aboutme.springwebservice.board.model.response.ResponseComment;
-import com.aboutme.springwebservice.board.model.response.ResponseDailyLists;
+import com.aboutme.springwebservice.board.model.response.*;
 import com.aboutme.springwebservice.board.entity.QnACategory;
-import com.aboutme.springwebservice.board.model.response.ResponsePost;
 import com.aboutme.springwebservice.board.repository.*;
 import com.aboutme.springwebservice.board.service.BoardDailyService;
 import com.aboutme.springwebservice.board.service.BoardInfoService;
@@ -302,5 +299,21 @@ public class BoardInfoController {
             return r;
         }
         else return boardDailyService.getDailyColors(userId);
+    }
+
+    //유저가 오늘 글을 썼니 안썼니??
+    @GetMapping(path = "/Board/isDailyWirtten/{user}")
+    public ResponseIsDailyWritten getIsDailyWirtten(HttpServletResponse response, @PathVariable(name = "user") long userId){
+        ResponseIsDailyWritten r = new ResponseIsDailyWritten();
+        if(!infoRepository.existsById(userId)){
+            r.setCode(400);
+            r.setMessage("해당 유저가 존재하지 않습니다.");
+            return r;
+        }
+        else
+            r.setCode(200);
+            r.setMessage("해당 유저 [아이디 : "+userId+"] 가 오늘 글을 썼는지 우무 ");
+            r.setIsWritten(boardDailyService.isDailyWirtten(userId));
+            return r;
     }
 }

@@ -7,6 +7,8 @@ import com.aboutme.springwebservice.board.model.response.ResponseDailyLists;
 import com.aboutme.springwebservice.board.entity.DefaultEnquiry;
 import com.aboutme.springwebservice.board.repository.DefaultEnquiryRepository;
 import com.aboutme.springwebservice.board.entity.QnACategory;
+import com.aboutme.springwebservice.board.repository.QnACategoryLevelRepository;
+import com.aboutme.springwebservice.board.repository.QnACategoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,6 +25,8 @@ import java.util.List;
 public class BoardDailyService{
 
     private final DefaultEnquiryRepository DailyRepository;
+    private final QnACategoryRepository qnACategoryRepository;
+    private final QnACategoryLevelRepository qnACategoryLevelRepository;
 
     @PersistenceContext
     private EntityManager em;
@@ -90,5 +94,19 @@ public class BoardDailyService{
         dailyLists.setDailyLists(list_02);
 
         return dailyLists;
+    }
+
+    @Transactional(readOnly = true)
+    public Boolean isDailyWirtten(long userId) {
+        Boolean isDailyWirttenBy = false;
+        List<QnACategoryLevel> today_list  = qnACategoryLevelRepository.selectTodate();
+        for (QnACategoryLevel o : today_list) {
+            QnACategory title = qnACategoryRepository.findBySeq(o.getCategoryId());
+            if(title.getAuthorId() == userId){
+                isDailyWirttenBy = true;
+                break;
+            }
+        }
+        return isDailyWirttenBy;
     }
 }
