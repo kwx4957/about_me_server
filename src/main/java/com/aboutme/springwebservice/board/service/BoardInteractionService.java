@@ -27,8 +27,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -48,10 +46,9 @@ public class BoardInteractionService {
     @Transactional
         public ResponseEntity<?extends BasicResponse> addLike(BoardInteractionVO vo) {
                 Map<String, String> data = new HashMap<>();
-                ResponseCrushList time = new ResponseCrushList();
 
                 //임시 userId;
-                UserInfo likeUser = UserInfo.builder().seq(vo.getUserId()).build();
+                UserInfo likeUser    = UserInfo.builder().seq(vo.getUserId()).build();
                 UserProfile nickname = userProfileRepository.findOneByUserID(vo.getUserId());
 
                 QnACategoryLevel qnACategoryLevel = qnACategoryLevelRepository.findById(vo.getQuestId())
@@ -78,15 +75,15 @@ public class BoardInteractionService {
                                                                             .title("오늘의나")
                                                                             .token("fWs7iOUjLkL5tExH0qq2Rl:APA91bFPh34RD63hy_6MZgVQ4nA927FKC6JjKgyoskBSnPBLgcWQSGXpPTsdLY7G8NvSRUTSA5VX4ummqzfF3UuFiA12mbXaJfJs7G6WEjGlR1tJs-LSBFiP5E4xl1Nca-orgDpTmnJ7")
                                                                             .topic("global").build();
-                    NotificationList noti = NotificationList.builder()
-                                                            .message(request.getMessage())
-                                                            .color(nickname.getColor())
-                                                            .aulthorId(authorUser)
-                                                            .build();
+
                     boardInteraction.likeYes();
                     boardInteraction.getBoard().addLikesCount();
                     pushNotificationService.sendPushNotificationToTokenWithData(data,request);
-                    notificationRepository.save(noti);
+                    notificationRepository.save(NotificationList.builder()
+                                                                .message(request.getMessage())
+                                                                .color(nickname.getColor())
+                                                                .aulthorId(authorUser)
+                                                                .build());
                     boardInteractionRepository.save(boardInteraction);
                     return ResponseEntity.ok().body( new CommonResponse<>());
                 }

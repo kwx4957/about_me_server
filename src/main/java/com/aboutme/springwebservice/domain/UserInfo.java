@@ -2,6 +2,7 @@ package com.aboutme.springwebservice.domain;
 
 import com.sun.xml.bind.v2.TODO;
 import lombok.*;
+import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -10,6 +11,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Entity
+@DynamicUpdate
 @Table(name="User_Info")
 public class UserInfo {
     @Id
@@ -54,4 +56,5 @@ public class UserInfo {
         this.reg_date = reg_date;
         this.update_date = update_date;
     }
+
 }
