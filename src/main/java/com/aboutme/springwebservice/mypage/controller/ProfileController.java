@@ -92,8 +92,8 @@ public class ProfileController {
     }
 
     //주차별 진행도
-    @GetMapping("/MyPage/WeeklyProgressing/{userId}/{mon}/{d}")
-    public ResponseWeeklyProgressing getMonthlyProgressing(@PathVariable("userId") long userId, @PathVariable("mon") int mon, @PathVariable("d") int d){
+    @GetMapping("/MyPage/WeeklyProgressing/{userId}")
+    public ResponseWeeklyProgressing getMonthlyProgressing(@PathVariable("userId") long userId){
 
         if (!userInfoRepository.existsById(userId)) {
             return new ResponseWeeklyProgressing(400, "해당 유저가 존재하지 않습니다", null);
@@ -102,8 +102,7 @@ public class ProfileController {
         UserLevelDTO ulDTO = new UserLevelDTO();
         ulDTO.setUser_id(userId);
 
-//        LocalDate now = LocalDate.now();
-        LocalDate now = LocalDate.of(2021,mon,d);
+        LocalDate now = LocalDate.now();
         LocalDate firstDayOfMonth = LocalDate.of(now.getYear(), now.getMonth(), 1);
         LocalDate firstMonday = firstDayOfMonth.with(TemporalAdjusters.nextOrSame(DayOfWeek.MONDAY));
 
