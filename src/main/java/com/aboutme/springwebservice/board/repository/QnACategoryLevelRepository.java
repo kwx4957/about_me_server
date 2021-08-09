@@ -12,7 +12,7 @@ public interface QnACategoryLevelRepository extends JpaRepository<QnACategoryLev
     @Query(value = "DELETE FROM QnA_Category_Level WHERE seq = ?1", nativeQuery = true)
     void delCardAnswer(long categorySeq);
 
-    @Query(value = "SELECT *  FROM QnA_Category_Level WHERE TIMESTAMPDIFF(day,reg_date,now())=0 ", nativeQuery = true)
+    @Query(value = "SELECT *  FROM QnA_Category_Level WHERE date_format(reg_date,'%Y-%m-%d') = CURDATE() ", nativeQuery = true)
     List<QnACategoryLevel> selectTodate();
 
     @Query(value = "UPDATE QnA_Category_Level SET  share_yn = CASE WHEN share_yn ='Y' THEN 'N' ELSE 'Y' END WHERE seq = ?1 AND level = ?2", nativeQuery = true)
