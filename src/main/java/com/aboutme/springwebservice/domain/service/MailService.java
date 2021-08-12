@@ -2,7 +2,9 @@ package com.aboutme.springwebservice.domain.service;
 
 import com.aboutme.springwebservice.domain.MailDto;
 import com.aboutme.springwebservice.domain.UserInfo;
+import com.aboutme.springwebservice.domain.UserProfile;
 import com.aboutme.springwebservice.domain.repository.UserInfoRepository;
+import com.aboutme.springwebservice.domain.repository.UserProfileRepository;
 import com.google.gson.JsonObject;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,14 +25,15 @@ public class MailService {
 
     private static final String FROM_ADDRESS = "aboutme2auth@gmail.com";
     private final UserInfoRepository infoRepository;
+    private final UserProfileRepository profileRepository;
 
     @Transactional(readOnly = true)
     public String mailSend(MailDto mailDto) {
         JsonObject o = new JsonObject();
-        Optional<UserInfo> info = infoRepository.findById((long)mailDto.getUserId());
+        Optional<UserProfile> profile = profileRepository.findById((long)mailDto.getUserId());
         Date currentTime = new Date();
 
-        String from = info.get().getEmail();
+        String from = profile.get().getEmail();
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(MailService.FROM_ADDRESS);
         message.setFrom(from);
