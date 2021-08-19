@@ -4,12 +4,15 @@ import com.aboutme.springwebservice.auth.apple.domainModel.User;
 import com.aboutme.springwebservice.auth.apple.model.*;
 import com.aboutme.springwebservice.auth.apple.repository.AppleUserRepository;
 import com.aboutme.springwebservice.auth.apple.service.AppleService;
-import com.nimbusds.jose.Payload;
+
+import com.aboutme.springwebservice.domain.UserProfile;
+import com.aboutme.springwebservice.domain.repository.UserProfileRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @RestController
@@ -22,7 +25,7 @@ public class AppleController {
     AppleService appleService;
 
     @Autowired
-    AppleUserRepository appleUserRepository;
+    UserProfileRepository appleUserRepository;
 
     /**
      * Apple Login 유저 정보를 받은 후 권한 생성
@@ -42,44 +45,21 @@ public class AppleController {
         String client_secret = appleService.getAppleClientSecret(signUpRequest.getId_token());
         Payload payload = appleService.getPayload(signUpRequest.getId_token());
 
-        TokenResponse response = appleService.requestCodeValidations(client_secret, code);
+        TokenResponse response = new TokenResponse();//appleService.requestCodeValidations(client_secret, code);
 
-        String userId = payload.toJSONObject().get("email").toString();
+        long userId = payload.getEmail().hashCode();
 
-        User user = User.builder()
-                .userId(userId)
-                .accesToken(response.getAccess_token())
-                .refreshToken(response.getRefresh_token())
-                .updateDate(new Date())
+        UserProfile user = UserProfile.builder(userId)
+                .reg_date(LocalDateTime.now())
+                .update_date(LocalDateTime.now())
+                .email(payload.getEmail())
                 .build();
 
         appleUserRepository.save(user);
 
+        response.setUserId(userId);
         return response;
     }
-
-    /**
-     * Apple Login 유저 정보를 받은 후 권한 생성
-     *
-     * @param loginRequest
-     * @return
-     */
-    @PostMapping(value = "/login")
-    @ResponseBody
-    public LoginResponse Login(@RequestParam LoginRequest loginRequest) {
-
-        if (loginRequest == null) {
-            return new LoginResponse("실패");
-        }
-
-        if(appleUserRepository.findByUserId(loginRequest.getUserID()).getAccesToken() == loginRequest.getAccessToken()) {
-            return new LoginResponse("성공");
-        }
-
-        //하루단위로 엑세스 토근 업데이트 하는 로직을 만들것인지 확인 필요.
-        return new LoginResponse("실패");
-    }
-
 
     /**
      * refresh_token 유효성 검사

@@ -3,6 +3,7 @@ package com.aboutme.springwebservice.auth.apple.utils;
 import com.aboutme.springwebservice.auth.apple.model.Key;
 import com.aboutme.springwebservice.auth.apple.model.Keys;
 import com.aboutme.springwebservice.auth.apple.model.TokenResponse;
+import com.aboutme.springwebservice.auth.apple.model.Payload;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nimbusds.jose.*;

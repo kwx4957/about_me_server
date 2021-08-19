@@ -1,8 +1,8 @@
 package com.aboutme.springwebservice.auth.apple.service;
 
 import com.aboutme.springwebservice.auth.apple.model.TokenResponse;
+import com.aboutme.springwebservice.auth.apple.model.Payload;
 import com.aboutme.springwebservice.auth.apple.utils.AppleUtils;
-import com.nimbusds.jose.Payload;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

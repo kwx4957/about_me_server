@@ -1,7 +1,7 @@
 package com.aboutme.springwebservice.auth.apple.service;
 
 import com.aboutme.springwebservice.auth.apple.model.TokenResponse;
-import com.nimbusds.jose.Payload;
+import com.aboutme.springwebservice.auth.apple.model.Payload;
 
 import java.util.Map;
 
