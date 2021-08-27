@@ -5,6 +5,7 @@ import com.aboutme.springwebservice.auth.apple.model.*;
 import com.aboutme.springwebservice.auth.apple.repository.AppleUserRepository;
 import com.aboutme.springwebservice.auth.apple.service.AppleService;
 
+import com.aboutme.springwebservice.auth.common.exception.ResourceAlreadyExistsException;
 import com.aboutme.springwebservice.domain.UserProfile;
 import com.aboutme.springwebservice.domain.repository.UserProfileRepository;
 import org.slf4j.Logger;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/apple/auth")
@@ -41,13 +43,12 @@ public class AppleController {
             return null;
         }
 
-        String code = signUpRequest.getCode();
-        String client_secret = appleService.getAppleClientSecret(signUpRequest.getId_token());
         Payload payload = appleService.getPayload(signUpRequest.getId_token());
 
-        TokenResponse response = new TokenResponse();//appleService.requestCodeValidations(client_secret, code);
+        TokenResponse response = new TokenResponse();
 
         long userId = payload.getEmail().hashCode();
+        this.validateDuplicateUser(userId);
 
         UserProfile user = UserProfile.builder(userId)
                 .reg_date(LocalDateTime.now())
@@ -85,4 +86,11 @@ public class AppleController {
         logger.debug("[/path/to/endpoint] RequestBody ‣ " + appsResponse.getPayload());
     }
 
+    public void validateDuplicateUser(Long userNo) {
+        Optional<UserProfile> userProfile = Optional.ofNullable(appleUserRepository.findOneByUserID(userNo));
+        userProfile.ifPresent(findUser -> {
+            throw new ResourceAlreadyExistsException("Already user exists");
+        });
+    }
+    
 }
