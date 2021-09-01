@@ -6,6 +6,7 @@ import com.aboutme.springwebservice.auth.apple.repository.AppleUserRepository;
 import com.aboutme.springwebservice.auth.apple.service.AppleService;
 
 import com.aboutme.springwebservice.auth.common.exception.ResourceAlreadyExistsException;
+import com.aboutme.springwebservice.auth.common.exception.UserNotFoundException;
 import com.aboutme.springwebservice.domain.UserProfile;
 import com.aboutme.springwebservice.domain.repository.UserProfileRepository;
 import org.slf4j.Logger;
@@ -61,6 +62,30 @@ public class AppleController {
         response.setUserId(userId);
         return response;
     }
+
+    @PostMapping(value = "/signIn")
+    @ResponseBody
+    public TokenResponse SignIn(SignUpRequest signUpRequest) {
+
+        if (signUpRequest == null) {
+            return null;
+        }
+
+        Payload payload = appleService.getPayload(signUpRequest.getId_token());
+
+        TokenResponse response = new TokenResponse();
+
+        long userId = payload.getEmail().hashCode();
+        UserProfile appUserInfo = appleUserRepository.findOneByUserID(userId);
+
+        if (appUserInfo == null) {
+            throw new UserNotFoundException("user not found");
+        }
+
+        response.setUserId(userId);
+        return response;
+    }
+
 
     /**
      * refresh_token 유효성 검사
