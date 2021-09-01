@@ -1,6 +1,7 @@
 package com.aboutme.springwebservice.mypage.controller;
 
 import com.aboutme.springwebservice.domain.repository.UserInfoRepository;
+import com.aboutme.springwebservice.domain.repository.UserProfileRepository;
 import com.aboutme.springwebservice.mypage.model.*;
 import com.aboutme.springwebservice.mypage.model.response.ResponseSelfQnAList;
 import com.aboutme.springwebservice.mypage.model.response.ResponseThemeList;
@@ -19,7 +20,7 @@ import javax.persistence.PersistenceContext;
 public class SelfQuestionAnswerController {
 
     public SelfQuestRepository selfQuestRepository;
-    public UserInfoRepository infoRepository;
+    public UserProfileRepository infoRepository;
 
     private final SelfQuestService selfQuestService;
 

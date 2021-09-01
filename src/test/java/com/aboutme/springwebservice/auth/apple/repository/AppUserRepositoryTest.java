@@ -1,6 +1,8 @@
 package com.aboutme.springwebservice.auth.apple.repository;
 
 import com.aboutme.springwebservice.auth.apple.domainModel.User;
+import com.aboutme.springwebservice.domain.UserProfile;
+import com.aboutme.springwebservice.domain.repository.UserProfileRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +11,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @RunWith(SpringRunner.class)
@@ -16,25 +19,24 @@ import java.util.Date;
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 public class AppUserRepositoryTest {
     @Autowired
-    private AppleUserRepository appleUserRepository;
+    private UserProfileRepository appleUserRepository;
 
     @Test
     @Rollback(value = false)
     public void user_info_insert(){
-        User user = User.builder()
-                .userId("js")
-                .accesToken("accessTokenTest")
-                .refreshToken("refreshTokenTest")
-                .updateDate(new Date())
+        UserProfile userProfile = UserProfile.builder(2345L)
+                .reg_date(LocalDateTime.now())
+                .update_date(LocalDateTime.now())
                 .build();
-        System.out.println(user);
+
+        System.out.println(userProfile);
         System.out.println(appleUserRepository);
-        appleUserRepository.save(user);
+        appleUserRepository.save(userProfile);
     }
 
     @Test
     public void 유저_정보_조회() {
-        User test = appleUserRepository.findByUserId("js");
+        UserProfile test = appleUserRepository.findOneByUserID(123);
         System.out.println(test);
     }
 }

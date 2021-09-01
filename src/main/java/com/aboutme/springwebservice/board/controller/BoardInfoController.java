@@ -10,7 +10,7 @@ import com.aboutme.springwebservice.board.repository.*;
 import com.aboutme.springwebservice.board.service.BoardDailyService;
 import com.aboutme.springwebservice.board.service.BoardInfoService;
 import com.aboutme.springwebservice.board.service.BoardCommentService;
-import com.aboutme.springwebservice.domain.repository.UserInfoRepository;
+import com.aboutme.springwebservice.domain.repository.UserProfileRepository;
 import com.aboutme.springwebservice.mypage.service.UserLevelService;
 import com.google.gson.JsonObject;
 import lombok.AllArgsConstructor;
@@ -36,7 +36,7 @@ public class BoardInfoController {
     public QnACategoryLevelRepository answerRepository;
     public QnACommentRepository commRepository;
     public QnACategoryRepository questionRepository;
-    public UserInfoRepository infoRepository;
+    public UserProfileRepository userProfileRepository;
     public BoardCommentRepository boardCommentRepository;
     public DefaultEnquiryRepository defaultEnquiryRepository;
 
@@ -143,7 +143,7 @@ public class BoardInfoController {
         commentDTO.setAnswerId(answerId);
         commentDTO.setComment(comment);
 
-        if (!infoRepository.existsById(userId)) {
+        if (!userProfileRepository.existsById(userId)) {
             res.setCode(400);
             res.setMessage("해당 유저가 존재하지 않습니다.");
 
@@ -172,7 +172,7 @@ public class BoardInfoController {
 
             return res;
         }
-        if (!infoRepository.existsById(userId)) {
+        if (!userProfileRepository.existsById(userId)) {
             res.setCode(400);
             res.setMessage("해당 유저가 존재하지 않습니다.");
 
@@ -197,7 +197,7 @@ public class BoardInfoController {
         DailyAnswerDTO answerDTO = new DailyAnswerDTO();
         ResponseDailyLists r = new ResponseDailyLists();
 
-        if(!infoRepository.existsById((long)vo.getUser())){
+        if(!userProfileRepository.existsById((long)vo.getUser())){
             r.setCode(400);
             r.setMessage("해당 유저가 존재하지 않습니다.");
             return r;
@@ -292,7 +292,7 @@ public class BoardInfoController {
     //매일 받는 5색 질문 리스트 제공
     @GetMapping(path = "/Board/dailyColors/{user}")
     public ResponseDailyLists getDailyColors(HttpServletResponse response,@PathVariable(name = "user") int userId){
-        if(!infoRepository.existsById((long)userId)){
+        if(!userProfileRepository.existsById((long)userId)){
             ResponseDailyLists r = new ResponseDailyLists();
             r.setCode(400);
             r.setMessage("해당 유저가 존재하지 않습니다.");
@@ -305,15 +305,15 @@ public class BoardInfoController {
     @GetMapping(path = "/Board/isDailyWirtten/{user}")
     public ResponseIsDailyWritten getIsDailyWirtten(HttpServletResponse response, @PathVariable(name = "user") long userId){
         ResponseIsDailyWritten r = new ResponseIsDailyWritten();
-        if(!infoRepository.existsById(userId)){
-            r.setCode(400);
-            r.setMessage("해당 유저가 존재하지 않습니다.");
-            return r;
+            if(!userProfileRepository.existsById(userId)){
+                r.setCode(400);
+                r.setMessage("해당 유저가 존재하지 않습니다.");
+                return r;
+            }
+            else
+                r.setCode(200);
+                r.setMessage("해당 유저 [아이디 : "+userId+"] 가 오늘 글을 썼는지 우무 ");
+                r.setIsWritten(boardDailyService.isDailyWirtten(userId));
+                return r;
         }
-        else
-            r.setCode(200);
-            r.setMessage("해당 유저 [아이디 : "+userId+"] 가 오늘 글을 썼는지 우무 ");
-            r.setIsWritten(boardDailyService.isDailyWirtten(userId));
-            return r;
-    }
 }

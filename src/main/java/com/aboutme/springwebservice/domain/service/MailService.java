@@ -24,7 +24,6 @@ public class MailService {
     private MailSender mailSender;
 
     private static final String FROM_ADDRESS = "aboutme2auth@gmail.com";
-    private final UserInfoRepository infoRepository;
     private final UserProfileRepository profileRepository;
 
     @Transactional(readOnly = true)

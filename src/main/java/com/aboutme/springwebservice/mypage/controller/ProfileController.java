@@ -2,7 +2,6 @@ package com.aboutme.springwebservice.mypage.controller;
 
 import com.aboutme.springwebservice.board.model.response.ResponseBoardList;
 import com.aboutme.springwebservice.domain.UserProfile;
-import com.aboutme.springwebservice.domain.repository.UserInfoRepository;
 import com.aboutme.springwebservice.domain.repository.UserProfileRepository;
 import com.aboutme.springwebservice.mypage.model.ProfileVO;
 import com.aboutme.springwebservice.mypage.model.ProgressingVO;
@@ -31,7 +30,6 @@ public class ProfileController {
     private UserCrushService userCrushService;
     private MyPageService myPageService;
 
-    public UserInfoRepository userInfoRepository;
     public UserProfileRepository profileRepository;
 
     @PersistenceContext
@@ -68,7 +66,7 @@ public class ProfileController {
     @GetMapping("/MyPage/Progressing/{userId}")
     public ResponseProgressing getProgressing(@PathVariable("userId") long userId){
 
-        if(!userInfoRepository.existsById(userId)){
+        if(!profileRepository.existsById(userId)){
             return new ResponseProgressing(400, "해당 유저가 존재하지 않습니다.", null);
         }
 
@@ -95,7 +93,7 @@ public class ProfileController {
     @GetMapping("/MyPage/WeeklyProgressing/{userId}")
     public ResponseWeeklyProgressing getMonthlyProgressing(@PathVariable("userId") long userId){
 
-        if (!userInfoRepository.existsById(userId)) {
+        if (!profileRepository.existsById(userId)) {
             return new ResponseWeeklyProgressing(400, "해당 유저가 존재하지 않습니다", null);
         }
 
@@ -183,7 +181,7 @@ public class ProfileController {
         ResponseBoardList res = new ResponseBoardList();
         int _color; // color 입력 잘 못 되었는지 확인
 
-        if (!userInfoRepository.existsById(userId)) {
+        if (!profileRepository.existsById(userId)) {
             res.setCode(400);
             res.setMessage("해당 유저가 존재하지 않습니다.");
 
@@ -267,7 +265,7 @@ public class ProfileController {
     public ResponseMyMain enterMyProfile(@PathVariable("userId") long userId, @RequestParam(value="color", required = false) String color){
         ResponseMyMain res = new ResponseMyMain();
         int _color = -1; // color 입력 잘 못 되었는지 확인
-        if (!userInfoRepository.existsById(userId)) {
+        if (!profileRepository.existsById(userId)) {
             res.setCode(400);
             res.setMessage("해당 유저가 존재하지 않습니다.");
 
@@ -310,7 +308,7 @@ public class ProfileController {
                                          @RequestParam(value="color", required = false) String color){
         ResponseMyMain res = new ResponseMyMain();
         int _color = -1; // color 입력 잘 못 되었는지 확인
-        if (!userInfoRepository.existsById(otherID)) {
+        if (!profileRepository.existsById(otherID)) {
             res.setCode(400);
             res.setMessage("찾으신 유저가 존재하지 않습니다.");
 

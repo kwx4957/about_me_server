@@ -4,6 +4,7 @@ import com.aboutme.springwebservice.board.model.BoardVO;
 import com.aboutme.springwebservice.board.model.response.ResponseBoardList;
 import com.aboutme.springwebservice.board.service.BoardSearchService;
 import com.aboutme.springwebservice.domain.repository.UserInfoRepository;
+import com.aboutme.springwebservice.domain.repository.UserProfileRepository;
 import com.aboutme.springwebservice.mypage.model.response.ResponseProgressing;
 import com.aboutme.springwebservice.mypage.service.MyPageService;
 import lombok.AllArgsConstructor;
@@ -23,7 +24,7 @@ public class BoardSearchController {
     private final BoardSearchService boardSearchService;
     private final MyPageService myPageService;
 
-    public UserInfoRepository userInfoRepository;
+    public UserProfileRepository userInfoRepository;
 
     @GetMapping("/Board/latestList/{userId}")
     public ResponseBoardList getLatestList(@PathVariable("userId") int userId,@RequestParam(value="color", required = false) String color)
@@ -71,6 +72,7 @@ public class BoardSearchController {
             res.setCode(200);
             res.setMessage("데이터가 없습니다");
         }
+
 
         return res;
     }
