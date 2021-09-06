@@ -9,6 +9,7 @@ import com.aboutme.springwebservice.auth.common.exception.ResourceAlreadyExistsE
 import com.aboutme.springwebservice.auth.common.exception.UserNotFoundException;
 import com.aboutme.springwebservice.domain.UserProfile;
 import com.aboutme.springwebservice.domain.repository.UserProfileRepository;
+import com.aboutme.springwebservice.message.controller.PushNotificationController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,9 @@ public class AppleController {
 
     @Autowired
     UserProfileRepository appleUserRepository;
+
+    @Autowired
+    private PushNotificationController fcmSender;
 
     /**
      * Apple Login 유저 정보를 받은 후 권한 생성
@@ -65,7 +69,7 @@ public class AppleController {
 
     @PostMapping(value = "/signIn")
     @ResponseBody
-    public TokenResponse SignIn(SignUpRequest signUpRequest) {
+    public TokenResponse SignIn(SignUpRequest signUpRequest, String fcmToken) {
 
         if (signUpRequest == null) {
             return null;
@@ -82,6 +86,7 @@ public class AppleController {
             throw new UserNotFoundException("user not found");
         }
 
+        fcmSender.insertFCMToken(fcmToken, userId);
         response.setUserId(userId);
         return response;
     }
