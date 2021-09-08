@@ -42,7 +42,7 @@ public class AppleController {
      */
     @PostMapping(value = "/signUp")
     @ResponseBody
-    public TokenResponse SignUp(SignUpRequest signUpRequest) {
+    public TokenResponse SignUp(@RequestBody SignUpRequest signUpRequest) {
 
         if (signUpRequest == null) {
             return null;
@@ -69,13 +69,13 @@ public class AppleController {
 
     @PostMapping(value = "/signIn")
     @ResponseBody
-    public TokenResponse SignIn(SignUpRequest signUpRequest, String fcmToken) {
+    public TokenResponse SignIn(@RequestBody SingInRequest singInRequest) {
 
-        if (signUpRequest == null) {
+        if (singInRequest == null) {
             return null;
         }
 
-        Payload payload = appleService.getPayload(signUpRequest.getId_token());
+        Payload payload = appleService.getPayload(singInRequest.getId_token());
 
         TokenResponse response = new TokenResponse();
 
@@ -86,7 +86,7 @@ public class AppleController {
             throw new UserNotFoundException("user not found");
         }
 
-        fcmSender.insertFCMToken(fcmToken, userId);
+        fcmSender.insertFCMToken(singInRequest.getFcmToken(), userId);
         response.setUserId(userId);
         return response;
     }
