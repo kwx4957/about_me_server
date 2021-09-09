@@ -1,4 +1,4 @@
-# about_me_server[![Build Status](https://travis-ci.org/ABOUT-ME-APP/about_me_server.svg?branch=main)](https://travis-ci.org/ABOUT-ME-APP/about_me_server)
+# about_me_server [![Build Status](https://travis-ci.org/ABOUT-ME-APP/about_me_server.svg?branch=main)](https://travis-ci.org/ABOUT-ME-APP/about_me_server?branch=dev_1)
 앱구동을 위한 서버환경 설정 , api 서버 구축 
 
 ### * 환경설정
