@@ -57,6 +57,7 @@ public class BoardInteractionService {
                 DefaultEnquiry defaultEnquiry = defaultEnquiryRepository.findBySeq(qnACategory.getTitleId());
 
                 UserInfo authorUser= UserInfo.builder().seq(qnACategory.getAuthorId()).build();
+                UserProfile authorToken = userProfileRepository.findOneByUserID(qnACategory.getAuthorId());
                 if( likeUser.getSeq() == authorUser.getSeq() ){
                     return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                                          .body(new ErrorResponse("자신의 글에는 좋아요 할 수 없습니다","400"));
@@ -73,7 +74,7 @@ public class BoardInteractionService {
                     PushNotificationRequest request = PushNotificationRequest.builder()
                                                                             .message(nickname.getNickname()+"님이 "+defaultEnquiry.getQuestion()+"에 공감해주었어요.")
                                                                             .title("오늘의나")
-                                                                            .token("fWs7iOUjLkL5tExH0qq2Rl:APA91bFPh34RD63hy_6MZgVQ4nA927FKC6JjKgyoskBSnPBLgcWQSGXpPTsdLY7G8NvSRUTSA5VX4ummqzfF3UuFiA12mbXaJfJs7G6WEjGlR1tJs-LSBFiP5E4xl1Nca-orgDpTmnJ7")
+                                                                            .token(authorToken.getFcmToken())
                                                                             .topic("global").build();
 
                     boardInteraction.likeYes();
