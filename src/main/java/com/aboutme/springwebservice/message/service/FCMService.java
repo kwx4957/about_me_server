@@ -38,29 +38,12 @@ public class FCMService {
 
     private final UserProfileRepository userProfileRepository;
 
-//    @Transactional
-//    public void callUrl() throws JsonProcessingException {
-//
-//        HttpHeaders headers = new HttpHeaders();
-//        headers.setContentType(new MediaType("application", "josn", Charset.forName("UTF-8")));
-//
-//        Map<String ,Object> map = new HashMap<>();
-//        map.put("FCMtoken","put your fcmtoken");
-//        String para = objectMapper.writeValueAsString(map);
-//
-//        HttpEntity entity = new HttpEntity(para,headers);
-//
-//        RestTemplate restTemplate = new RestTemplate();
-//        ResponseEntity<String> responseEntity = restTemplate.exchange("http://127.0.0.1/Message/FCMToken" , HttpMethod.POST,entity, String.class);
-//    }
-
     @Transactional
     public void saveFCMToken(String fcmToken,long userID){
            UserProfile user = userProfileRepository.findOneByUserID(userID);
            user.savefcmToken(fcmToken);
            userProfileRepository.save(user);
     }
-
 
     public void sendMessage(Map<String, String> data, PushNotificationRequest request)throws InterruptedException, ExecutionException {
         Message message = getPreconfiguredMessageWithData(data, request);
@@ -86,6 +69,15 @@ public class FCMService {
         logger.info("Sent message to token. Device token: " + request.getToken() + ", " + response+ " msg "+jsonOutput);
     }
 
+    public void sendMessageWithTopic(Map<String, String> data, PushNotificationRequest request)throws InterruptedException, ExecutionException {
+        Message message = getPreconfiguredMessageWithTopic(data, request);
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        String jsonOutput = gson.toJson(message);
+        String response = sendAndGetResponse(message);
+        logger.info("Sent message with data. Topic: " + request.getTopic() + ", " + response+ " msg "+jsonOutput);
+    }
+
+
     private String sendAndGetResponse(Message message) throws InterruptedException, ExecutionException {
         return FirebaseMessaging.getInstance().sendAsync(message).get();
     }
@@ -105,6 +97,12 @@ public class FCMService {
 
     private Message getPreconfiguredMessageWithData(Map<String, String> data, PushNotificationRequest request) {
         return getPreconfiguredMessageBuilder(request).putAllData(data).setToken(request.getToken())
+                .build();
+    }
+
+    //구독자들 알림보내기
+    private Message getPreconfiguredMessageWithTopic(Map<String, String> data,PushNotificationRequest request) {
+        return getPreconfiguredMessageBuilder(request).putAllData(data).setTopic(request.getTopic())
                 .build();
     }
 

@@ -5,6 +5,7 @@ import com.aboutme.springwebservice.message.model.PushNotificationRequest;
 import com.aboutme.springwebservice.message.service.FCMService;
 import com.aboutme.springwebservice.message.service.PushNotificationService;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.google.firebase.messaging.FirebaseMessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -25,7 +26,7 @@ public class PushNotificationController {
     }
 
      @PostMapping("/Message/push")
-     public void  sendPushNotification(@RequestBody PushNotificationRequest request ) throws Exception {
+     public void  sendPushNotification(@RequestBody PushNotificationRequest request ){
          pushNotificationService.sendPushNotification(request);
         }
 
@@ -36,12 +37,9 @@ public class PushNotificationController {
 
     @Scheduled(cron = "0 0 09 * * ?")
     public void sendAutoNotification(){
-        PushNotificationRequest request= PushNotificationRequest.builder()
-                .message("오늘은 질문 해주시는거죠?")
-                .title("오늘의나")
-                .token("fWs7iOUjLkL5tExH0qq2Rl:APA91bFPh34RD63hy_6MZgVQ4nA927FKC6JjKgyoskBSnPBLgcWQSGXpPTsdLY7G8NvSRUTSA5VX4ummqzfF3UuFiA12mbXaJfJs7G6WEjGlR1tJs-LSBFiP5E4xl1Nca-orgDpTmnJ7")
-                .topic("global").build();
-        pushNotificationService.sendPushNotification(request);
+        PushNotificationRequest request= PushNotificationRequest.builder().message("오늘은 질문 해주시는거죠?")
+                                            .title("오늘의나").topic("notice").build();
+        pushNotificationService.sendPushNotificationWithTopic(request);
      }
 
 }

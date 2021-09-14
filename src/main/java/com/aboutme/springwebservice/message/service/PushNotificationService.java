@@ -1,6 +1,8 @@
 package com.aboutme.springwebservice.message.service;
 
 import com.aboutme.springwebservice.domain.UserInfo;
+import com.aboutme.springwebservice.domain.UserProfile;
+import com.aboutme.springwebservice.domain.repository.UserProfileRepository;
 import com.aboutme.springwebservice.entity.BasicResponse;
 import com.aboutme.springwebservice.entity.CommonResponse;
 import com.aboutme.springwebservice.message.entity.NotificationList;
@@ -8,6 +10,9 @@ import com.aboutme.springwebservice.message.model.PushNotificationRequest;
 import com.aboutme.springwebservice.message.model.response.ResponseNotiList;
 import com.aboutme.springwebservice.message.repository.NotificationRepository;
 import com.aboutme.springwebservice.mypage.model.response.ResponseCrushList;
+import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.firebase.messaging.FirebaseMessagingException;
+import com.google.firebase.messaging.TopicManagementResponse;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -38,12 +43,8 @@ public class PushNotificationService {
         List<NotificationList> notificationList = notificationRepository.findAllByAulthorId(user);
 
         for(NotificationList responseNoti:notificationList){
-
-            responseNotiLists.add( ResponseNotiList.builder()
-                                                   .color(this.convertColor(responseNoti.getColor()))
-                                                   .message(responseNoti.getMessage())
-                                                   .updateDate(this.converTime(responseNoti.getRegDate()))
-                                                   .build());
+            responseNotiLists.add( ResponseNotiList.builder().color(this.convertColor(responseNoti.getColor()))
+                                    .message(responseNoti.getMessage()).updateDate(this.converTime(responseNoti.getRegDate())).build());
         }
 
         return ResponseEntity.ok().body( new CommonResponse<List>(responseNotiLists));
@@ -74,12 +75,21 @@ public class PushNotificationService {
         }
     }
 
+    public void sendPushNotificationWithTopic(PushNotificationRequest request) {
+        try {
+            fcmService.sendMessageWithTopic(getSamplePayloadData(), request);
+        } catch (Exception e) {
+            logger.error(e.getMessage()+ e.getCause());
+        }
+    }
+
+
 
     private Map<String, String> getSamplePayloadData() {
         Map<String, String> pushData = new HashMap<>();
         pushData.put("title", "오늘의나");
         pushData.put("message", "오늘도 질문에 답변 하실꺼죠?");
-        pushData.put("topic", "global");
+        pushData.put("topic", "notice");
         return pushData;
     }
 
@@ -116,22 +126,20 @@ public class PushNotificationService {
         return updateDate;
     }
 
-//    private Map<String, String> getSamplePayloadDataWithSpecificJsonFormat() {
-//        Map<String, String> pushData = new HashMap<>();
-//        Map<String, String> data = new HashMap<>();
-//        ArrayList<Map<String, String>> payload = new ArrayList<>();
-//        Map<String, String> article_data = new HashMap<>();
-//
-//        pushData.put("title", "jsonformat");
-//        pushData.put("message", "itsworkingkudussssssssssssssssssssssssssssssssssss");
-//        pushData.put("image", "qqq");
-//        pushData.put("timestamp", "fefe");
-//        article_data.put("article_data", "ffff");
-//        payload.add(article_data);
-//        pushData.put("payload", String.valueOf(payload));
-//        data.put("data", String.valueOf(pushData));
-//        return data;
-//
-//    }
+    // fcm토큰 구독
+    private final UserProfileRepository userProfileRepository;
+    List<String> registrationTokens = new ArrayList<>();
+    public List<String> getFcmToken(){
+        List<UserProfile> token = userProfileRepository.findAll();
+        for(int i=0;i< token.size();i++) {
+            registrationTokens.add(token.get(i).getFcmToken());
+            System.out.println(token.get(i).getFcmToken());
+        }
+        return registrationTokens;
+    }
+    public void zzz(List<String> registrationTokens,String topic) throws FirebaseMessagingException {
+        TopicManagementResponse response = FirebaseMessaging.getInstance().subscribeToTopic(registrationTokens, topic);
+        System.out.println(response.getSuccessCount() + " tokens were subscribed successfully");
+    }
 
 }
