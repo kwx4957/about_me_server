@@ -82,7 +82,8 @@ public class BoardCommentService {
         UserInfo notiId = UserInfo.builder().seq(user.getUserID()).build();
         res.setNickname(user.getNickname());
 
-        QnACategory qnACategory = qnACategoryRepository.findBySeq(res.getAnswerId());
+        QnACategoryLevel qnACategoryLevel = qnACategoryLevelRepository.findBySeq(res.getAnswerId());
+        QnACategory qnACategory = qnACategoryRepository.findBySeq(qnACategoryLevel.getCategoryId());
         DefaultEnquiry title = defaultEnquiryRepository.findBySeq(qnACategory.getTitleId());
         PushNotificationRequest request = PushNotificationRequest.builder()
                                           .message(user.getNickname()+" "+title.getQuestion() +"에 댓글을 남겼습니다") //글 작성자에게 알림
