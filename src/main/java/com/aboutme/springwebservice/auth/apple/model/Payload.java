@@ -16,6 +16,7 @@ public class Payload {
     private String email_verified;
     private String is_private_email;
     private Long auth_time;
+    private Long real_user_status;
     private boolean nonce_supported;
 
     @Override
@@ -33,6 +34,7 @@ public class Payload {
                 ", email_verified='" + email_verified + '\'' +
                 ", is_private_email='" + is_private_email + '\'' +
                 ", auth_time=" + auth_time +
+                ", real_user_status=" + real_user_status +
                 ", nonce_supported=" + nonce_supported +
                 '}';
     }
