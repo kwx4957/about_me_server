@@ -66,4 +66,10 @@ public class UserProfile {
     public void savefcmToken(String fcmToken){
         this.fcmToken = fcmToken;
     }
+    public void pushYes(){
+        this.push_yn = "Y";
+    }
+    public void pushNo(){
+        this.push_yn = "N";
+    }
 }

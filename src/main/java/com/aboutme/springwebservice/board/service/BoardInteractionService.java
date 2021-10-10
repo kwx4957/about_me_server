@@ -79,7 +79,9 @@ public class BoardInteractionService {
 
                     boardInteraction.likeYes();
                     boardInteraction.getBoard().addLikesCount();
-                    pushNotificationService.sendPushNotificationToTokenWithData(data,request);
+                    if(authorToken.getPush_yn().equals("Y")){
+                        pushNotificationService.sendPushNotificationToTokenWithData(data, request);
+                    }
                     notificationRepository.save(NotificationList.builder()
                                                                 .message(request.getMessage())
                                                                 .color(nickname.getColor())

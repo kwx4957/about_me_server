@@ -34,6 +34,7 @@ public class PushNotificationService {
     @Autowired
     private FCMService fcmService;
     private final NotificationRepository notificationRepository;
+    private final UserProfileRepository userProfileRepository;
 
     @Transactional
     public ResponseEntity<?extends BasicResponse> pushNotificationList(long userId){
@@ -50,6 +51,18 @@ public class PushNotificationService {
         return ResponseEntity.ok().body( new CommonResponse<List>(responseNotiLists));
     }
 
+    public ResponseEntity<? extends BasicResponse> subscribePushNotifictaion(long userId){
+        UserProfile user = userProfileRepository.findOneByUserID(userId);
+
+        if(user.getPush_yn().equals("Y")){
+            user.pushNo();
+            userProfileRepository.save(user);
+        }else{
+            user.pushYes();
+            userProfileRepository.save(user);
+        }
+        return ResponseEntity.ok().body( new CommonResponse<>());
+    }
 
     public void sendPushNotification(PushNotificationRequest request) {
         try {
@@ -126,8 +139,6 @@ public class PushNotificationService {
         return updateDate;
     }
 
-    // fcm토큰 구독
-    private final UserProfileRepository userProfileRepository;
     List<String> registrationTokens = new ArrayList<>();
     public List<String> getFcmToken(){
         List<UserProfile> token = userProfileRepository.findAll();
