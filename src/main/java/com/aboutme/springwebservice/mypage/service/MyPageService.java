@@ -58,17 +58,17 @@ public class MyPageService {
                         "up.nickname, " +
                         "up.introduce , " +
                         "case" +
-                        " when ul.color = 0 then 'red' " +
-                        " when ul.color = 1 then 'yellow' " +
-                        " when ul.color = 2 then 'green' " +
-                        " when ul.color = 3 then 'pink' " +
+                        " when up.color = 0 then 'red' " +
+                        " when up.color = 1 then 'yellow' " +
+                        " when up.color = 2 then 'green' " +
+                        " when up.color = 3 then 'pink' " +
                         " else 'purple' " +
                         "end as color, " +
                         "case " +
-                        " when ul.color = 0 then '열정충만' " +
-                        " when ul.color = 1 then '소소한일상' " +
-                        " when ul.color = 2 then '기억상자' " +
-                        " when ul.color = 3 then '관계의미학' " +
+                        " when up.color = 0 then '열정충만' " +
+                        " when up.color = 1 then '소소한일상' " +
+                        " when up.color = 2 then '기억상자' " +
+                        " when up.color = 3 then '관계의미학' " +
                         " else '상상플러스' " +
                         "end as color_tag " +
                         "FROM User_Level ul " +
