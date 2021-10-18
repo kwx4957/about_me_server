@@ -9,11 +9,9 @@ import com.aboutme.springwebservice.message.entity.NotificationList;
 import com.aboutme.springwebservice.message.model.PushNotificationRequest;
 import com.aboutme.springwebservice.message.model.response.ResponseNotiList;
 import com.aboutme.springwebservice.message.repository.NotificationRepository;
-import com.aboutme.springwebservice.mypage.model.response.ResponseCrushList;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.FirebaseMessagingException;
 import com.google.firebase.messaging.TopicManagementResponse;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,7 +51,6 @@ public class PushNotificationService {
 
     public ResponseEntity<? extends BasicResponse> subscribePushNotifictaion(long userId){
         UserProfile user = userProfileRepository.findOneByUserID(userId);
-
         if(user.getPush_yn().equals("Y")){
             user.pushNo();
             userProfileRepository.save(user);
@@ -61,7 +58,8 @@ public class PushNotificationService {
             user.pushYes();
             userProfileRepository.save(user);
         }
-        return ResponseEntity.ok().body( new CommonResponse<>());
+       CommonResponse<String> response= new CommonResponse<String>(user.getPush_yn());
+        return ResponseEntity.ok().body(response);
     }
 
     public void sendPushNotification(PushNotificationRequest request) {
