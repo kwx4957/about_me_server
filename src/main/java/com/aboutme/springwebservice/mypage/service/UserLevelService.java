@@ -16,6 +16,8 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -137,7 +139,17 @@ public class UserLevelService {
         ArrayList<UserLevel> ul = userLevelRepository.getProgressingByUserId(userId);
 
         UserLevelDTO ulDTO = new UserLevelDTO(ul.get(color));
+        ArrayList<UserLevelDTO> ulArr = new ArrayList<UserLevelDTO>();
 
+        for(int i = 0; i < 5; i++){
+            UserLevelDTO tmp = new UserLevelDTO();
+            tmp.setExperience(ul.get(i).getExperience());
+            tmp.setLevel(ul.get(i).getLevel());
+            tmp.setColor(ul.get(i).getColor());
+            tmp.setSeq(ul.get(i).getSeq());
+            tmp.setUser_id(ul.get(i).getUser_id());
+            ulArr.add(tmp);
+        }
         int level = ulDTO.getLevel();
         int exp = ulDTO.getExperience();
         if(isDelete){   // 작성한 카드를 삭제했을 때
@@ -159,8 +171,13 @@ public class UserLevelService {
 
         ulDTO.setLevel(level);
         ulDTO.setExperience(exp);
+        ulArr.get(color).setLevel(level);
+        ulArr.get(color).setExperience(exp);
 
         userLevelRepository.updateUserLevelExperience(ulDTO.toEntity());
+        Collections.sort(ulArr);
+
+        profileRepository.updateUserColor(ulArr.get(4).getColor(), userId);
 
         return;
     }

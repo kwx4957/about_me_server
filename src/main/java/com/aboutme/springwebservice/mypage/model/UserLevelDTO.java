@@ -8,7 +8,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class UserLevelDTO {
+public class UserLevelDTO implements Comparable<UserLevelDTO> {
     private Long seq;
     private int color;
     private int level;
@@ -30,5 +30,21 @@ public class UserLevelDTO {
                 .experience(experience)
                 .user_id(user_id)
                 .build();
+    }
+
+    @Override
+    public int compareTo(UserLevelDTO ul){
+        if(this.level < ul.level)
+            return -1;
+        else if(this.level == ul.level){
+            if(this.experience < ul.experience)
+                return -1;
+            else if(this.experience == ul.experience)
+                return 0;
+            else
+                return 1;
+        }
+        else
+            return 1;
     }
 }
