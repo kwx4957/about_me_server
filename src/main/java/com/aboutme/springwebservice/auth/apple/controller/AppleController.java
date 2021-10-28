@@ -59,6 +59,7 @@ public class AppleController {
                 .reg_date(LocalDateTime.now())
                 .update_date(LocalDateTime.now())
                 .email(payload.getEmail())
+                .push_yn('Y')
                 .build();
 
         appleUserRepository.save(user);

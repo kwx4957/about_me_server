@@ -58,7 +58,7 @@ public class PushNotificationService {
             user.pushYes();
             userProfileRepository.save(user);
         }
-       CommonResponse<String> response= new CommonResponse<String>(user.getPush_yn());
+       CommonResponse<Character> response= new CommonResponse<Character>(user.getPush_yn());
         return ResponseEntity.ok().body(response);
     }
 

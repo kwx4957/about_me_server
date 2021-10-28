@@ -44,7 +44,7 @@ public class NaverAuthService implements AuthService {
                     UserProfile.UserProfileBuilder()
                         .userID(naverUser.getUserId())
                         .nickname(naverUser.getUserName())
-                        .push_yn("Y")
+                        .push_yn('Y')
                         .reg_date(LocalDateTime.now())
                         .update_date(LocalDateTime.now())
                         .build());
