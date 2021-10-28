@@ -48,7 +48,7 @@ public class KaKaoAuthService implements AuthService {
                     UserProfile.UserProfileBuilder()
                             .userID(kaKaoUser.getId())
                             .nickname(kaKaoUser.getProperties().getNickname())
-                            .push_yn("Y")
+                            .push_yn('Y')
                             .reg_date(LocalDateTime.now())
                             .update_date(LocalDateTime.now())
                             .build());

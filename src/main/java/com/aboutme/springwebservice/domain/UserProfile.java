@@ -33,7 +33,7 @@ public class UserProfile {
     private Integer themeComment;
 
     @Column(name = "push_yn")
-    private String push_yn;
+    private Character push_yn;
 
     @Column(name = "push_time")
     private String push_time;
@@ -67,9 +67,9 @@ public class UserProfile {
         this.fcmToken = fcmToken;
     }
     public void pushYes(){
-        this.push_yn = "Y";
+        this.push_yn = 'Y';
     }
     public void pushNo(){
-        this.push_yn = "N";
+        this.push_yn = 'N';
     }
 }
