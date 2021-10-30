@@ -87,7 +87,7 @@ public class AppleController {
             throw new UserNotFoundException("user not found");
         }
 
-        fcmSender.insertFCMToken(singInRequest.getFcmToken(), userId);
+        fcmSender.insertFCMToken(singInRequest.getFcmToken(), appUserInfo.getUserID());
         response.setUserId(userId);
         return response;
     }
