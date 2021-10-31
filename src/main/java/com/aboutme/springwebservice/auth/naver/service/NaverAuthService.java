@@ -34,7 +34,7 @@ public class NaverAuthService implements AuthService {
     private PushNotificationController fcmSender;
 
     @Transactional
-    public SignUpResponse signup(String naverAccessToken) {
+    public SignUpResponse signup(String naverAccessToken,String fcmToken) {
         NaverUser naverUser = naverClient.profile(naverAccessToken);
 
         try {
@@ -45,6 +45,7 @@ public class NaverAuthService implements AuthService {
                         .userID(naverUser.getUserId())
                         .nickname(naverUser.getUserName())
                         .push_yn('Y')
+                        .fcmToken(fcmToken)
                         .reg_date(LocalDateTime.now())
                         .update_date(LocalDateTime.now())
                         .build());

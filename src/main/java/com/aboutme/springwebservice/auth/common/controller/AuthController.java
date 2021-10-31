@@ -24,9 +24,9 @@ public class AuthController {
     private KaKaoAuthService kaKaoAuthService;
 
     @PostMapping("/signup")
-    public SignUpResponse signup(@RequestHeader String token, @RequestParam AuthType type) {
+    public SignUpResponse signup(@RequestHeader String token, @RequestParam AuthType type,@RequestParam String fcmToken) {
         chooseAuthService(type);
-        return authService.signup(token);
+        return authService.signup(token,fcmToken);
     }
 
     @GetMapping("/signin")
