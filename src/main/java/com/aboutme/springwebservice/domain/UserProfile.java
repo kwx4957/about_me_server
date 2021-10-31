@@ -33,7 +33,7 @@ public class UserProfile {
     private Integer themeComment;
 
     @Column(name = "push_yn" , columnDefinition = "Character default Y")
-    private Character push_yn;
+    private Character push_yn = 'Y';
 
     @Column(name = "push_time")
     private String push_time;
