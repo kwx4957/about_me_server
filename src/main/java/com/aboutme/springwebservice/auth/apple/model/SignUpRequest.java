@@ -7,6 +7,6 @@ public class SignUpRequest {
 
     private String code;
     private String id_token;
-    private String fcmtoken;
+    private String fcmToken;
 
 }

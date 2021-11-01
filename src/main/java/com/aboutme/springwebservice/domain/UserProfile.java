@@ -32,6 +32,7 @@ public class UserProfile {
     @Column(name = "theme_comment")
     private Integer themeComment;
 
+    @Builder.Default
     @Column(name = "push_yn" , columnDefinition = "Character default Y")
     private Character push_yn = 'Y';
 

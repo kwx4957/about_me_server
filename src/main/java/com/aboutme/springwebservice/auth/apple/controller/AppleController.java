@@ -59,8 +59,7 @@ public class AppleController {
                 .reg_date(LocalDateTime.now())
                 .update_date(LocalDateTime.now())
                 .email(payload.getEmail())
-                .fcmToken(signUpRequest.getFcmtoken())
-                .push_yn('Y')
+                .fcmToken(signUpRequest.getFcmToken())
                 .build();
 
         appleUserRepository.save(user);
