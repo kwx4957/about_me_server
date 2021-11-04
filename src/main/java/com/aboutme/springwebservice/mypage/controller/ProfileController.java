@@ -48,12 +48,6 @@ public class ProfileController {
         return new ResponseProfile(200, "profile update 성공", profileVO);
     }
 
-    @GetMapping("/MyPage/profile/{userId}")
-    UserProfile getProfile(@PathVariable("userId") long userId)
-    {
-        return profileRepository.findOneByUserID(userId);
-    }
-
     // 진행도
     @GetMapping("/MyPage/Progressing/{userId}")
     public ResponseProgressing getProgressing(@PathVariable("userId") long userId){

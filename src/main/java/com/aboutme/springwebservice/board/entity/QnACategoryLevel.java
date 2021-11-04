@@ -30,7 +30,8 @@ import java.util.Set;
                 name = QnACategoryLevel.getMyPopularPostList,
                 procedureName = "aboutme_rds.getMyPopularPostList",
                 parameters = {
-                        @StoredProcedureParameter(name = "userId", mode = ParameterMode.IN, type = Integer.class),
+                        @StoredProcedureParameter(name = "userId", mode = ParameterMode.IN, type = Long.class),
+                        @StoredProcedureParameter(name = "color", mode = ParameterMode.IN, type = Integer.class),
                 }
         ),
         @NamedStoredProcedureQuery(

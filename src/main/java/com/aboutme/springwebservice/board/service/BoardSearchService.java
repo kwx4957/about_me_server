@@ -147,17 +147,18 @@ public class BoardSearchService {
     }
 
     @Transactional(readOnly = true)
-    public List getMyPopularList(Long id, String color) {
+    public List getMyPopularList(Long id, int _color) {
         UserInfo user= UserInfo.builder().seq(id).build();
         List<Object[]> resultList = em
                 .createNamedStoredProcedureQuery(QnACategoryLevel.getMyPopularPostList)
-                .setParameter("userId", 1)
+                .setParameter("userId", id)
+                .setParameter("color", _color)
                 .getResultList();
 
         List postList = new ArrayList<ResponseBoardList>();
         for(Object o : resultList) {
             Object[] res = (Object[]) o;
-            if((color.equals(res[1])||color.equals("no"))&&(Integer.parseInt(res[3].toString())!=id)) {
+            if(Integer.parseInt(res[3].toString())!=id) {
                 BoardInteraction boardInteraction = null;
                 if(Integer.parseInt(res[7].toString()) > 0 || Integer.parseInt(res[8].toString()) > 0){
                     QnACategoryLevel qnACategoryLevel = qnACategoryLevelRepository.findBySeq(Long.parseLong(res[0].toString()));

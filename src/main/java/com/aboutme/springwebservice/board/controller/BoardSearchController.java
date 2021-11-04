@@ -104,12 +104,39 @@ public class BoardSearchController {
     @GetMapping("/Board/latestList/Category/{userId}")
     public ResponseBoardList getLatestListSearchedByCategory(@PathVariable("userId") Long userId,@RequestParam(value="color", required = false) String color)
     {
-        String _color = color == null ? "no" :color;
+        int _color;
         ResponseBoardList res = new ResponseBoardList();
+
+        if(color == null){
+            color = "none";
+        }
 
         if(!userInfoRepository.existsById(userId)){
             return new ResponseBoardList(400, "해당 유저가 존재하지 않습니다.", null);
         }
+
+
+        switch (color) {
+            case "red":
+                _color = 0;
+                break;
+            case "yellow":
+                _color = 1;
+                break;
+            case "green":
+                _color = 2;
+                break;
+            case "pink":
+                _color = 3;
+                break;
+            case "purple":
+                _color = 4;
+                break;
+            default:
+                _color = userInfoRepository.findOneByUserID(userId).getColor();
+        }
+
+        System.out.println(_color);
 
         List postList = boardSearchService.getMyPopularList(userId,_color);
 
