@@ -38,20 +38,12 @@ public class ProfileController {
     @PutMapping("/MyPage/profile")
     ResponseProfile updateProfile(@RequestBody ProfileVO profileVO)
     {
-        UserProfile userProfile = profileRepository.findOneByUserID(profileVO.getUserId());
+        Optional<UserProfile> userProfile = Optional.ofNullable(profileRepository.findOneByUserID(profileVO.getUserId()));
 
-        userProfile.setColor(profileVO.getColor());
-        userProfile.setIntro(profileVO.getIntroduce());
-        userProfile.setNickname(profileVO.getNickName());
-        userProfile.setPush_time(profileVO.getPush_time());
-        userProfile.setPush_yn(profileVO.getPush_yn());
-        userProfile.setUpdate_date(LocalDateTime.now());
-        userProfile.setThemeComment(profileVO.getTheme_comment());
-        userProfile.setBirthday(profileVO.getBirthday());
-        userProfile.setGender(profileVO.getGender());
-        userProfile.setEmail(profileVO.getEmail());
-
-        profileRepository.save(userProfile);
+        userProfile.ifPresent(profile->{profile.setIntro(profileVO.getIntroduce());
+            profile.setNickname(profileVO.getNickName());
+            profileRepository.save(profile);
+        });
 
         return new ResponseProfile(200, "profile update 성공", profileVO);
     }

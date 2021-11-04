@@ -59,7 +59,7 @@ public class AppleController {
                 .reg_date(LocalDateTime.now())
                 .update_date(LocalDateTime.now())
                 .email(payload.getEmail())
-                .push_yn('Y')
+                .fcmToken(signUpRequest.getFcmToken())
                 .build();
 
         appleUserRepository.save(user);
@@ -87,7 +87,7 @@ public class AppleController {
             throw new UserNotFoundException("user not found");
         }
 
-        fcmSender.insertFCMToken(singInRequest.getFcmToken(), userId);
+        fcmSender.insertFCMToken(singInRequest.getFcmToken(), appUserInfo.getUserID());
         response.setUserId(userId);
         return response;
     }

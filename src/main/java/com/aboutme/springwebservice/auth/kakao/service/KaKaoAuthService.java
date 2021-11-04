@@ -37,7 +37,7 @@ public class KaKaoAuthService implements AuthService {
     private PushNotificationController fcmSender;
 
     @Transactional
-    public SignUpResponse signup(String accessToken) {
+    public SignUpResponse signup(String accessToken,String fcmToken) {
         KaKaoUser kaKaoUser = kakaoClient.profile(accessToken);
 
         try {
@@ -48,7 +48,7 @@ public class KaKaoAuthService implements AuthService {
                     UserProfile.UserProfileBuilder()
                             .userID(kaKaoUser.getId())
                             .nickname(kaKaoUser.getProperties().getNickname())
-                            .push_yn('Y')
+                            .fcmToken(fcmToken)
                             .reg_date(LocalDateTime.now())
                             .update_date(LocalDateTime.now())
                             .build());
