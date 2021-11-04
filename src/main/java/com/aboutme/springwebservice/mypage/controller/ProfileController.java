@@ -56,7 +56,7 @@ public class ProfileController {
         return new ResponseProfile(200, "profile update 성공", profileVO);
     }
 
-    @GetMapping("/MyPage/profile")
+    @GetMapping("/MyPage/profile/{userId}")
     UserProfile getProfile(@PathVariable("userId") long userId)
     {
         return profileRepository.findOneByUserID(userId);
