@@ -10,6 +10,7 @@ import com.aboutme.springwebservice.board.repository.DefaultEnquiryRepository;
 import com.aboutme.springwebservice.board.repository.QnACategoryLevelRepository;
 import com.aboutme.springwebservice.board.repository.QnACategoryRepository;
 import com.aboutme.springwebservice.domain.UserInfo;
+import com.aboutme.springwebservice.domain.UserProfile;
 import com.aboutme.springwebservice.mypage.repository.UserLevelRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -34,7 +35,7 @@ public class BoardInfoService {
     EntityManager em;
 
     public Object getPost(Long id, Long answerId) {
-        UserInfo user= UserInfo.builder().seq(id).build();
+        UserProfile user= UserProfile.UserProfileBuilder().userID(id).build();
         List<Object[]> resultList = em
                 .createNamedStoredProcedureQuery(QnACategoryLevel.getPost)
                 .setParameter("answerId", answerId)

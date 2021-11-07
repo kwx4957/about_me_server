@@ -50,15 +50,19 @@ public class PushNotificationService {
     }
 
     public ResponseEntity<? extends BasicResponse> subscribePushNotifictaion(long userId){
+
         UserProfile user = userProfileRepository.findOneByUserID(userId);
-        if(user.getPush_yn().equals("Y")){
+
+        if(user.getPush_yn().equals('Y')){
             user.pushNo();
             userProfileRepository.save(user);
         }else{
             user.pushYes();
             userProfileRepository.save(user);
         }
+
        CommonResponse<Character> response= new CommonResponse<Character>(user.getPush_yn());
+
         return ResponseEntity.ok().body(response);
     }
 
@@ -136,19 +140,4 @@ public class PushNotificationService {
         }
         return updateDate;
     }
-
-    List<String> registrationTokens = new ArrayList<>();
-    public List<String> getFcmToken(){
-        List<UserProfile> token = userProfileRepository.findAll();
-        for(int i=0;i< token.size();i++) {
-            registrationTokens.add(token.get(i).getFcmToken());
-            System.out.println(token.get(i).getFcmToken());
-        }
-        return registrationTokens;
-    }
-    public void zzz(List<String> registrationTokens,String topic) throws FirebaseMessagingException {
-        TopicManagementResponse response = FirebaseMessaging.getInstance().subscribeToTopic(registrationTokens, topic);
-        System.out.println(response.getSuccessCount() + " tokens were subscribed successfully");
-    }
-
 }

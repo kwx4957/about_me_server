@@ -2,6 +2,7 @@ package com.aboutme.springwebservice.message.entity;
 
 import com.aboutme.springwebservice.board.entity.QnACategoryLevel;
 import com.aboutme.springwebservice.domain.UserInfo;
+import com.aboutme.springwebservice.domain.UserProfile;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -31,16 +32,16 @@ public class UserVoc  {
     @JoinColumn(name = "question_id" ,nullable = false)
     private QnACategoryLevel questionId;
 
-    @ManyToOne(targetEntity = UserInfo.class, fetch = FetchType.LAZY)
+    @ManyToOne(targetEntity = UserProfile.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "author_id" ,nullable = false)
-    private UserInfo authorId;
+    private UserProfile authorId;
 
     @CreatedDate
     @Column
     private LocalDateTime regDate;
 
     @Builder
-    public  UserVoc(DefaultReasonList reasonId, QnACategoryLevel questionId, UserInfo authorId){
+    public  UserVoc(DefaultReasonList reasonId, QnACategoryLevel questionId, UserProfile authorId){
         this.reasonId=reasonId;
         this.questionId=questionId;
         this.authorId=authorId;

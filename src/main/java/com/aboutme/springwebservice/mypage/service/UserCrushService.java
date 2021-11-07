@@ -8,8 +8,8 @@ import com.aboutme.springwebservice.board.entity.QnACategoryLevel;
 import com.aboutme.springwebservice.board.repository.*;
 import com.aboutme.springwebservice.domain.UserInfo;
 import com.aboutme.springwebservice.entity.BasicResponse;
-import com.aboutme.springwebservice.entity.CommonResponse;
 import com.aboutme.springwebservice.entity.ErrorResponse;
+import com.aboutme.springwebservice.entity.ListCommonResponse;
 import com.aboutme.springwebservice.mypage.model.response.ResponseCrushList;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -39,7 +39,6 @@ public class UserCrushService {
         QnACategoryLevel qnACategoryLevel;
         QnACategory qnACategory;
         DefaultEnquiry defaultEnquiry;
-        //수정예정   코드 테스트용 유저 삽입
         UserInfo userInfo=UserInfo.builder().seq(userId).build();
 
         if(cursh.equals("likes")){
@@ -49,16 +48,15 @@ public class UserCrushService {
                 responseBoardSeq.add(this.convertBoardSeq(boardInteraction));
             }
 
-            for(int i=0; i<responseBoardSeq.size(); i++) {
-                qnACategoryLevel = qnACategoryLevelRepository.findBySeq(responseBoardSeq.get(i).getBoardSeq());
-                commentCount     = qnACommentRepository.countByCategoryLevelId(responseBoardSeq.get(i).getBoardSeq());
+            for(ResponseCrushList resSeq : responseBoardSeq){
+                qnACategoryLevel = qnACategoryLevelRepository.findBySeq(resSeq.getBoardSeq());
+                commentCount     = qnACommentRepository.countByCategoryLevelId(resSeq.getBoardSeq());
                 qnACategory      = qnACategoryRepository.findBySeq(qnACategoryLevel.getCategoryId());
                 defaultEnquiry   = defaultEnquiryRepository.findBySeq(qnACategory.getTitleId());
                 if(qnACategory.getColor()==color||color==-1){
                     responseCrushList.add(this.convertList(qnACategoryLevel, commentCount,
-                            convertColor(qnACategory.getColor()), defaultEnquiry.getQuestion(),responseBoardSeq.get(i)));
+                            convertColor(qnACategory.getColor()), defaultEnquiry.getQuestion(), resSeq));
                 }
-
             }
 
         }else if(cursh.equals("scrap")){
@@ -68,15 +66,14 @@ public class UserCrushService {
                 responseBoardSeq.add(this.convertBoardSeq(boardInteraction));
             }
 
-            for(int i=0; i<responseBoardSeq.size(); i++) {
-                qnACategoryLevel = qnACategoryLevelRepository.findBySeq(responseBoardSeq.get(i).getBoardSeq());
-                commentCount = qnACommentRepository.countByCategoryLevelId(responseBoardSeq.get(i).getBoardSeq());
-                qnACategory = qnACategoryRepository.findBySeq(qnACategoryLevel.getCategoryId());
-                defaultEnquiry = defaultEnquiryRepository.findBySeq(qnACategory.getTitleId());
-                if (qnACategory.getColor() == color||color==-1) {
+            for(ResponseCrushList resSeq : responseBoardSeq){
+                qnACategoryLevel = qnACategoryLevelRepository.findBySeq(resSeq.getBoardSeq());
+                commentCount     = qnACommentRepository.countByCategoryLevelId(resSeq.getBoardSeq());
+                qnACategory      = qnACategoryRepository.findBySeq(qnACategoryLevel.getCategoryId());
+                defaultEnquiry   = defaultEnquiryRepository.findBySeq(qnACategory.getTitleId());
+                if(qnACategory.getColor()==color||color==-1){
                     responseCrushList.add(this.convertList(qnACategoryLevel, commentCount,
-                            convertColor(qnACategory.getColor()), defaultEnquiry.getQuestion(),responseBoardSeq.get(i)));
-
+                            convertColor(qnACategory.getColor()), defaultEnquiry.getQuestion(), resSeq));
                 }
             }
 
@@ -85,7 +82,7 @@ public class UserCrushService {
                                  .body(new ErrorResponse("잘못된 접근입니다"));
         }
 
-       return ResponseEntity.ok().body( new CommonResponse<List>(responseCrushList));
+       return ResponseEntity.ok().body( new ListCommonResponse<ResponseCrushList>(responseCrushList));
     }
 
     //좋아요 글번호추출

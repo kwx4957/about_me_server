@@ -8,6 +8,7 @@ import com.aboutme.springwebservice.board.repository.BoardInteractionRepository;
 import com.aboutme.springwebservice.board.repository.QnACategoryLevelRepository;
 import com.aboutme.springwebservice.board.repository.QnACommentRepository;
 import com.aboutme.springwebservice.domain.UserInfo;
+import com.aboutme.springwebservice.domain.UserProfile;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,7 +29,7 @@ public class BoardSearchService {
 
     @Transactional(readOnly = true)
     public List getLatestPost(int id, int color) {
-        UserInfo user= UserInfo.builder().seq(id).build();
+        UserProfile user= UserProfile.UserProfileBuilder().userID(id).build();
         List<Object[]> resultList = em
                 .createNamedStoredProcedureQuery(QnACategoryLevel.getLatestPost)
                 .setParameter("color", color)
@@ -89,7 +90,7 @@ public class BoardSearchService {
 
     @Transactional(readOnly = true)
     public List getHotPosts(int id, String color) {
-        UserInfo user= UserInfo.builder().seq(id).build();
+        UserProfile user= UserProfile.UserProfileBuilder().userID(id).build();
         List<Object[]> resultList = em
                 .createNamedStoredProcedureQuery(QnACategoryLevel.getPopularPost)
                 .getResultList();
@@ -148,7 +149,7 @@ public class BoardSearchService {
 
     @Transactional(readOnly = true)
     public List getMyPopularList(Long id, int _color) {
-        UserInfo user= UserInfo.builder().seq(id).build();
+        UserProfile user= UserProfile.UserProfileBuilder().userID(id).build();
         List<Object[]> resultList = em
                 .createNamedStoredProcedureQuery(QnACategoryLevel.getMyPopularPostList)
                 .setParameter("userId", id)

@@ -79,7 +79,7 @@ public class BoardCommentService {
 
         CommentDTO res = new CommentDTO(commentResult);
         UserProfile user = userProfileRepository.findOneByUserID(commentResult.getAuthorId());
-        UserInfo notiId = UserInfo.builder().seq(user.getUserID()).build();
+        UserProfile notiId= UserProfile.UserProfileBuilder().userID(user.getUserID()).build();
         res.setNickname(user.getNickname());
 
         QnACategoryLevel qnACategoryLevel = qnACategoryLevelRepository.findBySeq(res.getAnswerId());

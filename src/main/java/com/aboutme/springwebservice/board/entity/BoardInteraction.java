@@ -1,6 +1,7 @@
 package com.aboutme.springwebservice.board.entity;
 
 import com.aboutme.springwebservice.domain.UserInfo;
+import com.aboutme.springwebservice.domain.UserProfile;
 import com.aboutme.springwebservice.entity.BaseTimeEntity;
 import io.swagger.models.auth.In;
 import lombok.*;
@@ -31,16 +32,16 @@ public class BoardInteraction extends BaseTimeEntity {
     @JoinColumn(name = "category_level_id",nullable = false)
     private QnACategoryLevel board;
 
-    @ManyToOne(targetEntity = UserInfo.class, fetch = FetchType.LAZY , cascade = CascadeType.REMOVE)
+    @ManyToOne(targetEntity = UserProfile.class, fetch = FetchType.LAZY , cascade = CascadeType.REMOVE)
     @JoinColumn(name = "like_user", nullable = false)
-    private UserInfo likeUser;
+    private UserProfile likeUser;
 
-    @ManyToOne(targetEntity = UserInfo.class, fetch = FetchType.LAZY , cascade = CascadeType.REMOVE)
+    @ManyToOne(targetEntity = UserProfile.class, fetch = FetchType.LAZY , cascade = CascadeType.REMOVE)
     @JoinColumn(name = "author_id", nullable = false)
-    private UserInfo authorId;
+    private UserProfile authorId;
 
     @Builder
-    public BoardInteraction(QnACategoryLevel board, UserInfo likeUser, int likeYn, UserInfo authorId, int scrapYn){
+    public BoardInteraction(QnACategoryLevel board, UserProfile likeUser, int likeYn, UserProfile authorId, int scrapYn){
         this.board=board;
         this.likeUser=likeUser;
         this.likeYn=likeYn;
@@ -48,7 +49,7 @@ public class BoardInteraction extends BaseTimeEntity {
         this.scrapYn=scrapYn;
     }
 
-    public BoardInteraction(QnACategoryLevel board, UserInfo likeUser,UserInfo authorId, int scrapYn){
+    public BoardInteraction(QnACategoryLevel board, UserProfile likeUser,UserProfile authorId, int scrapYn){
         this.board=board;
         this.likeUser=likeUser;
         this.authorId=authorId;

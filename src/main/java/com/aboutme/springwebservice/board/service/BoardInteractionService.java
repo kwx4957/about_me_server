@@ -47,18 +47,16 @@ public class BoardInteractionService {
         public ResponseEntity<?extends BasicResponse> addLike(BoardInteractionVO vo) {
                 Map<String, String> data = new HashMap<>();
 
-                //임시 userId;
-                UserInfo likeUser    = UserInfo.builder().seq(vo.getUserId()).build();
-                UserProfile nickname = userProfileRepository.findOneByUserID(vo.getUserId());
+                //UserProfile likeUser = UserProfile.UserProfileBuilder().userID(vo.getUserId()).build();
+                UserProfile likeUser = userProfileRepository.findOneByUserID(vo.getUserId());
 
                 QnACategoryLevel qnACategoryLevel = qnACategoryLevelRepository.findById(vo.getQuestId())
                                                                               .orElseThrow(()-> new IllegalArgumentException("해당 글이 존재하지 않습니다"));
                 QnACategory qnACategory = qnACategoryRepository.findBySeq(qnACategoryLevel.getCategoryId());
                 DefaultEnquiry defaultEnquiry = defaultEnquiryRepository.findBySeq(qnACategory.getTitleId());
 
-                UserInfo authorUser= UserInfo.builder().seq(qnACategory.getAuthorId()).build();
-                UserProfile authorToken = userProfileRepository.findOneByUserID(qnACategory.getAuthorId());
-                if( likeUser.getSeq() == authorUser.getSeq() ){
+                UserProfile authorUser = userProfileRepository.findOneByUserID(qnACategory.getAuthorId());
+                if( likeUser.getUserID() == authorUser.getUserID() ){
                     return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                                          .body(new ErrorResponse("자신의 글에는 좋아요 할 수 없습니다","400"));
                 }
@@ -72,19 +70,19 @@ public class BoardInteractionService {
 
                 if(boardInteraction.getLikeYn() == 0){
                     PushNotificationRequest request = PushNotificationRequest.builder()
-                                                                            .message(nickname.getNickname()+"님이 "+defaultEnquiry.getQuestion()+"에 공감해주었어요.")
+                                                                            .message(likeUser.getNickname()+"님이 "+defaultEnquiry.getQuestion()+"에 공감해주었어요.")
                                                                             .title("오늘의나")
-                                                                            .token(authorToken.getFcmToken())
+                                                                            .token(authorUser.getFcmToken())
                                                                             .topic("global").build();
 
                     boardInteraction.likeYes();
                     boardInteraction.getBoard().addLikesCount();
-                    if(authorToken.getPush_yn().equals('Y')){
+                    if(authorUser.getPush_yn().equals('Y')){
                         pushNotificationService.sendPushNotificationToTokenWithData(data, request);
                     }
                     notificationRepository.save(NotificationList.builder()
                                                                 .message(request.getMessage())
-                                                                .color(nickname.getColor())
+                                                                .color(likeUser.getColor())
                                                                 .aulthorId(authorUser)
                                                                 .build());
                     boardInteractionRepository.save(boardInteraction);
@@ -104,12 +102,14 @@ public class BoardInteractionService {
         @Transactional
         public ResponseEntity<?extends BasicResponse> addScrap(BoardInteractionVO vo) {
 
-                UserInfo likeUser= UserInfo.builder().seq(vo.getUserId()).build();
+                UserProfile likeUser= UserProfile.UserProfileBuilder().userID(vo.getUserId()).build();
                 QnACategoryLevel qnACategoryLevel = qnACategoryLevelRepository.findById(vo.getQuestId())
                                                                               .orElseThrow(() -> new IllegalArgumentException("해당 글이 존재하지 않습니다"));
+
                 QnACategory qnACategory = qnACategoryRepository.findBySeq(qnACategoryLevel.getCategoryId());
-                UserInfo authorUser= UserInfo.builder().seq(qnACategory.getAuthorId()).build();
-                if(likeUser.getSeq() == authorUser.getSeq() ){
+                UserProfile authorUser= UserProfile.UserProfileBuilder().userID(qnACategory.getAuthorId()).build();
+
+                if(likeUser.getUserID() == authorUser.getUserID() ){
                     return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                                          .body(new ErrorResponse("자신의 글에는 스크랩 할 수 없습니다","400"));
                 }

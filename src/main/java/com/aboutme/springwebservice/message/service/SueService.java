@@ -50,8 +50,7 @@ public class SueService {
     @Transactional
     public ResponseEntity<?extends BasicResponse> sue(@RequestBody SueVO vo) {
 
-        //임시Id
-        UserInfo authorId = UserInfo.builder().seq(vo.getSuedUserId()).build();
+        UserProfile authorId = userProfileRepository.findOneByUserID(vo.getSuedUserId());
         if(vo.getSueType().equals("board")){
             QnACategoryLevel qnACategoryLevel = qnACategoryLevelRepository.findById(vo.getTargetQuestionId())
                                                                           .orElseThrow(()-> new IllegalArgumentException("해당 글이 존재하지 않습니다"));
@@ -60,12 +59,14 @@ public class SueService {
             DefaultEnquiry defaultEnquiry = defaultEnquiryRepository.findBySeq(qnACategory.getTitleId());
 
             UserVoc userVoc = UserVoc.builder().authorId(authorId).questionId(qnACategoryLevel).reasonId(new DefaultReasonList(vo.getSueReason())).build();
-            UserInfo userinfo = UserInfo.builder().seq(qnACategory.getAuthorId()).build();
+            UserProfile userinfo = UserProfile.UserProfileBuilder().userID(qnACategory.getAuthorId()).build();
+
             PushNotificationRequest request = PushNotificationRequest.builder()
                                                 .message(defaultEnquiry.getQuestion()+"글에 신고가 들어왔어요.") //글작성자에게
                                                 .title("오늘의나")
-                                                .token("fWs7iOUjLkL5tExH0qq2Rl:APA91bFPh34RD63hy_6MZgVQ4nA927FKC6JjKgyoskBSnPBLgcWQSGXpPTsdLY7G8NvSRUTSA5VX4ummqzfF3UuFiA12mbXaJfJs7G6WEjGlR1tJs-LSBFiP5E4xl1Nca-orgDpTmnJ7")
+                                                .token(authorId.getFcmToken())
                                                 .topic("global").build();
+
             NotificationList noti = NotificationList.builder()
                                                     .message(request.getMessage())
                                                     .aulthorId(userinfo)
@@ -79,16 +80,19 @@ public class SueService {
         }else if(vo.getSueType().equals("comment")){
 
             BoardComment boardComment = qnACommentRepository.findById(vo.getTargetQuestionId())
-                                                             .orElseThrow(() -> new IllegalArgumentException("해당 댓글이 존재하지 않습니다") );
+                                                             .orElseThrow(() -> new IllegalArgumentException("해당 댓글이 존재하지 않습니다"));
+
             QnACategory qnACategory =qnACategoryRepository.findById(boardComment.getCategoryLevelId())
                                                             .orElseThrow(() -> new IllegalArgumentException("해당 글이 존재하지 않습니다"));
 
-            if(qnACategory.getAuthorId() != authorId.getSeq()){
+            if(qnACategory.getAuthorId() != authorId.getUserID()){
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body( new ErrorResponse("글 작성자가 아닙니다.","403"));
             }
+
             qnACommentRepository.deleteById(vo.getTargetQuestionId());
 
             return  ResponseEntity.ok().body( new CommonResponse<>("댓글이 삭제되었습니다"));
+
         }else
             return  ResponseEntity.status(HttpStatus.BAD_REQUEST).body( new ErrorResponse("잘못된 입력입니다."));
 
@@ -110,9 +114,9 @@ public class SueService {
 
         for(UserVoc userVoc1:userVoc) {
             qnACategory      = qnACategoryRepository.findBySeq(userVoc1.getQuestionId().getCategoryId());
-            authorId         = userProfileRepository.findOneByUserID(userVoc1.getAuthorId().getSeq());
+            authorId         = userProfileRepository.findOneByUserID(userVoc1.getAuthorId().getUserID());
             suedId           = userProfileRepository.findOneByUserID(qnACategory.getAuthorId());
-            qnACategoryLevel = qnACategoryLevelRepository.findBySeq(userVoc1.getAuthorId().getSeq());
+            qnACategoryLevel = qnACategoryLevelRepository.findBySeq(userVoc1.getAuthorId().getUserID());
             responseSueLists.add(ResponseSueList.builder().qnACategoryLevel(userVoc1.getQuestionId())
                                                           .sue(this.convertSue(authorId ,suedId ,userVoc1.getReasonId()))
                                                           .contents(qnACategoryLevel)

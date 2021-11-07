@@ -1,6 +1,7 @@
 package com.aboutme.springwebservice.message.entity;
 
 import com.aboutme.springwebservice.domain.UserInfo;
+import com.aboutme.springwebservice.domain.UserProfile;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -34,12 +35,12 @@ public class NotificationList {
     @CreatedDate
     private LocalDateTime regDate;
 
-    @ManyToOne(targetEntity = UserInfo.class, fetch = FetchType.LAZY)
+    @ManyToOne(targetEntity = UserProfile.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "author_user" ,nullable = false)
-    private UserInfo aulthorId;
+    private UserProfile aulthorId;
 
     @Builder
-    public NotificationList(String message, int color, UserInfo aulthorId){
+    public NotificationList(String message, int color, UserProfile aulthorId){
         this.message = message;
         this.color = color;
         this.aulthorId = aulthorId;
