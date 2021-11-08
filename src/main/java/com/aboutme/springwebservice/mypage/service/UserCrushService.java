@@ -7,6 +7,7 @@ import com.aboutme.springwebservice.board.entity.QnACategory;
 import com.aboutme.springwebservice.board.entity.QnACategoryLevel;
 import com.aboutme.springwebservice.board.repository.*;
 import com.aboutme.springwebservice.domain.UserInfo;
+import com.aboutme.springwebservice.domain.UserProfile;
 import com.aboutme.springwebservice.entity.BasicResponse;
 import com.aboutme.springwebservice.entity.ErrorResponse;
 import com.aboutme.springwebservice.entity.ListCommonResponse;
@@ -30,7 +31,7 @@ public class UserCrushService {
     private final DefaultEnquiryRepository defaultEnquiryRepository;
 
     @Transactional
-    public ResponseEntity<?extends BasicResponse>  crushLists(Long userId, String cursh,int color){
+    public ResponseEntity<?extends BasicResponse>  crushLists(Long userId, String crush, int color){
         int likeYn = 1, scarpYn = 1;
         int commentCount ;
         List<ResponseCrushList> responseBoardSeq  = new ArrayList<>();
@@ -39,28 +40,10 @@ public class UserCrushService {
         QnACategoryLevel qnACategoryLevel;
         QnACategory qnACategory;
         DefaultEnquiry defaultEnquiry;
-        UserInfo userInfo=UserInfo.builder().seq(userId).build();
+        UserProfile user = UserProfile.UserProfileBuilder().userID(userId).build();
 
-        if(cursh.equals("likes")){
-             boardInteractions =  boardInteractionRepository.findByLikeUserAndLikeYn(userInfo,likeYn);
-
-            for(BoardInteraction boardInteraction : boardInteractions){
-                responseBoardSeq.add(this.convertBoardSeq(boardInteraction));
-            }
-
-            for(ResponseCrushList resSeq : responseBoardSeq){
-                qnACategoryLevel = qnACategoryLevelRepository.findBySeq(resSeq.getBoardSeq());
-                commentCount     = qnACommentRepository.countByCategoryLevelId(resSeq.getBoardSeq());
-                qnACategory      = qnACategoryRepository.findBySeq(qnACategoryLevel.getCategoryId());
-                defaultEnquiry   = defaultEnquiryRepository.findBySeq(qnACategory.getTitleId());
-                if(qnACategory.getColor()==color||color==-1){
-                    responseCrushList.add(this.convertList(qnACategoryLevel, commentCount,
-                            convertColor(qnACategory.getColor()), defaultEnquiry.getQuestion(), resSeq));
-                }
-            }
-
-        }else if(cursh.equals("scrap")){
-             boardInteractions   = boardInteractionRepository.findByLikeUserAndScrapYn(userInfo, scarpYn);
+        if(crush.equals("likes")){
+             boardInteractions =  boardInteractionRepository.findByLikeUserAndLikeYn(user,likeYn);
 
             for(BoardInteraction boardInteraction : boardInteractions){
                 responseBoardSeq.add(this.convertBoardSeq(boardInteraction));
@@ -77,7 +60,23 @@ public class UserCrushService {
                 }
             }
 
-        }else{
+        }else if(crush.equals("scrap")){
+             boardInteractions   = boardInteractionRepository.findByLikeUserAndScrapYn(user, scarpYn);
+
+            for(BoardInteraction boardInteraction : boardInteractions){
+                responseBoardSeq.add(this.convertBoardSeq(boardInteraction));
+            }
+
+            for(ResponseCrushList resSeq : responseBoardSeq){
+                qnACategoryLevel = qnACategoryLevelRepository.findBySeq(resSeq.getBoardSeq());
+                commentCount     = qnACommentRepository.countByCategoryLevelId(resSeq.getBoardSeq());
+                qnACategory      = qnACategoryRepository.findBySeq(qnACategoryLevel.getCategoryId());
+                defaultEnquiry   = defaultEnquiryRepository.findBySeq(qnACategory.getTitleId());
+                if(qnACategory.getColor()==color||color==-1){
+                    responseCrushList.add(this.convertList(qnACategoryLevel, commentCount,
+                            convertColor(qnACategory.getColor()), defaultEnquiry.getQuestion(), resSeq));
+                }
+            }}else{
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                                  .body(new ErrorResponse("잘못된 접근입니다"));
         }

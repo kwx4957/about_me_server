@@ -13,13 +13,13 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(IllegalArgumentException.class)
     protected ResponseEntity<ErrorResponse> handlleIllegal(IllegalArgumentException e){
-        final ErrorResponse response= new ErrorResponse(e.getMessage());
+        final ErrorResponse response = new ErrorResponse(e.getMessage());
         return new  ResponseEntity<>(response,HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(EmptyResultDataAccessException.class)
     protected ResponseEntity<ErrorResponse> handlleEmpty(EmptyResultDataAccessException e){
-        final ErrorResponse response= new ErrorResponse("해당하는 글 또는 댓글이 없습니다");
+        final ErrorResponse response = new ErrorResponse("해당하는 글 또는 댓글이 없습니다");
         return new  ResponseEntity<>(response,HttpStatus.NOT_FOUND);
     }
 }

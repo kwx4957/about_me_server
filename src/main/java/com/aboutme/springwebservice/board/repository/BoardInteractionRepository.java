@@ -14,7 +14,8 @@ import java.util.Optional;
 public interface BoardInteractionRepository extends JpaRepository<BoardInteraction,Long>{
     Optional<BoardInteraction> findByBoardAndLikeUser(QnACategoryLevel qnACategoryLevel, UserProfile userInfo);
 
-    List<BoardInteraction> findByLikeUserAndLikeYn(UserInfo userId, int likeYn);
+    List<BoardInteraction> findByLikeUserAndLikeYn(UserProfile userId, int likeYn);
 
-    List<BoardInteraction> findByLikeUserAndScrapYn(UserInfo userId, int scarpYn);
+    List<BoardInteraction> findByLikeUserAndScrapYn(UserProfile userId, int scarpYn);
+
 }
