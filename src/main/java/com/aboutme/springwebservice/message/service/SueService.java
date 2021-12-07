@@ -10,6 +10,7 @@ import com.aboutme.springwebservice.board.repository.QnACategoryRepository;
 import com.aboutme.springwebservice.board.repository.QnACommentRepository;
 import com.aboutme.springwebservice.domain.UserInfo;
 import com.aboutme.springwebservice.domain.UserProfile;
+import com.aboutme.springwebservice.domain.repository.UserInfoRepository;
 import com.aboutme.springwebservice.domain.repository.UserProfileRepository;
 import com.aboutme.springwebservice.entity.BasicResponse;
 import com.aboutme.springwebservice.entity.CommonResponse;
@@ -29,6 +30,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,10 +45,17 @@ public class SueService {
     private final QnACommentRepository qnACommentRepository;
     private final QnACategoryRepository qnACategoryRepository;
     private final UserProfileRepository userProfileRepository;
+    private final UserInfoRepository userInfoRepository;
     private final DefaultEnquiryRepository defaultEnquiryRepository;
     private final NotificationRepository notificationRepository;
     private PushNotificationService pushNotificationService;
 
+    @Transactional
+    public ResponseEntity<?extends BasicResponse> adminLogin(String id,String password) {
+        return userInfoRepository.isAdmin(id,password)==1?
+                ResponseEntity.ok().body( new CommonResponse<>("관리자 로그인 성공")): ResponseEntity.status(HttpStatus.BAD_REQUEST).body( new ErrorResponse("관리자 로그인 실패"));
+    }
+    
     @Transactional
     public ResponseEntity<?extends BasicResponse> sue(@RequestBody SueVO vo) {
 

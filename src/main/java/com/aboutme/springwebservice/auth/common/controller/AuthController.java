@@ -6,9 +6,12 @@ import com.aboutme.springwebservice.auth.common.model.response.AuthResponse;
 import com.aboutme.springwebservice.auth.common.model.response.SignUpResponse;
 import com.aboutme.springwebservice.auth.naver.service.NaverAuthService;
 import com.aboutme.springwebservice.auth.common.service.AuthService;
+import com.aboutme.springwebservice.entity.BasicResponse;
 import com.aboutme.springwebservice.message.controller.PushNotificationController;
+import com.aboutme.springwebservice.message.service.SueService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,6 +19,9 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/auth")
 public class AuthController {
     private AuthService authService;
+
+    @Autowired
+    private SueService sueService;
 
     @Autowired
     private NaverAuthService naverAuthService;
@@ -33,6 +39,11 @@ public class AuthController {
     public AuthResponse signin(@RequestHeader String token, @RequestParam AuthType type,@RequestParam String fcmToken ) {
         chooseAuthService(type);
         return authService.signin(token,fcmToken);
+    }
+
+    @GetMapping("/signin/admin")
+    public ResponseEntity<?extends BasicResponse> signin(@RequestParam String id, @RequestParam String password) {
+        return sueService.adminLogin(id,password);
     }
 
     @GetMapping("/refresh")
