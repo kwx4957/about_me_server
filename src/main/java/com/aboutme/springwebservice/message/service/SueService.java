@@ -98,15 +98,15 @@ public class SueService {
 
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public ResponseEntity<?extends BasicResponse> sueList() {
         List<ResponseSueList> responseSueLists  = new ArrayList<>();
-        List<UserVoc> userVoc;
+
         UserProfile authorId;
         UserProfile suedId;
         QnACategory qnACategory;
         QnACategoryLevel qnACategoryLevel;
-        userVoc = sueRepository.findAll();
+        List<UserVoc> userVoc = sueRepository.findAll();
 
         if(userVoc.isEmpty()){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body( new ErrorResponse("신고된 글이 존재하지 않습니다."));
@@ -116,7 +116,7 @@ public class SueService {
             qnACategory      = qnACategoryRepository.findBySeq(userVoc1.getQuestionId().getCategoryId());
             authorId         = userProfileRepository.findOneByUserID(userVoc1.getAuthorId().getUserID());
             suedId           = userProfileRepository.findOneByUserID(qnACategory.getAuthorId());
-            qnACategoryLevel = qnACategoryLevelRepository.findBySeq(userVoc1.getAuthorId().getUserID());
+            qnACategoryLevel = qnACategoryLevelRepository.findBySeq(userVoc1.getQuestionId().getSeq());
             responseSueLists.add(ResponseSueList.builder().qnACategoryLevel(userVoc1.getQuestionId())
                                                           .sue(this.convertSue(authorId ,suedId ,userVoc1.getReasonId()))
                                                           .contents(qnACategoryLevel)

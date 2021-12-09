@@ -16,7 +16,7 @@ public class BoardInteractionController {
     private final BoardInteractionService boardInteractionService;
 
     @PostMapping("/Board/likes/")
-    public ResponseEntity<? extends BasicResponse> createLike(@RequestBody BoardInteractionVO vo)  //userid->  @AuthenticationPrincipal MemberAdapter memberAdapter
+    public ResponseEntity<? extends BasicResponse> createLike(@RequestBody BoardInteractionVO vo)
     {
         return boardInteractionService.addLike(vo);
     }

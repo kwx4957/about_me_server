@@ -19,7 +19,7 @@ public class PushNotificationController {
     PushNotificationService pushNotificationService;
     FCMService fcmService;
 
-    @GetMapping("Message/Push/{userId}/List") //
+    @GetMapping("Message/Push/{userId}/List")
     public ResponseEntity<? extends BasicResponse> getPushNoticationList(@PathVariable("userId") long userId){
         return pushNotificationService.pushNotificationList(userId);
     }
