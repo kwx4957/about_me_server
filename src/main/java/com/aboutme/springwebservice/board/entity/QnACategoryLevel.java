@@ -18,13 +18,16 @@ import java.util.Set;
                 name = QnACategoryLevel.getLatestPost,
                 procedureName = "aboutme_rds.getLatestPost",
                 parameters = {
+                        @StoredProcedureParameter(name = "uid", mode = ParameterMode.IN, type = Integer.class),
                         @StoredProcedureParameter(name = "color", mode = ParameterMode.IN, type = Integer.class),
                 }
         ),
         @NamedStoredProcedureQuery(
                 name = QnACategoryLevel.getPopularPost,
                 procedureName = "aboutme_rds.getPopularPost",
-                parameters = {}
+                parameters = {
+                        @StoredProcedureParameter(name = "uid", mode = ParameterMode.IN, type = Integer.class),
+                }
         ),
         @NamedStoredProcedureQuery(
                 name = QnACategoryLevel.getMyPopularPostList,

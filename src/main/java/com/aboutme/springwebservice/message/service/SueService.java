@@ -17,11 +17,13 @@ import com.aboutme.springwebservice.entity.CommonResponse;
 import com.aboutme.springwebservice.entity.ErrorResponse;
 import com.aboutme.springwebservice.message.entity.DefaultReasonList;
 import com.aboutme.springwebservice.message.entity.NotificationList;
+import com.aboutme.springwebservice.message.entity.UserBlock;
 import com.aboutme.springwebservice.message.entity.UserVoc;
 import com.aboutme.springwebservice.message.model.PushNotificationRequest;
 import com.aboutme.springwebservice.message.model.SueJudgeVO;
 import com.aboutme.springwebservice.message.model.SueVO;
 import com.aboutme.springwebservice.message.model.response.ResponseSueList;
+import com.aboutme.springwebservice.message.repository.BlockRepository;
 import com.aboutme.springwebservice.message.repository.NotificationRepository;
 import com.aboutme.springwebservice.message.repository.SueRepository;
 import lombok.AllArgsConstructor;
@@ -32,6 +34,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -41,6 +44,7 @@ import java.util.Optional;
 public class SueService {
 
     private final SueRepository sueRepository;
+    private final BlockRepository blockRepository;
     private final QnACategoryLevelRepository qnACategoryLevelRepository;
     private final QnACommentRepository qnACommentRepository;
     private final QnACategoryRepository qnACategoryRepository;
@@ -49,6 +53,18 @@ public class SueService {
     private final DefaultEnquiryRepository defaultEnquiryRepository;
     private final NotificationRepository notificationRepository;
     private PushNotificationService pushNotificationService;
+
+    @Transactional(readOnly = true)
+    public ResponseEntity<?extends BasicResponse> block(long offer_id,long other_id) {
+         int isBlock = blockRepository.userAlreadyBlock(offer_id,other_id);
+         System.out.println(isBlock);
+         System.out.println(isBlock==0);
+         if(isBlock==0){
+             blockRepository.saveUserBlock(offer_id,other_id);
+             return  ResponseEntity.ok().body( new CommonResponse<>("차단 성공"));
+         }
+        return  ResponseEntity.status(HttpStatus.BAD_REQUEST).body( new ErrorResponse("이미 차단한 분의 게시글입니다. 관리자에게 문의해주세요."));
+    }
 
     @Transactional
     public ResponseEntity<?extends BasicResponse> adminLogin(String id,String password) {

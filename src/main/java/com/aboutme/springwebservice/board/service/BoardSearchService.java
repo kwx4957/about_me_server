@@ -32,6 +32,7 @@ public class BoardSearchService {
         UserProfile user= UserProfile.UserProfileBuilder().userID(id).build();
         List<Object[]> resultList = em
                 .createNamedStoredProcedureQuery(QnACategoryLevel.getLatestPost)
+                .setParameter("uid", id)
                 .setParameter("color", color)
                 .getResultList();
 
@@ -93,6 +94,7 @@ public class BoardSearchService {
         UserProfile user= UserProfile.UserProfileBuilder().userID(id).build();
         List<Object[]> resultList = em
                 .createNamedStoredProcedureQuery(QnACategoryLevel.getPopularPost)
+                .setParameter("uid", id)
                 .getResultList();
 
         List postList = new ArrayList<ResponseBoardList>();

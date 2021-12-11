@@ -40,4 +40,9 @@ public class SueController {
     public ResponseEntity<? extends BasicResponse> createSue(@RequestBody SueVO vo){
         return sueService.sue(vo);
     }
+
+    @PostMapping("/Message/block") //차단기능
+    public ResponseEntity<? extends BasicResponse> createSue(@RequestParam long offer_id, @RequestParam long other_id){
+        return sueService.block(offer_id,other_id);
+    }
 }
