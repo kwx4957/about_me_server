@@ -131,6 +131,7 @@ public class SueService {
         UserProfile suedId;
         QnACategory qnACategory;
         QnACategoryLevel qnACategoryLevel;
+        DefaultEnquiry defaultEnquiry;
         List<UserVoc> userVoc = sueRepository.findAll();
 
         if(userVoc.isEmpty()){
@@ -139,10 +140,13 @@ public class SueService {
 
         for(UserVoc userVoc1:userVoc) {
             qnACategory      = qnACategoryRepository.findBySeq(userVoc1.getQuestionId().getCategoryId());
+            defaultEnquiry   = defaultEnquiryRepository.findBySeq(qnACategory.getTitleId());
             authorId         = userProfileRepository.findOneByUserID(userVoc1.getAuthorId().getUserID());
             suedId           = userProfileRepository.findOneByUserID(qnACategory.getAuthorId());
             qnACategoryLevel = qnACategoryLevelRepository.findBySeq(userVoc1.getQuestionId().getSeq());
             responseSueLists.add(ResponseSueList.builder().qnACategoryLevel(userVoc1.getQuestionId())
+                                                          .title(defaultEnquiry.getQuestion())
+                                                          .color(convertColor(qnACategory.getColor()))
                                                           .sue(this.convertSue(authorId ,suedId ,userVoc1.getReasonId()))
                                                           .contents(qnACategoryLevel)
                                                           .build());
@@ -172,6 +176,28 @@ public class SueService {
         sueReason= authorId.getNickname()+"님이 "+suedId.getNickname()+"님을 "+reason.getReason()+"내용으로 신고하였습니다";
         return sueReason;
    }
+
+    private String convertColor(int color) {
+        String colorString = "";
+        switch (color) {
+            case 0:
+                colorString = "red";
+                break;
+            case 1:
+                colorString = "yellow";
+                break;
+            case 2:
+                colorString = "green";
+                break;
+            case 3:
+                colorString = "pink";
+                break;
+            case 4:
+                colorString = "purple";
+                break;
+        }
+        return colorString;
+    }
 
 }
 
