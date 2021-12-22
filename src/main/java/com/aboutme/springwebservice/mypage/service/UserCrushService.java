@@ -31,7 +31,7 @@ public class UserCrushService {
 
     @Transactional
     public ResponseEntity<? extends BasicResponse> crushLists(Long userId, String crush, int color) {
-        int likeYn = 1, scarpYn = 1;
+        int Yes = 1;
         int commentCount;
         List<ResponseCrushList> responseBoardSeq = new ArrayList<>();
         List<ResponseCrushList> responseCrushList = new ArrayList<>();
@@ -42,44 +42,26 @@ public class UserCrushService {
         UserProfile user = UserProfile.UserProfileBuilder().userID(userId).build();
 
         if (crush.equals("likes")) {
-            boardInteractions = boardInteractionRepo.findByLikeUserAndLikeYn(user, likeYn);
-
-            for (BoardInteraction boardInteraction : boardInteractions) {
-                responseBoardSeq.add(this.convertBoardSeq(boardInteraction));
-            }
-
-            for (ResponseCrushList resSeq : responseBoardSeq) {
-                qnACategoryLevel = qnACategoryLevelRepo.findBySeq(resSeq.getBoardSeq());
-                commentCount = qnACommentRepo.countByCategoryLevelId(resSeq.getBoardSeq());
-                qnACategory = qnACategoryRepo.findBySeq(qnACategoryLevel.getCategoryId());
-                defaultEnquiry = defaultEnquiryRepo.findBySeq(qnACategory.getTitleId());
-                if (qnACategory.getColor() == color || color == -1) {
-                    responseCrushList.add(this.convertList(qnACategoryLevel, commentCount,
-                            convertColor(qnACategory.getColor()), defaultEnquiry.getQuestion(), resSeq));
-                }
-            }
-
-        }else if (crush.equals("scrap")) {
-            boardInteractions = boardInteractionRepo.findByLikeUserAndScrapYn(user, scarpYn);
-
-            for (BoardInteraction boardInteraction : boardInteractions) {
-                responseBoardSeq.add(this.convertBoardSeq(boardInteraction));
-            }
-
-            for (ResponseCrushList resSeq : responseBoardSeq) {
-                qnACategoryLevel = qnACategoryLevelRepo.findBySeq(resSeq.getBoardSeq());
-                commentCount = qnACommentRepo.countByCategoryLevelId(resSeq.getBoardSeq());
-                qnACategory = qnACategoryRepo.findBySeq(qnACategoryLevel.getCategoryId());
-                defaultEnquiry = defaultEnquiryRepo.findBySeq(qnACategory.getTitleId());
-                if (qnACategory.getColor() == color || color == -1) {
-                    responseCrushList.add(this.convertList(qnACategoryLevel, commentCount,
-                            convertColor(qnACategory.getColor()), defaultEnquiry.getQuestion(), resSeq));
-                }
-            }
-        }else{
-
+            boardInteractions = boardInteractionRepo.findByLikeUserAndLikeYn(user, Yes);
+        }else if(crush.equals("scrap")) {
+            boardInteractions = boardInteractionRepo.findByLikeUserAndScrapYn(user, Yes);
+        }else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse("잘못된 접근입니다"));
+        }
 
+        for (BoardInteraction boardInteraction : boardInteractions) {
+            responseBoardSeq.add(this.convertBoardSeq(boardInteraction));
+        }
+
+        for (ResponseCrushList resSeq : responseBoardSeq) {
+            qnACategoryLevel = qnACategoryLevelRepo.findBySeq(resSeq.getBoardSeq());
+            commentCount = qnACommentRepo.countByCategoryLevelId(resSeq.getBoardSeq());
+            qnACategory = qnACategoryRepo.findBySeq(qnACategoryLevel.getCategoryId());
+            defaultEnquiry = defaultEnquiryRepo.findBySeq(qnACategory.getTitleId());
+            if (qnACategory.getColor() == color || color == -1) {
+                responseCrushList.add(this.convertList(qnACategoryLevel, commentCount,
+                        qnACategory.getColor(), defaultEnquiry.getQuestion(), resSeq));
+            }
         }
 
         return ResponseEntity.ok().body(new ListCommonResponse<ResponseCrushList>(responseCrushList));
@@ -96,30 +78,7 @@ public class UserCrushService {
 
     //글번호로 리스트 변환
     private ResponseCrushList convertList(QnACategoryLevel qnACategoryLevel, int commentCount,
-                                          String color, String question, ResponseCrushList responseCrushList) {
+                                          int color, String question, ResponseCrushList responseCrushList) {
         return new ResponseCrushList(qnACategoryLevel, commentCount, color, question, responseCrushList);
-    }
-
-    //색 문자열로 변환
-    private String convertColor(int color) {
-        String colorString = "";
-        switch (color) {
-            case 0:
-                colorString = "red";
-                break;
-            case 1:
-                colorString = "yellow";
-                break;
-            case 2:
-                colorString = "green";
-                break;
-            case 3:
-                colorString = "pink";
-                break;
-            case 4:
-                colorString = "purple";
-                break;
-        }
-        return colorString;
     }
 }

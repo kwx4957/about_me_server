@@ -32,9 +32,9 @@ public class ResponseCrushList {
     }
 
     @Builder
-    public ResponseCrushList(QnACategoryLevel entity, int commentCount, String color, String question ,ResponseCrushList responseCrushList){
+    public ResponseCrushList(QnACategoryLevel entity, int commentCount, int color, String question ,ResponseCrushList responseCrushList){
         this.question     = question;
-        this.color        = color;
+        this.color        = convertColorIntToString(color);
         this.boardSeq     = entity.getSeq();
         this.answer       = entity.getAnswer();
         if(entity.getShare_yn()=='N')
@@ -51,11 +51,7 @@ public class ResponseCrushList {
     }
 
     private boolean convertType(int hasInform){
-        if(hasInform == 0) {
-            return false;
-        }else {
-            return true;
-        }
+        return hasInform != 0;
     }
 
     public String converTime(LocalDateTime update_date){
@@ -77,4 +73,27 @@ public class ResponseCrushList {
         }
         return updateDate;
     }
+
+    private String convertColorIntToString(int color) {
+        String colorString = "";
+        switch (color) {
+            case 0:
+                colorString = "red";
+                break;
+            case 1:
+                colorString = "yellow";
+                break;
+            case 2:
+                colorString = "green";
+                break;
+            case 3:
+                colorString = "pink";
+                break;
+            case 4:
+                colorString = "purple";
+                break;
+        }
+        return colorString;
+    }
+
 }
