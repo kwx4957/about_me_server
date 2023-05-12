@@ -14,7 +14,7 @@
 인원 : 기획자 1명, 디자이너 3명, IOS 개발자 3명, 백엔드 4명  
 사용 기술 및 환경 :
 - Java 8, SpringBoot, Spring Data JPA
-- MyriaDB
+- MariaDB
 - AWS EC2, S3, CodeDeploy, TravisCI, FireBase
 - Intellij
 
