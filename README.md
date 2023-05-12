@@ -2,7 +2,7 @@
 앱구동을 위한 서버환경 설정 , api 서버 구축 
 
 ### * 환경설정
-> 1. 개발언어 -> spring > mybatis > mysql
+> 1. 개발언어 -> spring > mysql
 > 2. 클라우드 환경  -> 파이어베이스(푸시기능 매우 필요) 또는 AWS
 > 3. IDE -> 인텔리J 또는 Visula Studio Code 
 
