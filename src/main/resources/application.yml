@@ -1,0 +1,60 @@
+spring :
+  profiles :
+    active : local # 기본 환경 선택
+# local 환경
+---
+spring :
+  config :
+    activate :
+      on-profile : local
+  jpa :
+    generate-ddl : false
+    hibernate :
+      naming :
+        physical-strategy : org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+        implicit-strategy : org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl
+    properties :
+      hibernate :
+        show_sql : true
+        format_sql : true  #sql 예쁘게 보기
+        ddl-auto : none
+        dialect : org.hibernate.dialect.MariaDB53Dialect
+  datasource :
+    url : jdbc:mariadb://about-me-server.ci2sufiezham.ap-northeast-2.rds.amazonaws.com:3306/aboutme_rds?characterEncoding=UTF-8
+    username : admin_aboutme
+    password : mcQ0^94zz
+    driver-class-name : org.mariadb.jdbc.Driver
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: aboutme2auth@gmail.com
+    password: ABOUTME!@6
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+logging :
+  level :
+    org :
+      hibernate :
+        sql: Debug
+        type :
+          descriptor :
+            sql : TRACE
+APPLE:
+  AUTH:
+    TOKEN:
+      URL: https://appleid.apple.com/auth/token
+  PUBLICKEY:
+    URL: https://appleid.apple.com/auth/keys
+  ISS: https://appleid.apple.com
+  WEBSITE:
+    URL: Website_URLs
+  AUD: Client_ID
+  TEAM:
+    ID: Team_ID
+  KEY:
+    ID: Key_ID
+    PATH: static/AuthKey_KeyID.p8
