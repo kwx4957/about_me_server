@@ -18,6 +18,13 @@
 - AWS EC2, S3, CodeDeploy, TravisCI, FireBase
 - Intellij
 
+## 담당 업무
+- AWS 인프라 구축
+- 자동화 배포를 위한 TravisCI + AWS 연동
+- JPA 및 DB 연동
+- 스케쥴러를 이용한 알림 전송
+- IOS 알림 전송을 위한 FCM 연동 및 API 구현
+- 유저간 상호작용 및 신고 API 구현
 
 ## 전체 구성도
 ![](https://user-images.githubusercontent.com/33277725/237874424-673f803f-9739-4dbf-b0ef-323cf20250a5.png)
