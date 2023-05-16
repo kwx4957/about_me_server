@@ -1,4 +1,4 @@
-# ![](https://user-images.githubusercontent.com/33277725/237874338-16a0eb49-e7bd-4406-916d-b8b11f95ebd9.png) 오늘의 나
+# ![](https://user-images.githubusercontent.com/33277725/237874338-16a0eb49-e7bd-4406-916d-b8b11f95ebd9.png) [오늘의나](https://github.com/kwx4957/about_me_server)
 ## 개요
 5가지의 색깔로 분류된 질문과 답을 통해 나를 돌아보는 기록의 장 제공과 동시에 가치관 형성에 도움을 줄 수 있는 서비스
 
