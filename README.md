@@ -14,8 +14,8 @@
 - AWS EC2, S3, CodeDeploy, TravisCI, FireBase
 - Intellij
 
-## IOS 배포 중단
-[IOS](https://apps.apple.com/kr/app/%EC%98%A4%EB%8A%98%EC%9D%98-%EB%82%98-5%EA%B0%80%EC%A7%80-%EC%BB%AC%EB%9F%AC%EC%9D%98-%EB%82%98/id1570798831)
+## iOS 배포 중단
+[iOS](https://apps.apple.com/kr/app/%EC%98%A4%EB%8A%98%EC%9D%98-%EB%82%98-5%EA%B0%80%EC%A7%80-%EC%BB%AC%EB%9F%AC%EC%9D%98-%EB%82%98/id1570798831)
 
 ## 담당 업무
 - AWS 인프라 구축
