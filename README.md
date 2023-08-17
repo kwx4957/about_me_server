@@ -6,13 +6,11 @@
 
 
 ## 개발 환경
-기간 : 2021.02 ~ 2021.06.30   
-인원 : 기획자 1명, 디자이너 3명, IOS 개발자 3명, 백엔드 개발자 4명  
+기간 : 2021.02 ~ 2021.06  
+인원 : 기획자 1명, 디자이너 3명, iOS 개발자 3명, 백엔드 개발자 4명  
 사용 기술 및 환경 :
-- Java 8, SpringBoot, Spring Data JPA
-- MariaDB
-- AWS EC2, S3, CodeDeploy, TravisCI, FireBase
-- Intellij
+- Java 8, SpringBoot, Spring Data JPA, MariaDB
+- AWS EC2, S3, CodeDeploy, TravisCI, Firebase
 
 ## iOS 배포 중단
 [iOS](https://apps.apple.com/kr/app/%EC%98%A4%EB%8A%98%EC%9D%98-%EB%82%98-5%EA%B0%80%EC%A7%80-%EC%BB%AC%EB%9F%AC%EC%9D%98-%EB%82%98/id1570798831)
@@ -22,8 +20,8 @@
 - 자동화 배포를 위한 TravisCI + AWS 연동
 - JPA 및 DB 연동
 - 스케쥴러를 이용한 알림 전송
-- iOS 알림 전송을 위한 FCM 연동 및 API 구현
-- 유저간 상호작용 및 신고 API 구현
+- iOS 알림 전송을 위한 FirebaseMessaging 연동 및 API 구현
+- CRUD API 구현
 
 ## 전체 구성도
 ![](https://user-images.githubusercontent.com/33277725/237874424-673f803f-9739-4dbf-b0ef-323cf20250a5.png)
