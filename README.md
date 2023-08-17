@@ -41,6 +41,3 @@
 
 ![](https://user-images.githubusercontent.com/33277725/237874327-78b9462c-4d79-4e89-885d-06a9fbfac277.png)|![](https://user-images.githubusercontent.com/33277725/237874391-98eb8751-df88-4c68-b2b8-77a3b08edb45.png)|![](https://user-images.githubusercontent.com/33277725/237874399-0d8eb63b-607b-4c29-9131-0cfe87d49c94.png)|![](https://user-images.githubusercontent.com/33277725/237874407-174dc6be-7f19-4420-8a74-66dcae313b59.png)
 ---|---|---|---|
-
-참고 자료:   
-스프링 부트와 AWS로 혼자 구현하는 웹 서비스 https://jojoldu.tistory.com/250?category=635883
